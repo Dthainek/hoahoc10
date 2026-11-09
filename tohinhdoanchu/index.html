@@ -28,7 +28,6 @@ html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sa
 .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
 .top h2{margin:0;font-size:15px;color:#1e293b;font-weight:700;display:flex;align-items:center;gap:6px}
 .top h2 span.icon{color:#4f46e5;font-size:18px}
-.badge{background:#fef3c7;border:1px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 14px;font-size:13px;font-weight:700;letter-spacing:0.2px}
 .mosaic-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:4px}
 #mosaic{position:relative;width:100%;aspect-ratio:35/21;max-height:100%;max-width:calc((100vh - 180px) * 35 / 21);background:#ffffff;border:2px solid #0f172a;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
 .cell{position:absolute;border:1.5px solid #0f172a;background:#ffffff;color:#0f172a;display:flex;align-items:center;justify-content:center;
@@ -50,9 +49,20 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 
 /* Nửa phải: Khu vực trắc nghiệm */
 .q-container{display:flex;flex-direction:column;height:100%}
-.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
 .qno{font-weight:800;color:#2563eb;font-size:17px}
 .set-badge{background:#e0e7ff;color:#3730a3;font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px}
+
+/* Bộ đếm giờ 30s */
+.timer-badge{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;border:1.5px solid #93c5fd;color:#1d4ed8;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:800;transition:all .25s ease}
+.timer-badge.warning{background:#fffbeb;border-color:#fcd34d;color:#b45309}
+.timer-badge.danger{background:#fef2f2;border-color:#fca5a5;color:#b91c1c;animation:timerPulse 0.8s infinite alternate ease-in-out}
+.timer-badge.done{background:#f1f5f9;border-color:#cbd5e1;color:#64748b}
+@keyframes timerPulse{from{transform:scale(1)}to{transform:scale(1.06)}}
+.timer-bar-wrap{height:4px;width:100%;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:12px}
+.timer-bar{height:100%;width:100%;background:#2563eb;transition:width 0.25s linear,background-color 0.3s;border-radius:999px}
+.timer-bar.warning{background:#f59e0b}
+.timer-bar.danger{background:#dc2626}
 #qtext{font-size:21px;font-weight:600;line-height:1.42;margin-bottom:18px;min-height:75px;color:#0f172a}
 .opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2px solid #e2e8f0;background:#ffffff;color:#1e293b;border-radius:12px;padding:12px 16px;margin-bottom:10px;font-size:17px;cursor:pointer;transition:all .15s}
 .opt b{flex:0 0 36px;height:36px;border-radius:50%;background:#f1f5f9;color:#0f172a;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;border:1px solid #cbd5e1}
@@ -116,7 +126,6 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   <section class="half">
     <div class="top">
       <h2><span class="icon">👆</span> Bấm vào một ô bất kỳ để mở câu hỏi tương ứng</h2>
-      <span class="badge">Mảnh ghép màu đỏ tạo nên thông điệp 20 - 11</span>
     </div>
     <div class="mosaic-wrap"><div id="mosaic"></div></div>
     <div class="left-controls">
@@ -133,7 +142,14 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <div class="q-container">
       <div class="q-header">
         <div class="qno" id="qno">Câu 01:</div>
+        <div class="timer-badge" id="timerBadge">
+          <span class="timer-icon">⏱️</span>
+          <span id="timerText">30s</span>
+        </div>
         <div class="set-badge" id="currentSetName">Bộ câu hỏi</div>
+      </div>
+      <div class="timer-bar-wrap">
+        <div class="timer-bar" id="timerBar"></div>
       </div>
       <div id="qtext">Nội dung câu hỏi...</div>
       <div id="opts"></div>
@@ -419,8 +435,97 @@ function layout(){
   return {stroke: rects.slice(), bg};
 }
 
-/* ---------- Logic trò chơi ---------- */
+/* ---------- Logic trò chơi & Bộ đếm giờ 30s ---------- */
+let timerInterval = null;
+
+function stopTimer(){
+  if(timerInterval){
+    clearInterval(timerInterval);
+    timerInterval = null;
+  }
+}
+
+function startTimer(){
+  stopTimer();
+  if(!state || state.ans[state.cur] !== null) return;
+  
+  timerInterval = setInterval(() => {
+    if(!state || state.ans[state.cur] !== null){
+      stopTimer();
+      return;
+    }
+    state.timesLeft[state.cur]--;
+    updateTimerUI(state.timesLeft[state.cur]);
+    
+    if(state.timesLeft[state.cur] <= 0){
+      stopTimer();
+      handleTimeout(state.cur);
+    }
+  }, 1000);
+}
+
+function updateTimerUI(sec){
+  const badge = document.getElementById('timerBadge');
+  const text = document.getElementById('timerText');
+  const bar = document.getElementById('timerBar');
+  if(!badge || !text || !bar) return;
+  
+  const s = Math.max(0, sec);
+  text.textContent = s + 's';
+  const pct = Math.max(0, Math.min(100, (s / 30) * 100));
+  bar.style.width = pct + '%';
+  
+  badge.className = 'timer-badge';
+  bar.className = 'timer-bar';
+  
+  if(s <= 5){
+    badge.classList.add('danger');
+    bar.classList.add('danger');
+  } else if(s <= 10){
+    badge.classList.add('warning');
+    bar.classList.add('warning');
+  }
+}
+
+function setTimerDoneUI(){
+  const badge = document.getElementById('timerBadge');
+  const text = document.getElementById('timerText');
+  const bar = document.getElementById('timerBar');
+  if(!badge || !text || !bar) return;
+  
+  badge.className = 'timer-badge done';
+  bar.className = 'timer-bar';
+  bar.style.width = '0%';
+  text.textContent = 'Đã xong';
+}
+
+function handleTimeout(qIndex){
+  if(!state || state.ans[qIndex] !== null) return;
+  stopTimer();
+  state.ans[qIndex] = -1;
+  
+  // Chọn 1 ô đáp án sai của câu này để tô đen
+  const wrongCells = state.cells.filter(c => c.q === qIndex && c.l !== questions[qIndex].a);
+  if(wrongCells.length > 0){
+    state.timeoutTiles = state.timeoutTiles || {};
+    state.timeoutTiles[qIndex] = wrongCells[0].l;
+  }
+  
+  show();
+  toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}! Câu này tính là sai.`, '#dc2626');
+  checkGameFinished();
+}
+
+function checkGameFinished(){
+  if(state.ans.every(x => x !== null)){
+    stopTimer();
+    const ok = state.ans.filter((x, i) => x === questions[i].a).length;
+    toast(ok === N ? '🎉 Xuất sắc! Bức tranh thông điệp 20 - 11 màu đỏ đã hiện ra trọn vẹn!' : `Hoàn thành trò chơi! Bạn trả lời đúng ${ok}/${N} câu.`);
+  }
+}
+
 function newGame(){
+  stopTimer();
   const {stroke, bg} = layout();
   const order = shuffle([...Array(N).keys()]);
   const cells = [];
@@ -431,7 +536,7 @@ function newGame(){
   shuffle(wrong);
   bg.forEach((r, i) => cells.push({...r, q: wrong[i][0], l: wrong[i][1]}));
 
-  state = { cells, ans: Array(N).fill(null), cur: 0 };
+  state = { cells, ans: Array(N).fill(null), timesLeft: Array(N).fill(30), cur: 0, timeoutTiles: {} };
   renderMosaic();
   show();
 }
@@ -454,14 +559,19 @@ function paint(){
   state.cells.forEach(c => {
     const a = state.ans[c.q];
     c.el.classList.remove('red', 'black', 'cur');
-    if(a !== null && a === c.l){
-      c.el.classList.add(c.l === questions[c.q].a ? 'red' : 'black');
+    if(a !== null){
+      if(a === c.l){
+        c.el.classList.add(c.l === questions[c.q].a ? 'red' : 'black');
+      } else if(a === -1 && state.timeoutTiles && state.timeoutTiles[c.q] === c.l){
+        c.el.classList.add('black');
+      }
     }
     if(c.q === state.cur) c.el.classList.add('cur');
   });
 }
 
 function show(){
+  stopTimer();
   const i = state.cur, q = questions[i], a = state.ans[i];
   document.getElementById('qno').textContent = `Câu ${String(i+1).padStart(2,'0')}:`;
   document.getElementById('qtext').textContent = q.q;
@@ -483,13 +593,21 @@ function show(){
   const r = document.getElementById('result');
   if(a === null){
     r.className = '';
-    r.textContent = 'Hãy chọn một đáp án';
+    r.textContent = 'Hãy chọn một đáp án (tối đa 30s)';
+    updateTimerUI(state.timesLeft[i]);
+    startTimer();
+  } else if(a === -1){
+    r.className = 'no';
+    r.textContent = `⏰ Hết thời gian (30s)! Bạn không kịp chọn đáp án (Đáp án đúng: ${L[q.a]})`;
+    setTimerDoneUI();
   } else if(a === q.a){
     r.className = 'ok';
     r.textContent = `✅ Chính xác! Ô ${i+1}${L[a]} được tô đỏ`;
+    setTimerDoneUI();
   } else {
     r.className = 'no';
     r.textContent = `❌ Sai rồi! Ô ${i+1}${L[a]} bị tô đen (Đáp án đúng: ${L[q.a]})`;
+    setTimerDoneUI();
   }
   
   document.getElementById('prev').disabled = i === 0;
@@ -516,12 +634,10 @@ function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;
 
 function answer(k){
   if(state.ans[state.cur] !== null) return;
+  stopTimer();
   state.ans[state.cur] = k;
   show();
-  if(state.ans.every(x => x !== null)){
-    const ok = state.ans.filter((x, i) => x === questions[i].a).length;
-    toast(ok === N ? '🎉 Xuất sắc! Bức tranh thông điệp 20 - 11 màu đỏ đã hiện ra trọn vẹn!' : `Hoàn thành trò chơi! Bạn trả lời đúng ${ok}/${N} câu.`);
-  }
+  checkGameFinished();
 }
 
 function toast(msg, bg='#15803d'){
