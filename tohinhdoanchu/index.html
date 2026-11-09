@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tô Hình Đoán Chữ - Hóa Học 10</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#0d1117;color:#e6edf3}
+.header-bar{background:#161b22;border-bottom:1px solid #30363d;padding:8px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.back-link{color:#58a6ff;text-decoration:none;font-weight:600;font-size:14px;display:flex;align-items:center;gap:6px}
+.back-link:hover{text-decoration:underline}
+.app-title{font-size:16px;font-weight:700;color:#f0f6fc;margin:0}
+.app{display:flex;height:calc(100vh - 49px);gap:14px;padding:12px}
+.half{flex:1 1 50%;min-width:0;background:#161b22;border:1px solid #30363d;border-radius:14px;box-shadow:0 8px 24px rgba(0,0,0,0.4);padding:14px;display:flex;flex-direction:column}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.top h2{margin:0;font-size:15px;color:#c9d1d9;font-weight:600;display:flex;align-items:center;gap:6px}
+.badge{background:#e3b34120;border:1px solid #d29922;color:#f0b72f;border-radius:999px;padding:4px 12px;font-size:13px;font-weight:600}
+.mosaic-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0}
+#mosaic{position:relative;width:100%;aspect-ratio:35/21;max-height:100%;max-width:calc((100vh - 170px) * 35 / 21);background:#0d1117;border:2px solid #30363d;border-radius:8px;overflow:hidden}
+.cell{position:absolute;border:1px solid #30363d;background:#21262d;color:#c9d1d9;display:flex;align-items:center;justify-content:center;
+  container-type:size;cursor:pointer;overflow:hidden;transition:background .25s, transform .1s;user-select:none}
+.cell span{font-weight:800;font-size:clamp(7px,min(45cqh,28cqw),24px);line-height:1;letter-spacing:0.5px}
+.cell:hover{background:#30363d;z-index:1}
+.cell.red{background:#dc2626!important;color:#fff!important;border-color:#ef4444!important;box-shadow:inset 0 0 10px rgba(0,0,0,0.3)}
+.cell.black{background:#04070a!important;color:#484f58!important;border-color:#161b22!important}
+.cell.cur{outline:3px solid #58a6ff;outline-offset:-3px;z-index:3}
+.btns{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+button{font:inherit;cursor:pointer;transition:all .15s}
+.btn-ui{border:1px solid #30363d;background:#21262d;color:#c9d1d9;border-radius:8px;padding:6px 12px;font-size:13px;font-weight:600}
+.btn-ui:hover{background:#30363d;color:#fff;border-color:#8b949e}
+.btn-accent{background:#238636;color:#fff;border:1px solid #2ea043}
+.btn-accent:hover{background:#2ea043}
+
+/* Phía bên phải: câu hỏi */
+.q-container{display:flex;flex-direction:column;height:100%}
+.qno{font-weight:700;color:#58a6ff;font-size:16px;margin-bottom:8px}
+#qtext{font-size:20px;font-weight:600;line-height:1.4;margin-bottom:18px;min-height:75px;color:#f0f6fc}
+.opt{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:2px solid #30363d;background:#21262d;color:#c9d1d9;border-radius:12px;padding:12px 16px;margin-bottom:10px;font-size:17px;cursor:pointer}
+.opt b{flex:0 0 34px;height:34px;border-radius:50%;background:#30363d;color:#f0f6fc;display:flex;align-items:center;justify-content:center;font-size:15px}
+.opt:hover:not(:disabled){border-color:#58a6ff;background:#1f2937;color:#fff}
+.opt:disabled{cursor:default}
+.opt.right{border-color:#238636!important;background:#13231b!important;color:#3fb950!important}
+.opt.right b{background:#238636;color:#fff}
+.opt.wrong{border-color:#da3633!important;background:#2b1011!important;color:#f85149!important}
+.opt.wrong b{background:#da3633;color:#fff}
+.nav{display:flex;align-items:center;gap:10px;margin-top:auto;padding-top:10px}
+.nav .nb{background:#1f6feb;color:#fff;border:0;border-radius:10px;padding:12px 18px;font-size:15px;font-weight:700}
+.nav .nb:hover:not(:disabled){background:#388bfd}
+.nav .nb:disabled{background:#21262d;color:#484f58;cursor:default}
+#result{flex:1;text-align:center;border:2px dashed #30363d;border-radius:10px;padding:10px;font-weight:700;min-height:46px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#8b949e}
+#result.ok{color:#3fb950;border-color:#238636;background:#13231b}
+#result.no{color:#f85149;border-color:#da3633;background:#2b1011}
+.dots{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
+.dot{width:32px;height:32px;border-radius:8px;border:1px solid #30363d;background:#21262d;color:#c9d1d9;font-size:13px;font-weight:700}
+.dot:hover{background:#30363d}
+.dot.cur{outline:2px solid #58a6ff;border-color:#58a6ff}
+.dot.ok{background:#dc2626;color:#fff;border-color:#dc2626}
+.dot.no{background:#04070a;color:#6e7681;border-color:#21262d}
+
+/* Modal */
+#modal{position:fixed;inset:0;background:rgba(0,0,0,0.8);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:100}
+#modal.show{display:flex}
+.box{background:#161b22;border:1px solid #30363d;border-radius:14px;width:min(860px,96vw);max-height:92vh;overflow:auto;padding:20px;color:#c9d1d9}
+.box h3{margin-top:0;color:#f0f6fc;display:flex;justify-content:space-between;align-items:center}
+.qe{border:1px solid #30363d;background:#0d1117;border-radius:10px;padding:12px;margin-bottom:12px}
+.qe textarea,.qe input,.qe select{width:100%;font:inherit;padding:8px 10px;border:1px solid #30363d;border-radius:6px;background:#161b22;color:#f0f6fc;margin-top:4px}
+.qe .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.qe label{font-size:13px;font-weight:600;color:#8b949e}
+.gh-box{background:#13231b;border:1px solid #238636;border-radius:10px;padding:14px;margin-bottom:14px}
+.gh-box input{background:#0d1117;border:1px solid #30363d;color:#fff;padding:8px;border-radius:6px;width:100%;font-family:monospace;font-size:13px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#238636;color:#fff;padding:12px 24px;border-radius:10px;display:none;z-index:200;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.5)}
+@media(max-width:900px){.app{flex-direction:column;height:auto}#mosaic{max-width:100%}}
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+  <a href="../index.html" class="back-link">⬅ Về kho Minigame Hóa học 10</a>
+  <h1 class="app-title">Trò chơi: Tô Hình Đoán Chữ (20 - 11)</h1>
+  <div style="font-size:13px;color:#8b949e">Môn: Hóa học 10</div>
+</div>
+
+<div class="app">
+  <section class="half">
+    <div class="top">
+      <h2>👆 Bấm vào một ô bất kỳ để mở câu hỏi</h2>
+      <span class="badge" id="progress">Đã trả lời 0/12</span>
+    </div>
+    <div class="mosaic-wrap"><div id="mosaic"></div></div>
+    <div class="btns">
+      <button class="btn-ui" id="btnReset">🔄 Chơi lại (Xáo trộn ô)</button>
+      <button class="btn-ui btn-accent" id="btnEdit">✏️ Soạn & Lưu bộ câu hỏi</button>
+    </div>
+  </section>
+
+  <section class="half">
+    <div class="q-container">
+      <div class="qno" id="qno"></div>
+      <div id="qtext"></div>
+      <div id="opts"></div>
+      <div class="nav">
+        <button class="nb" id="prev">◀ Câu trước</button>
+        <div id="result">Hãy chọn một đáp án</div>
+        <button class="nb" id="next">Câu sau ▶</button>
+      </div>
+      <div class="dots" id="dots"></div>
+    </div>
+  </section>
+</div>
+
+<!-- Modal Quản lý / Soạn câu hỏi -->
+<div id="modal">
+  <div class="box">
+    <h3>
+      <span>✏️ Quản lý & Soạn bộ 12 câu hỏi</span>
+      <button class="btn-ui" id="eClose">✖ Đóng</button>
+    </h3>
+
+    <!-- Khối đồng bộ GitHub -->
+    <div class="gh-box">
+      <div style="font-weight:700;color:#3fb950;margin-bottom:6px">🌐 Lưu & Xuất bản vĩnh viễn lên GitHub (dthainek.github.io/hoahoc10)</div>
+      <p style="font-size:13px;color:#c9d1d9;margin:0 0 8px 0">
+        Để câu hỏi tự cập nhật vĩnh viễn lên web cho học sinh xem được ngay, nhập <b>GitHub Personal Access Token</b> có quyền write repository <code>Dthainek/hoahoc10</code>:
+      </p>
+      <input type="password" id="ghToken" placeholder="Dán token dạng ghp_xxxx hoặc github_pat_xxxx vào đây...">
+      <div style="display:flex;gap:8px;margin-top:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn-ui btn-accent" id="btnSyncGH">🚀 Xuất bản lên GitHub ngay</button>
+        <a href="https://github.com/settings/tokens/new" target="_blank" style="color:#58a6ff;font-size:12px;text-decoration:none">Tạo token GitHub mới (tick chọn quyền "repo") ↗</a>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px">
+      <span style="font-weight:600">Danh sách 12 câu hỏi trắc nghiệm:</span>
+      <div class="btns" style="margin:0">
+        <button class="btn-ui" id="eExport">⬇ Xuất file JSON</button>
+        <button class="btn-ui" id="eImport">⬆ Nhập file JSON</button>
+        <button class="btn-ui" id="eDefault">🔄 Khôi phục mẫu Hóa 10</button>
+      </div>
+    </div>
+
+    <div id="editor"></div>
+
+    <div class="btns" style="margin-top:14px">
+      <button class="btn-ui btn-accent" id="eSaveLocal" style="padding:10px 18px">💾 Lưu vào máy (Trình duyệt này)</button>
+      <input type="file" id="file" accept=".json" hidden>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const L=['A','B','C','D'], N=12, LOCAL_KEY='hoahoc10_2011_questions', GH_TOKEN_KEY='hoahoc10_gh_token';
+const REPO_OWNER = 'Dthainek';
+const REPO_NAME = 'hoahoc10';
+const FILE_PATH = 'tohinhdoanchu/questions.json';
+
+const DEFAULT_HOA10 = [
+  { q: "Nguyên tử được cấu tạo từ các loại hạt cơ bản nào sau đây?", o: ["Proton, neutron và electron", "Chỉ proton và electron", "Chỉ neutron và electron", "Proton và hạt nhân"], a: 0 },
+  { q: "Hạt mang điện tích dương nằm trong hạt nhân nguyên tử là?", o: ["Electron", "Proton", "Neutron", "Positron"], a: 1 },
+  { q: "Bảng tuần hoàn các nguyên tố hóa học hiện đại có bao nhiêu chu kì?", o: ["5 chu kì", "6 chu kì", "7 chu kì", "8 chu kì"], a: 2 },
+  { q: "Nhóm VIIA trong bảng tuần hoàn còn được gọi là nhóm nguyên tố gì?", o: ["Kim loại kiềm", "Khí hiếm", "Kim loại kiềm thổ", "Halogen"], a: 3 },
+  { q: "Liên kết ion thường được hình thành giữa nguyên tử kim loại điển hình và?", o: ["Phi kim điển hình", "Kim loại khác", "Khí hiếm", "Hiđro"], a: 0 },
+  { q: "Trong phản ứng oxi hóa - khử, chất khử là chất?", o: ["Nhận electron", "Nhường electron", "Nhận proton", "Nhường proton"], a: 1 },
+  { q: "Cấu hình electron của nguyên tử Natri (Na, Z = 11) là?", o: ["1s² 2s² 2p⁵", "1s² 2s² 2p⁶ 3s²", "1s² 2s² 2p⁶ 3s¹", "1s² 2s² 2p⁶ 3p¹"], a: 2 },
+  { q: "Đơn chất halogen nào ở trạng thái lỏng ở điều kiện thường?", o: ["Fluorine (F₂)", "Chlorine (Cl₂)", "Iodine (I₂)", "Bromine (Br₂)"], a: 3 },
+  { q: "Số oxi hóa của nguyên tố Lưu huỳnh (S) trong phân tử H₂SO₄ là?", o: ["+6", "+4", "-2", "0"], a: 0 },
+  { q: "Trong cùng một chu kì theo chiều điện tích hạt nhân tăng dần, bán kính nguyên tử có xu hướng?", o: ["Tăng dần", "Giảm dần", "Không đổi", "Biến đổi tuần hoàn không đều"], a: 1 },
+  { q: "Khí nào sau đây có tính tẩy màu khi ẩm và được dùng để khử trùng nước?", o: ["Nitơ (N₂)", "Oxi (O₂)", "Clo (Cl₂)", "Hiđro (H₂)"], a: 2 },
+  { q: "Phản ứng tỏa nhiệt là phản ứng hóa học có đặc điểm gì?", o: ["Hấp thu năng lượng nhiệt", "Xảy ra ở 0 độ C", "Làm giảm nhiệt độ môi trường", "Giải phóng năng lượng dưới dạng nhiệt"], a: 3 }
+];
+
+let questions = DEFAULT_HOA10, state;
+
+async function initQuestions(){
+  // Ưu tiên nạp từ file questions.json trên web hosting
+  try {
+    const res = await fetch('./questions.json?t=' + Date.now());
+    if (res.ok) {
+      const data = await res.json();
+      if (Array.isArray(data) && data.length === N) {
+        questions = data;
+        newGame();
+        return;
+      }
+    }
+  } catch(e){}
+  // Fallback sang localStorage nếu có
+  try {
+    const saved = JSON.parse(localStorage.getItem(LOCAL_KEY));
+    if (Array.isArray(saved) && saved.length === N) {
+      questions = saved;
+    }
+  } catch(e){}
+  newGame();
+}
+
+const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
+const shuffle = a => { for(let i=a.length-1; i>0; i--){ const j=rnd(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+
+/* ---------- Thuật toán bố cục Mosaic 48 ô: 12 ô nét chữ "2011" ---------- */
+const GW = 35, GH = 21;
+function digitRects(d){
+  const s = rnd(3, 4);
+  if (d === '2') return [[0,0,7,2], [5,2,2,3], [0,5,7,2], [0,7,2,3], [0,10,7,2]];
+  if (d === '0') return [[0,0,7,2], [0,2,2,8], [5,2,2,s], [5,2+s,2,8-s], [0,10,7,2]];
+  return [[2,0,3,12]];
+}
+function layout(){
+  const grid = Array.from({length: GH}, () => Array(GW).fill(-1));
+  const rects = [];
+  const place = (x, y, w, h, stroke) => {
+    const id = rects.length;
+    rects.push({x, y, w, h, stroke});
+    for(let j=y; j<y+h; j++) for(let i=x; i<x+w; i++) grid[j][i] = id;
+  };
+  '2011'.split('').forEach((d, k) => digitRects(d).forEach(r => place(2 + k*8 + r[0], 4 + r[1], r[2], r[3], true)));
+  
+  let best = null;
+  for(let t=0; t<3000; t++){
+    const g = grid.map(r => r.slice()), out = [];
+    const mw = rnd(2, 35), mh = rnd(2, 12);
+    for(let y=0; y<GH; y++) for(let x=0; x<GW; x++){
+      if(g[y][x] !== -1) continue;
+      let w = 1; const wl = rnd(1, mw);
+      while(w < wl && x+w < GW && g[y][x+w] === -1) w++;
+      let h = 1; const hl = rnd(1, mh);
+      while(h < hl && y+h < GH){
+        let ok = true;
+        for(let i=0; i<w; i++) if(g[y+h][x+i] !== -1){ ok = false; break; }
+        if(!ok) break;
+        h++;
+      }
+      for(let j=0; j<h; j++) for(let i=0; i<w; i++) g[y+j][x+i] = 99;
+      out.push({x, y, w, h, stroke: false});
+    }
+    if(!best || out.length < best.length) best = out;
+    if(out.length <= 36 && out.length >= 24){ best = out; break; }
+  }
+  const bg = best;
+  while(bg.length < 36){
+    const c = bg.filter(r => r.w > 1 || r.h > 1);
+    let tot = c.reduce((s, r) => s + r.w * r.h, 0), p = Math.random() * tot, r = c[0];
+    for(const q of c){ p -= q.w * q.h; if(p <= 0){ r = q; break; } }
+    const vert = r.w > 1 && (r.h === 1 || r.w * 1.4 >= r.h);
+    if(vert){ const k = rnd(1, r.w - 1); bg.push({x: r.x + k, y: r.y, w: r.w - k, h: r.h, stroke: false}); r.w = k; }
+    else{ const k = rnd(1, r.h - 1); bg.push({x: r.x, y: r.y + k, w: r.w, h: r.h - k, stroke: false}); r.h = k; }
+  }
+  while(bg.length > 36){
+    let done = false;
+    for(let a=0; a<bg.length && !done; a++) for(let b=a+1; b<bg.length && !done; b++){
+      const A = bg[a], B = bg[b];
+      if(A.y === B.y && A.h === B.h && (A.x + A.w === B.x || B.x + B.w === A.x)){ A.x = Math.min(A.x, B.x); A.w += B.w; bg.splice(b, 1); done = true; }
+      else if(A.x === B.x && A.w === B.w && (A.y + A.h === B.y || B.y + B.h === A.y)){ A.y = Math.min(A.y, B.y); A.h += B.h; bg.splice(b, 1); done = true; }
+    }
+    if(!done) return layout();
+  }
+  return {stroke: rects.slice(), bg};
+}
+
+/* ---------- Logic trò chơi ---------- */
+function newGame(){
+  const {stroke, bg} = layout();
+  const order = shuffle([...Array(N).keys()]);
+  const cells = [];
+  stroke.forEach((r, i) => { const q = order[i]; cells.push({...r, q, l: questions[q].a}); });
+  
+  const wrong = [];
+  for(let q=0; q<N; q++) for(let l=0; l<4; l++) if(l !== questions[q].a) wrong.push([q, l]);
+  shuffle(wrong);
+  bg.forEach((r, i) => cells.push({...r, q: wrong[i][0], l: wrong[i][1]}));
+
+  state = { cells, ans: Array(N).fill(null), cur: 0 };
+  renderMosaic();
+  show();
+}
+
+function renderMosaic(){
+  const m = document.getElementById('mosaic');
+  m.innerHTML = '';
+  state.cells.forEach(c => {
+    const d = document.createElement('div');
+    d.className = 'cell';
+    d.style.cssText = `left:${c.x/GW*100}%;top:${c.y/GH*100}%;width:${c.w/GW*100}%;height:${c.h/GH*100}%`;
+    d.innerHTML = `<span>${c.q + 1}${L[c.l]}</span>`;
+    d.onclick = () => { state.cur = c.q; show(); };
+    c.el = d;
+    m.appendChild(d);
+  });
+}
+
+function paint(){
+  state.cells.forEach(c => {
+    const a = state.ans[c.q];
+    c.el.classList.remove('red', 'black', 'cur');
+    if(a !== null && a === c.l){
+      c.el.classList.add(c.l === questions[c.q].a ? 'red' : 'black');
+    }
+    if(c.q === state.cur) c.el.classList.add('cur');
+  });
+}
+
+function show(){
+  const i = state.cur, q = questions[i], a = state.ans[i];
+  document.getElementById('qno').textContent = `Câu ${String(i+1).padStart(2,'0')}:`;
+  document.getElementById('qtext').textContent = q.q;
+  const o = document.getElementById('opts');
+  o.innerHTML = '';
+  q.o.forEach((t, k) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.disabled = a !== null;
+    if(a !== null){
+      if(k === q.a) b.classList.add('right');
+      else if(k === a) b.classList.add('wrong');
+    }
+    b.innerHTML = `<b>${L[k]}</b><span>${esc(t)}</span>`;
+    b.onclick = () => answer(k);
+    o.appendChild(b);
+  });
+  
+  const r = document.getElementById('result');
+  if(a === null){
+    r.className = '';
+    r.textContent = 'Hãy chọn một đáp án';
+  } else if(a === q.a){
+    r.className = 'ok';
+    r.textContent = `✅ Chính xác! Ô ${i+1}${L[a]} được tô đỏ`;
+  } else {
+    r.className = 'no';
+    r.textContent = `❌ Chưa chính xác! Ô ${i+1}${L[a]} bị tô đen (Đáp án đúng: ${L[q.a]})`;
+  }
+  
+  document.getElementById('prev').disabled = i === 0;
+  document.getElementById('next').disabled = i === N-1;
+  const done = state.ans.filter(x => x !== null).length;
+  document.getElementById('progress').textContent = `Đã trả lời ${done}/${N}`;
+  
+  const dots = document.getElementById('dots');
+  dots.innerHTML = '';
+  for(let k=0; k<N; k++){
+    const d = document.createElement('button');
+    d.className = 'dot';
+    d.textContent = k + 1;
+    const x = state.ans[k];
+    if(x !== null) d.classList.add(x === questions[k].a ? 'ok' : 'no');
+    if(k === i) d.classList.add('cur');
+    d.onclick = () => { state.cur = k; show(); };
+    dots.appendChild(d);
+  }
+  paint();
+}
+
+function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+
+function answer(k){
+  if(state.ans[state.cur] !== null) return;
+  state.ans[state.cur] = k;
+  show();
+  if(state.ans.every(x => x !== null)){
+    const ok = state.ans.filter((x, i) => x === questions[i].a).length;
+    toast(ok === N ? '🎉 Xuất sắc! Bạn đã trả lời đúng 12/12 câu và hoàn thành bức tranh 20 - 11!' : `Hoàn thành trò chơi: Bạn đạt ${ok}/${N} câu đúng!`);
+  }
+}
+
+function toast(msg, bg='#238636'){
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.background = bg;
+  t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 5000);
+}
+
+prev.onclick = () => { if(state.cur > 0){ state.cur--; show(); } };
+next.onclick = () => { if(state.cur < N-1){ state.cur++; show(); } };
+btnReset.onclick = newGame;
+
+/* ---------- Soạn và Đồng bộ GitHub ---------- */
+function buildEditor(list){
+  const e = document.getElementById('editor');
+  e.innerHTML = '';
+  list.forEach((q, i) => {
+    const d = document.createElement('div');
+    d.className = 'qe';
+    d.innerHTML = `<b>Câu ${i+1}:</b><textarea rows="2" class="qq"></textarea>` +
+      `<div class="g">` +
+      L.map((l, k) => `<label>${l}: <input class="oo" data-k="${k}"></label>`).join('') +
+      `</div>` +
+      `<label style="display:block;margin-top:6px">Đáp án đúng: ` +
+      `<select class="aa">${L.map((l, k) => `<option value="${k}">${l}</option>`).join('')}</select></label>`;
+    d.querySelector('.qq').value = q.q;
+    d.querySelectorAll('.oo').forEach(inp => inp.value = q.o[inp.dataset.k]);
+    d.querySelector('.aa').value = q.a;
+    e.appendChild(d);
+  });
+}
+
+function readEditor(){
+  return [...document.querySelectorAll('.qe')].map(d => ({
+    q: d.querySelector('.qq').value.trim() || '(Chưa có nội dung)',
+    o: [...d.querySelectorAll('.oo')].map(i => i.value.trim() || '—'),
+    a: +d.querySelector('.aa').value
+  }));
+}
+
+btnEdit.onclick = () => {
+  buildEditor(questions);
+  document.getElementById('ghToken').value = localStorage.getItem(GH_TOKEN_KEY) || '';
+  document.getElementById('modal').classList.add('show');
+};
+eClose.onclick = () => document.getElementById('modal').classList.remove('show');
+
+eSaveLocal.onclick = () => {
+  questions = readEditor();
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(questions));
+  document.getElementById('modal').classList.remove('show');
+  newGame();
+  toast('Đã lưu bộ câu hỏi vào trình duyệt máy này!');
+};
+
+eDefault.onclick = () => buildEditor(DEFAULT_HOA10);
+eExport.onclick = () => {
+  const data = JSON.stringify(readEditor(), null, 2);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([data], {type: 'application/json'}));
+  a.download = 'bo-cau-hoi-hoa10.json';
+  a.click();
+};
+eImport.onclick = () => file.click();
+file.onchange = () => {
+  const f = file.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const s = JSON.parse(r.result);
+      if(!Array.isArray(s) || s.length !== N) throw new Error();
+      buildEditor(s);
+      toast('Đã nạp file JSON thành công!');
+    } catch(err){
+      alert('File JSON không hợp lệ! Cần đúng 12 câu hỏi trắc nghiệm.');
+    }
+  };
+  r.readAsText(f);
+  file.value = '';
+};
+
+/* Xuất bản thẳng lên GitHub API */
+btnSyncGH.onclick = async () => {
+  const token = document.getElementById('ghToken').value.trim();
+  if(!token){
+    alert('Vui lòng dán GitHub Personal Access Token để có quyền lưu lên repository!');
+    return;
+  }
+  localStorage.setItem(GH_TOKEN_KEY, token);
+  const updatedQuestions = readEditor();
+  
+  btnSyncGH.disabled = true;
+  btnSyncGH.textContent = '⏳ Đang đẩy lên GitHub...';
+  
+  try {
+    // 1. Lấy SHA của file cũ nếu có
+    let sha = null;
+    const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+      }
+    });
+    if(getRes.ok){
+      const fileData = await getRes.json();
+      sha = fileData.sha;
+    }
+    
+    // 2. Mã hóa UTF-8 sang Base64
+    const jsonStr = JSON.stringify(updatedQuestions, null, 2);
+    const utf8Bytes = new TextEncoder().encode(jsonStr);
+    let binary = '';
+    utf8Bytes.forEach(b => binary += String.fromCharCode(b));
+    const contentBase64 = btoa(binary);
+    
+    // 3. PUT commit cập nhật file
+    const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+      method: 'PUT',
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+        'Accept': 'application/vnd.github.v3+json'
+      },
+      body: JSON.stringify({
+        message: 'Cập nhật bộ câu hỏi trò chơi Tô hình đoán chữ 20-11',
+        content: contentBase64,
+        sha: sha || undefined
+      })
+    });
+    
+    if(!putRes.ok){
+      const errData = await putRes.json();
+      throw new Error(errData.message || 'Lỗi đẩy lên GitHub');
+    }
+    
+    questions = updatedQuestions;
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(questions));
+    document.getElementById('modal').classList.remove('show');
+    newGame();
+    toast('🎉 Đã xuất bản lên GitHub thành công! Web sẽ cập nhật cho học sinh sau 1 phút.');
+  } catch(err){
+    alert('Không thể lưu lên GitHub: ' + err.message + '\nKiểm tra lại quyền của Token (cần quyền Contents: Read and write).');
+  } finally {
+    btnSyncGH.disabled = false;
+    btnSyncGH.textContent = '🚀 Xuất bản lên GitHub ngay';
+  }
+};
+
+initQuestions();
+</script>
+</body>
+</html>

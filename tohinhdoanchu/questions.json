@@ -1,0 +1,62 @@
+[
+  {
+    "q": "Nguyên tử được cấu tạo từ các loại hạt cơ bản nào sau đây?",
+    "o": ["Proton, neutron và electron", "Chỉ proton và electron", "Chỉ neutron và electron", "Proton và hạt nhân"],
+    "a": 0
+  },
+  {
+    "q": "Hạt mang điện tích dương nằm trong hạt nhân nguyên tử là?",
+    "o": ["Electron", "Proton", "Neutron", "Positron"],
+    "a": 1
+  },
+  {
+    "q": "Bảng tuần hoàn các nguyên tố hóa học hiện đại có bao nhiêu chu kì?",
+    "o": ["5 chu kì", "6 chu kì", "7 chu kì", "8 chu kì"],
+    "a": 2
+  },
+  {
+    "q": "Nhóm VIIA trong bảng tuần hoàn còn được gọi là nhóm nguyên tố gì?",
+    "o": ["Kim loại kiềm", "Khí hiếm", "Kim loại kiềm thổ", "Halogen"],
+    "a": 3
+  },
+  {
+    "q": "Liên kết ion thường được hình thành giữa nguyên tử kim loại điển hình và?",
+    "o": ["Phi kim điển hình", "Kim loại khác", "Khí hiếm", "Hiđro"],
+    "a": 0
+  },
+  {
+    "q": "Trong phản ứng oxi hóa - khử, chất khử là chất?",
+    "o": ["Nhận electron", "Nhường electron", "Nhận proton", "Nhường proton"],
+    "a": 1
+  },
+  {
+    "q": "Cấu hình electron của nguyên tử Natri (Na, Z = 11) là?",
+    "o": ["1s² 2s² 2p⁵", "1s² 2s² 2p⁶ 3s²", "1s² 2s² 2p⁶ 3s¹", "1s² 2s² 2p⁶ 3p¹"],
+    "a": 2
+  },
+  {
+    "q": "Đơn chất halogen nào ở trạng thái lỏng ở điều kiện thường?",
+    "o": ["Fluorine (F₂)", "Chlorine (Cl₂)", "Iodine (I₂)", "Bromine (Br₂)"],
+    "a": 3
+  },
+  {
+    "q": "Số oxi hóa của nguyên tố Lưu huỳnh (S) trong phân tử H₂SO₄ là?",
+    "o": ["+6", "+4", "-2", "0"],
+    "a": 0
+  },
+  {
+    "q": "Trong cùng một chu kì theo chiều điện tích hạt nhân tăng dần, bán kính nguyên tử có xu hướng?",
+    "o": ["Tăng dần", "Giảm dần", "Không đổi", "Biến đổi tuần hoàn không đều"],
+    "a": 1
+  },
+  {
+    "q": "Khí nào sau đây có tính tẩy màu khi ẩm và được dùng để khử trùng nước?",
+    "o": ["Nitơ (N₂)", "Oxi (O₂)", "Clo (Cl₂)", "Hiđro (H₂)"],
+    "a": 2
+  },
+  {
+    "q": "Phản ứng tỏa nhiệt là phản ứng hóa học có đặc điểm gì?",
+    "o": ["Hấp thu năng lượng nhiệt", "Xảy ra ở 0 độ C", "Làm giảm nhiệt độ môi trường", "Giải phóng năng lượng dưới dạng nhiệt"],
+    "a": 3
+  }
+]
