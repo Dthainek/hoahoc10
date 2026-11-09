@@ -1,0 +1,122 @@
+[
+  {
+    "q": "Nguyên tử kim loại có xu hướng nhường electron hóa trị để tạo thành ion mang điện tích dương, gọi là gì?",
+    "o": [
+      "Cation (ion dương)",
+      "Anion (ion âm)",
+      "Phân tử trung hòa",
+      "Khí hiếm"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Nguyên tử phi kim có xu hướng nhận thêm electron để đạt cấu hình electron bền vững của khí hiếm, tạo thành gì?",
+    "o": [
+      "Cation (ion dương)",
+      "Anion (ion âm)",
+      "Hạt proton tự do",
+      "Đồng vị mới"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Bản chất của liên kết ion là lực tương tác nào sau đây?",
+    "o": [
+      "Lực liên kết cộng hóa trị giữa các nguyên tử",
+      "Lực van der Waals giữa các phân tử",
+      "Lực hút tĩnh điện giữa các ion mang điện tích trái dấu",
+      "Lực đẩy giữa các hạt nhân mang điện tích dương"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Liên kết ion thường được hình thành giữa nguyên tử của các nguyên tố nào sau đây?",
+    "o": [
+      "Hai phi kim điển hình",
+      "Hai kim loại điển hình",
+      "Khí hiếm và kim loại",
+      "Kim loại điển hình và phi kim điển hình"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Dãy nào sau đây chỉ gồm các ion đa nguyên tử?",
+    "o": [
+      "NH₄⁺, SO₄²⁻, NO₃⁻, CO₃²⁻",
+      "Na⁺, Mg²⁺, Ca²⁺, K⁺",
+      "Cl⁻, Br⁻, O²⁻, S²⁻",
+      "Fe³⁺, Al³⁺, Cu²⁺, Zn²⁺"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Phương trình nào sau đây biểu diễn đúng sự tạo thành cation Mg²⁺ từ nguyên tử Mg (Z = 12)?",
+    "o": [
+      "Mg + 2e → Mg²⁺",
+      "Mg → Mg²⁺ + 2e",
+      "Mg → Mg²⁺ + 1e",
+      "Mg²⁺ + 2e → Mg"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Phương trình nào sau đây biểu diễn đúng sự hình thành anion oxide (O²⁻) từ nguyên tử oxygen (Z = 8)?",
+    "o": [
+      "O → O²⁻ + 2e",
+      "O + 1e → O²⁻",
+      "O + 2e → O²⁻",
+      "O²⁻ → O + 2e"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Dựa vào hiệu độ âm điện (Δχ) theo thang Pauling, liên kết giữa 2 nguyên tử thường là liên kết ion khi nào?",
+    "o": [
+      "Δχ < 0,4",
+      "0,4 ≤ Δχ < 1,0",
+      "1,0 ≤ Δχ < 1,7",
+      "Δχ ≥ 1,7"
+    ],
+    "a": 3
+  },
+  {
+    "q": "Chất nào sau đây là hợp chất có liên kết ion trong phân tử?",
+    "o": [
+      "NaCl (Muối ăn)",
+      "HCl (Khí hiđroclorua)",
+      "H₂O (Nước tinh khiết)",
+      "CO₂ (Khí cacbonic)"
+    ],
+    "a": 0
+  },
+  {
+    "q": "Ở điều kiện thường, các hợp chất ion có đặc điểm vật lí nào sau đây?",
+    "o": [
+      "Thường ở thể lỏng, dễ bay hơi",
+      "Là chất rắn, có nhiệt độ nóng chảy và nhiệt độ sôi cao",
+      "Thường ở thể khí, nhiệt độ nóng chảy thấp",
+      "Mềm dẻo, dẫn nhiệt rất kém"
+    ],
+    "a": 1
+  },
+  {
+    "q": "Các hợp chất ion có khả năng dẫn điện tốt trong trường hợp nào sau đây?",
+    "o": [
+      "Ở trạng thái tinh thể rắn, khô khan",
+      "Khi bị đập vỡ thành hạt nhỏ ở thể rắn",
+      "Khi nóng chảy hoặc khi hòa tan trong nước",
+      "Trong mọi điều kiện nhiệt độ"
+    ],
+    "a": 2
+  },
+  {
+    "q": "Trong mạng tinh thể muối ăn NaCl, xung quanh mỗi ion Na⁺ được bao quanh bởi bao nhiêu ion Cl⁻ gần nhất?",
+    "o": [
+      "4 ion Cl⁻",
+      "8 ion Cl⁻",
+      "12 ion Cl⁻",
+      "6 ion Cl⁻"
+    ],
+    "a": 3
+  }
+]
