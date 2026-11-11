@@ -5,22 +5,22 @@
       "title": "Bộ Liên kết ion",
       "questions": [
         {
-          "q": "Nguyên tử kim loại có xu hướng nhường electron hóa trị để tạo thành ion mang điện tích dương, gọi là gì?",
+          "q": "Khi nguyên tử kim loại nhường electron hóa trị thì tạo thành",
           "o": [
-            "Cation (ion dương)",
-            "Anion (ion âm)",
-            "Phân tử trung hòa",
-            "Khí hiếm"
+            "cation (ion dương)",
+            "anion (ion âm)",
+            "phân tử trung hòa",
+            "khí hiếm"
           ],
           "a": 0
         },
         {
-          "q": "Nguyên tử phi kim có xu hướng nhận thêm electron để đạt cấu hình electron bền vững của khí hiếm, tạo thành gì?",
+          "q": "Khi nguyên tử phi kim nhận electron hóa trị thì tạo thành",
           "o": [
-            "Cation (ion dương)",
-            "Anion (ion âm)",
-            "Hạt proton tự do",
-            "Đồng vị mới"
+            "cation (ion dương)",
+            "anion (ion âm)",
+            "hạt proton tự do",
+            "dồng vị mới"
           ],
           "a": 1
         },
@@ -75,7 +75,7 @@
           "a": 2
         },
         {
-          "q": "Cấu hình electron của ion K+ giống với khí nào sau đây?",
+          "q": "Cấu hình electron của ion K⁺ giống với khí nào sau đây?",
           "o": [
             "He",
             "Ne",
@@ -85,7 +85,7 @@
           "a": 3
         },
         {
-          "q": "Chất nào sau đây là hợp chất có liên kết ion trong phân tử?",
+          "q": "Hợp chất nào sau đây chứa liên kết ion trong phân tử?",
           "o": [
             "NaCl (Muối ăn)",
             "HCl (Khí hydrogen chloride)",
@@ -95,7 +95,7 @@
           "a": 0
         },
         {
-          "q": "Một ion Ca2+ cần kết hợp với bao nhiêu ion Cl- để tạo thành phân tử trung hòa về điện?",
+          "q": "Một ion Ca²⁺ cần kết hợp với bao nhiêu ion Cl⁻ để tạo thành phân tử trung hòa về điện?",
           "o": [
             "1",
             "2",
@@ -105,17 +105,17 @@
           "a": 1
         },
         {
-          "q": "Khi nguyên tử nhường (cho) hoặc nhận (thu) electron sẽ tạo thành",
+          "q": "Điều nào dưới đây đúng khi nói về ion S²⁻ ?",
           "o": [
-            "phân tử.",
-            "cation.",
-            "ion.",
-            "anion"
+            "Có chứa 18 proton.",
+            "Trung hoà về điện.",
+            "Có chứa 18 electron.",
+            "Được tạo thành khi nguyên tử sulfur (S) nhận vào 2 proton."
           ],
           "a": 2
         },
         {
-          "q": "Số hợp chất ion được tạo thành từ các ion sau: K+, Ca2+, F-, O2- là:",
+          "q": "Số hợp chất ion được tạo thành từ các ion sau: K⁺, Ca²⁺, F⁻, O²⁻ là:",
           "o": [
             "2",
             "3",
