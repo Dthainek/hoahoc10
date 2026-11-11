@@ -561,7 +561,7 @@ function handleTimeout(qIndex){
   stopTimer();
   state.ans[qIndex] = -1;
   show();
-  toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}! Cả 4 ô chuyển sang màu đối lập.`, '#0e7490');
+  toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}!`, '#0e7490');
   checkGameFinished();
 }
 
@@ -699,20 +699,20 @@ function show(){
   const r = document.getElementById('result');
   if(a === null){
     r.className = '';
-    r.textContent = 'Hãy chọn một đáp án (tối đa 30s)';
+    r.textContent = 'Hãy chọn một đáp án';
     updateTimerUI(state.timesLeft[i]);
     startTimer();
   } else if(a === -1){
     r.className = 'no';
-    r.textContent = `⏰ Hết giờ (30s)! Cả 4 ô câu ${i+1} chuyển màu đối lập (Đáp án đúng: ${L[q.a]})`;
+    r.textContent = '⏰ Hết giờ!';
     setTimerDoneUI();
   } else if(a === q.a){
     r.className = 'ok';
-    r.textContent = `✅ Chính xác! Ô ${i+1}${L[a]} được tô đỏ, 3 ô còn lại tô màu đối lập`;
+    r.textContent = '✅ Đúng!';
     setTimerDoneUI();
   } else {
     r.className = 'no';
-    r.textContent = `❌ Sai rồi! Cả 4 ô câu ${i+1} tô màu đối lập (Đáp án đúng: ${L[q.a]})`;
+    r.textContent = '❌ Sai!';
     setTimerDoneUI();
   }
   
