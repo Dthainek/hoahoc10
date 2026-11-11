@@ -29,14 +29,13 @@ html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sa
 .top h2{margin:0;font-size:15px;color:#1e293b;font-weight:700;display:flex;align-items:center;gap:6px}
 .top h2 span.icon{color:#4f46e5;font-size:18px}
 .mosaic-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:4px}
-#mosaic{position:relative;width:100%;aspect-ratio:35/21;max-height:100%;max-width:calc((100vh - 180px) * 35 / 21);background:#ffffff;border:2px solid #0f172a;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+#mosaic{position:relative;width:100%;aspect-ratio:36/21;max-height:100%;max-width:calc((100vh - 180px) * 36 / 21);background:#ffffff;border:2px solid #0f172a;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
 .cell{position:absolute;border:1.5px solid #0f172a;background:#ffffff;color:#0f172a;display:flex;align-items:center;justify-content:center;
   container-type:size;cursor:pointer;overflow:hidden;transition:background .25s;user-select:none}
 .cell span{font-weight:800;font-size:clamp(8px,min(45cqh,28cqw),25px);line-height:1;letter-spacing:0.3px}
 .cell:hover{background:#f1f5f9;z-index:1}
 .cell.red{background:#dc2626!important;color:#ffffff!important;border-color:#991b1b!important}
-.cell.black{background:#0f172a!important;color:#f8fafc!important;border-color:#020617!important}
-.cell.cur{outline:4px solid #2563eb;outline-offset:-4px;z-index:3}
+.cell.cur{outline:3.5px solid #2563eb;outline-offset:-3.5px;box-shadow:inset 0 0 0 5px rgba(255,255,255,0.8);z-index:3}
 .left-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
 button{font:inherit;cursor:pointer;transition:all .15s}
@@ -84,7 +83,20 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .dot:hover{background:#f1f5f9;border-color:#94a3b8}
 .dot.cur{outline:2.5px solid #2563eb;border-color:#2563eb;color:#2563eb}
 .dot.ok{background:#dc2626;color:#ffffff;border-color:#dc2626}
-.dot.no{background:#0f172a;color:#ffffff;border-color:#0f172a}
+.dot.no{background:#0e7490;color:#ffffff;border-color:#155e75}
+
+/* Popup kết thúc */
+#finishModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:150}
+#finishModal.show{display:flex}
+.finish-box{background:#ffffff;border-radius:20px;width:min(460px,92vw);padding:30px 24px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .3s cubic-bezier(.16,1,.3,1)}
+@keyframes popIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
+.finish-icon{font-size:56px;margin-bottom:10px}
+.finish-title{margin:0 0 8px;font-size:23px;font-weight:800;color:#0f172a}
+.finish-title.win{color:#dc2626}
+.finish-sub{margin:0 0 16px;font-size:18px;font-weight:700;color:#b45309}
+.finish-sub.lose{color:#475569;font-weight:600;font-size:15px}
+.finish-score{display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;padding:6px 16px;border-radius:999px;font-size:14px;font-weight:700;color:#334155;margin-bottom:22px}
+.finish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
 /* Modal soạn và quản lý bộ câu hỏi */
 #modal{position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
@@ -110,7 +122,7 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 <div class="header-bar">
   <div class="header-left">
     <a href="../index.html" class="back-link">⬅ Về kho Minigame Hóa học 10</a>
-    <h1 class="app-title">Tô Hình Đoán Chữ (20 - 11)</h1>
+    <h1 class="app-title">Tô Hình Đoán Chữ (20-11)</h1>
   </div>
   
   <div class="set-selector-wrap">
@@ -207,6 +219,20 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <div class="btns" style="margin-top:16px">
       <button class="btn-ui btn-primary" id="eSaveLocal" style="padding:10px 20px;font-size:14px">💾 Lưu bộ đề vào máy này</button>
       <input type="file" id="file" accept=".json" hidden>
+    </div>
+  </div>
+</div>
+
+<!-- Popup kết thúc trò chơi -->
+<div id="finishModal">
+  <div class="finish-box">
+    <div class="finish-icon" id="finishIcon">🎉</div>
+    <h2 class="finish-title" id="finishTitle">Chúc mừng bạn đã hoàn thành!</h2>
+    <p class="finish-sub" id="finishSub">Chào mừng ngày Nhà giáo Việt Nam</p>
+    <div class="finish-score" id="finishScore">Kết quả: 12/12 câu đúng</div>
+    <div class="finish-actions">
+      <button class="btn-ui" id="btnFinishView">👀 Xem lại bức tranh</button>
+      <button class="btn-ui btn-primary" id="btnFinishReplay">🔄 Chơi lại</button>
     </div>
   </div>
 </div>
@@ -375,14 +401,45 @@ document.getElementById('setSelect').onchange = (e) => {
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const shuffle = a => { for(let i=a.length-1; i>0; i--){ const j=rnd(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-/* ---------- Thuật toán bố cục Mosaic 48 ô: 12 ô nét chữ "2011" ---------- */
-const GW = 35, GH = 21;
-function digitRects(d){
-  const s = rnd(3, 4);
-  if (d === '2') return [[0,0,7,2], [5,2,2,3], [0,5,7,2], [0,7,2,3], [0,10,7,2]];
-  if (d === '0') return [[0,0,7,2], [0,2,2,8], [5,2,2,s], [5,2+s,2,8-s], [0,10,7,2]];
-  return [[2,0,3,12]];
+/* ---------- Thuật toán bố cục Mosaic 48 ô: 12 ô nét chữ "20-11" ---------- */
+const GW = 36, GH = 21;
+const CONTRAST_COLORS = [
+  { bg: '#0e7490', border: '#155e75' }, // Cyan đậm (đối lập trực tiếp với đỏ)
+  { bg: '#0f766e', border: '#115e59' }, // Xanh ngọc Teal đậm
+  { bg: '#15803d', border: '#166534' }, // Xanh lá đậm
+  { bg: '#0369a1', border: '#075985' }, // Xanh dương Sky đậm
+  { bg: '#1d4ed8', border: '#1e40af' }, // Xanh lam đậm
+  { bg: '#334155', border: '#1e293b' }  // Xám xanh than
+];
+
+function get2011Rects(){
+  const rects = [];
+  // '2' tại x=2, y=4 (7x12) -> 5 ô
+  const v2 = rnd(0, 1);
+  const two = v2 === 0
+    ? [[0,0,7,2], [5,2,2,3], [0,5,7,2], [0,7,2,3], [0,10,7,2]]
+    : [[0,0,5,2], [5,0,2,5], [0,5,7,2], [0,7,2,5], [2,10,5,2]];
+  two.forEach(r => rects.push([2 + r[0], 4 + r[1], r[2], r[3]]));
+
+  // '0' tại x=11, y=4 (7x12) -> 4 ô
+  const v0 = rnd(0, 1);
+  const zero = v0 === 0
+    ? [[0,0,7,2], [0,2,2,8], [5,2,2,8], [0,10,7,2]]
+    : [[0,0,2,12], [2,0,3,2], [2,10,3,2], [5,0,2,12]];
+  zero.forEach(r => rects.push([11 + r[0], 4 + r[1], r[2], r[3]]));
+
+  // '-' tại x=20, y=9 (4x2) -> 1 ô
+  rects.push([20, 9, 4, 2]);
+
+  // '1' tại x=26, y=4 (3x12) -> 1 ô
+  rects.push([26, 4, 3, 12]);
+
+  // '1' tại x=31, y=4 (3x12) -> 1 ô
+  rects.push([31, 4, 3, 12]);
+
+  return rects;
 }
+
 function layout(){
   const grid = Array.from({length: GH}, () => Array(GW).fill(-1));
   const rects = [];
@@ -391,12 +448,12 @@ function layout(){
     rects.push({x, y, w, h, stroke});
     for(let j=y; j<y+h; j++) for(let i=x; i<x+w; i++) grid[j][i] = id;
   };
-  '2011'.split('').forEach((d, k) => digitRects(d).forEach(r => place(2 + k*8 + r[0], 4 + r[1], r[2], r[3], true)));
+  get2011Rects().forEach(r => place(r[0], r[1], r[2], r[3], true));
   
   let best = null;
   for(let t=0; t<3000; t++){
     const g = grid.map(r => r.slice()), out = [];
-    const mw = rnd(2, 35), mh = rnd(2, 12);
+    const mw = rnd(2, 36), mh = rnd(2, 12);
     for(let y=0; y<GH; y++) for(let x=0; x<GW; x++){
       if(g[y][x] !== -1) continue;
       let w = 1; const wl = rnd(1, mw);
@@ -503,40 +560,80 @@ function handleTimeout(qIndex){
   if(!state || state.ans[qIndex] !== null) return;
   stopTimer();
   state.ans[qIndex] = -1;
-  
-  // Chọn 1 ô đáp án sai của câu này để tô đen
-  const wrongCells = state.cells.filter(c => c.q === qIndex && c.l !== questions[qIndex].a);
-  if(wrongCells.length > 0){
-    state.timeoutTiles = state.timeoutTiles || {};
-    state.timeoutTiles[qIndex] = wrongCells[0].l;
-  }
-  
   show();
-  toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}! Câu này tính là sai.`, '#dc2626');
+  toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}! Cả 4 ô chuyển sang màu đối lập.`, '#0e7490');
   checkGameFinished();
 }
+
+function showFinishPopup(ok){
+  const modal = document.getElementById('finishModal');
+  const icon = document.getElementById('finishIcon');
+  const title = document.getElementById('finishTitle');
+  const sub = document.getElementById('finishSub');
+  const score = document.getElementById('finishScore');
+  
+  if(ok === N){
+    icon.textContent = '🎉💐';
+    title.textContent = 'Chúc mừng bạn đã hoàn thành!';
+    title.className = 'finish-title win';
+    sub.textContent = 'Chào mừng ngày Nhà giáo Việt Nam';
+    sub.className = 'finish-sub';
+    score.textContent = `Kết quả xuất sắc: ${ok}/${N} câu đúng`;
+  } else {
+    icon.textContent = '💪📚';
+    title.textContent = 'Bạn cần cố gắng hơn';
+    title.className = 'finish-title';
+    sub.textContent = 'Hãy ôn tập thêm và thử chinh phục lại bức tranh 20-11 nhé!';
+    sub.className = 'finish-sub lose';
+    score.textContent = `Kết quả: ${ok}/${N} câu đúng`;
+  }
+  modal.classList.add('show');
+}
+
+document.getElementById('btnFinishView').onclick = () => {
+  document.getElementById('finishModal').classList.remove('show');
+};
+document.getElementById('btnFinishReplay').onclick = () => {
+  document.getElementById('finishModal').classList.remove('show');
+  newGame();
+};
 
 function checkGameFinished(){
   if(state.ans.every(x => x !== null)){
     stopTimer();
     const ok = state.ans.filter((x, i) => x === questions[i].a).length;
-    toast(ok === N ? '🎉 Xuất sắc! Bức tranh thông điệp 20 - 11 màu đỏ đã hiện ra trọn vẹn!' : `Hoàn thành trò chơi! Bạn trả lời đúng ${ok}/${N} câu.`);
+    setTimeout(() => showFinishPopup(ok), 350);
   }
 }
 
 function newGame(){
   stopTimer();
+  document.getElementById('finishModal').classList.remove('show');
   const {stroke, bg} = layout();
   const order = shuffle([...Array(N).keys()]);
   const cells = [];
-  stroke.forEach((r, i) => { const q = order[i]; cells.push({...r, q, l: questions[q].a}); });
+  
+  // Gán 4 màu đối lập khác nhau cho 4 phương án A, B, C, D của mỗi câu hỏi
+  const qColors = [];
+  for(let q=0; q<N; q++){
+    qColors.push(shuffle([...CONTRAST_COLORS]).slice(0, 4));
+  }
+
+  stroke.forEach((r, i) => {
+    const q = order[i];
+    const l = questions[q].a;
+    cells.push({...r, q, l, altColor: qColors[q][l]});
+  });
   
   const wrong = [];
   for(let q=0; q<N; q++) for(let l=0; l<4; l++) if(l !== questions[q].a) wrong.push([q, l]);
   shuffle(wrong);
-  bg.forEach((r, i) => cells.push({...r, q: wrong[i][0], l: wrong[i][1]}));
+  bg.forEach((r, i) => {
+    const q = wrong[i][0], l = wrong[i][1];
+    cells.push({...r, q, l, altColor: qColors[q][l]});
+  });
 
-  state = { cells, ans: Array(N).fill(null), timesLeft: Array(N).fill(30), cur: 0, timeoutTiles: {} };
+  state = { cells, ans: Array(N).fill(null), timesLeft: Array(N).fill(30), cur: 0 };
   renderMosaic();
   show();
 }
@@ -558,12 +655,21 @@ function renderMosaic(){
 function paint(){
   state.cells.forEach(c => {
     const a = state.ans[c.q];
-    c.el.classList.remove('red', 'black', 'cur');
+    c.el.classList.remove('red', 'cur');
+    c.el.style.backgroundColor = '';
+    c.el.style.borderColor = '';
+    c.el.style.color = '';
+    
     if(a !== null){
-      if(a === c.l){
-        c.el.classList.add(c.l === questions[c.q].a ? 'red' : 'black');
-      } else if(a === -1 && state.timeoutTiles && state.timeoutTiles[c.q] === c.l){
-        c.el.classList.add('black');
+      const isRightAnswer = (a === questions[c.q].a);
+      if(isRightAnswer && c.l === questions[c.q].a){
+        // Chọn đúng: tô đỏ ô đáp án đúng
+        c.el.classList.add('red');
+      } else {
+        // 3 ô còn lại (nếu đúng) hoặc cả 4 ô (nếu sai/hết giờ): tô màu đối lập của đỏ
+        c.el.style.backgroundColor = c.altColor.bg;
+        c.el.style.borderColor = c.altColor.border;
+        c.el.style.color = '#ffffff';
       }
     }
     if(c.q === state.cur) c.el.classList.add('cur');
@@ -598,15 +704,15 @@ function show(){
     startTimer();
   } else if(a === -1){
     r.className = 'no';
-    r.textContent = `⏰ Hết thời gian (30s)! Bạn không kịp chọn đáp án (Đáp án đúng: ${L[q.a]})`;
+    r.textContent = `⏰ Hết giờ (30s)! Cả 4 ô câu ${i+1} chuyển màu đối lập (Đáp án đúng: ${L[q.a]})`;
     setTimerDoneUI();
   } else if(a === q.a){
     r.className = 'ok';
-    r.textContent = `✅ Chính xác! Ô ${i+1}${L[a]} được tô đỏ`;
+    r.textContent = `✅ Chính xác! Ô ${i+1}${L[a]} được tô đỏ, 3 ô còn lại tô màu đối lập`;
     setTimerDoneUI();
   } else {
     r.className = 'no';
-    r.textContent = `❌ Sai rồi! Ô ${i+1}${L[a]} bị tô đen (Đáp án đúng: ${L[q.a]})`;
+    r.textContent = `❌ Sai rồi! Cả 4 ô câu ${i+1} tô màu đối lập (Đáp án đúng: ${L[q.a]})`;
     setTimerDoneUI();
   }
   
