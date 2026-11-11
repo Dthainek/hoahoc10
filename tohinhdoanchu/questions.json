@@ -75,12 +75,12 @@
           "a": 2
         },
         {
-          "q": "Dựa vào hiệu độ âm điện (Δχ) theo thang Pauling, liên kết giữa 2 nguyên tử thường là liên kết ion khi nào?",
+          "q": "Cấu hình electron của ion K+ giống với khí nào sau đây?",
           "o": [
-            "Δχ < 0,4",
-            "0,4 ≤ Δχ < 1,0",
-            "1,0 ≤ Δχ < 1,7",
-            "Δχ ≥ 1,7"
+            "He",
+            "Ne",
+            "K",
+            "Ar"
           ],
           "a": 3
         },
@@ -88,39 +88,39 @@
           "q": "Chất nào sau đây là hợp chất có liên kết ion trong phân tử?",
           "o": [
             "NaCl (Muối ăn)",
-            "HCl (Khí hiđroclorua)",
+            "HCl (Khí hydrogen chloride)",
             "H₂O (Nước tinh khiết)",
-            "CO₂ (Khí cacbonic)"
+            "CO₂ (Khí carbon dioxide)"
           ],
           "a": 0
         },
         {
-          "q": "Ở điều kiện thường, các hợp chất ion có đặc điểm vật lí nào sau đây?",
+          "q": "Một ion Ca2+ cần kết hợp với bao nhiêu ion Cl- để tạo thành phân tử trung hòa về điện?",
           "o": [
-            "Thường ở thể lỏng, dễ bay hơi",
-            "Là chất rắn, có nhiệt độ nóng chảy và nhiệt độ sôi cao",
-            "Thường ở thể khí, nhiệt độ nóng chảy thấp",
-            "Mềm dẻo, dẫn nhiệt rất kém"
+            "1",
+            "2",
+            "3",
+            "4"
           ],
           "a": 1
         },
         {
-          "q": "Các hợp chất ion có khả năng dẫn điện tốt trong trường hợp nào sau đây?",
+          "q": "Khi nguyên tử nhường (cho) hoặc nhận (thu) electron sẽ tạo thành",
           "o": [
-            "Ở trạng thái tinh thể rắn, khô khan",
-            "Khi bị đập vỡ thành hạt nhỏ ở thể rắn",
-            "Khi nóng chảy hoặc khi hòa tan trong nước",
-            "Trong mọi điều kiện nhiệt độ"
+            "phân tử.",
+            "cation.",
+            "ion.",
+            "anion"
           ],
           "a": 2
         },
         {
-          "q": "Trong mạng tinh thể muối ăn NaCl, xung quanh mỗi ion Na⁺ được bao quanh bởi bao nhiêu ion Cl⁻ gần nhất?",
+          "q": "Số hợp chất ion được tạo thành từ các ion sau: K+, Ca2+, F-, O2- là:",
           "o": [
-            "4 ion Cl⁻",
-            "8 ion Cl⁻",
-            "12 ion Cl⁻",
-            "6 ion Cl⁻"
+            "2",
+            "3",
+            "1",
+            "4"
           ],
           "a": 3
         }
