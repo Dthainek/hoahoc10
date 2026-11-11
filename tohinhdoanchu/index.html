@@ -35,7 +35,8 @@ html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sa
 .cell span{font-weight:800;font-size:clamp(8px,min(45cqh,28cqw),25px);line-height:1;letter-spacing:0.3px}
 .cell:hover{background:#f1f5f9;z-index:1}
 .cell.red{background:#dc2626!important;color:#ffffff!important;border-color:#991b1b!important}
-.cell.cur{outline:3.5px solid #2563eb;outline-offset:-3.5px;box-shadow:inset 0 0 0 5px rgba(255,255,255,0.8);z-index:3}
+.cell.black{background:#0f172a!important;color:#ffffff!important;border-color:#020617!important}
+.cell.cur{outline:4px solid #2563eb;outline-offset:-4px;z-index:3}
 .left-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
 button{font:inherit;cursor:pointer;transition:all .15s}
@@ -83,7 +84,7 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .dot:hover{background:#f1f5f9;border-color:#94a3b8}
 .dot.cur{outline:2.5px solid #2563eb;border-color:#2563eb;color:#2563eb}
 .dot.ok{background:#dc2626;color:#ffffff;border-color:#dc2626}
-.dot.no{background:#0e7490;color:#ffffff;border-color:#155e75}
+.dot.no{background:#0f172a;color:#ffffff;border-color:#0f172a}
 
 /* Popup kết thúc */
 #finishModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:150}
@@ -403,14 +404,6 @@ const shuffle = a => { for(let i=a.length-1; i>0; i--){ const j=rnd(0, i); [a[i]
 
 /* ---------- Thuật toán bố cục Mosaic 48 ô: 12 ô nét chữ "20-11" ---------- */
 const GW = 36, GH = 21;
-const CONTRAST_COLORS = [
-  { bg: '#0e7490', border: '#155e75' }, // Cyan đậm (đối lập trực tiếp với đỏ)
-  { bg: '#0f766e', border: '#115e59' }, // Xanh ngọc Teal đậm
-  { bg: '#15803d', border: '#166534' }, // Xanh lá đậm
-  { bg: '#0369a1', border: '#075985' }, // Xanh dương Sky đậm
-  { bg: '#1d4ed8', border: '#1e40af' }, // Xanh lam đậm
-  { bg: '#334155', border: '#1e293b' }  // Xám xanh than
-];
 
 function get2011Rects(){
   const rects = [];
@@ -561,7 +554,7 @@ function handleTimeout(qIndex){
   stopTimer();
   state.ans[qIndex] = -1;
   show();
-  toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}!`, '#0e7490');
+  toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}!`, '#dc2626');
   checkGameFinished();
 }
 
@@ -612,25 +605,17 @@ function newGame(){
   const {stroke, bg} = layout();
   const order = shuffle([...Array(N).keys()]);
   const cells = [];
-  
-  // Gán 4 màu đối lập khác nhau cho 4 phương án A, B, C, D của mỗi câu hỏi
-  const qColors = [];
-  for(let q=0; q<N; q++){
-    qColors.push(shuffle([...CONTRAST_COLORS]).slice(0, 4));
-  }
 
   stroke.forEach((r, i) => {
     const q = order[i];
-    const l = questions[q].a;
-    cells.push({...r, q, l, altColor: qColors[q][l]});
+    cells.push({...r, q, l: questions[q].a});
   });
   
   const wrong = [];
   for(let q=0; q<N; q++) for(let l=0; l<4; l++) if(l !== questions[q].a) wrong.push([q, l]);
   shuffle(wrong);
   bg.forEach((r, i) => {
-    const q = wrong[i][0], l = wrong[i][1];
-    cells.push({...r, q, l, altColor: qColors[q][l]});
+    cells.push({...r, q: wrong[i][0], l: wrong[i][1]});
   });
 
   state = { cells, ans: Array(N).fill(null), timesLeft: Array(N).fill(30), cur: 0 };
@@ -655,22 +640,9 @@ function renderMosaic(){
 function paint(){
   state.cells.forEach(c => {
     const a = state.ans[c.q];
-    c.el.classList.remove('red', 'cur');
-    c.el.style.backgroundColor = '';
-    c.el.style.borderColor = '';
-    c.el.style.color = '';
-    
-    if(a !== null){
-      const isRightAnswer = (a === questions[c.q].a);
-      if(isRightAnswer && c.l === questions[c.q].a){
-        // Chọn đúng: tô đỏ ô đáp án đúng
-        c.el.classList.add('red');
-      } else {
-        // 3 ô còn lại (nếu đúng) hoặc cả 4 ô (nếu sai/hết giờ): tô màu đối lập của đỏ
-        c.el.style.backgroundColor = c.altColor.bg;
-        c.el.style.borderColor = c.altColor.border;
-        c.el.style.color = '#ffffff';
-      }
+    c.el.classList.remove('red', 'black', 'cur');
+    if(a !== null && a === c.l){
+      c.el.classList.add(a === questions[c.q].a ? 'red' : 'black');
     }
     if(c.q === state.cur) c.el.classList.add('cur');
   });
