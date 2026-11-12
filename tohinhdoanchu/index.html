@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Tô Hình Đoán Chữ 20-11 - Hóa Học 10</title>
+<title>Tô Hình Đoán Chữ - Hóa Học 10</title>
 <style>
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#eef2f6;color:#1e293b}
@@ -15,7 +15,8 @@ html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sa
 .app-title{font-size:17px;font-weight:800;color:#0f172a;margin:0}
 
 /* Bộ câu hỏi selector trên header */
-.set-selector-wrap{display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:10px}
+.set-selector-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:10px}
+.header-bar .btn-ui{white-space:nowrap}
 .set-selector-wrap label{font-size:13px;font-weight:700;color:#475569;white-space:nowrap}
 #setSelect{font:inherit;font-size:14px;font-weight:600;padding:5px 8px;border-radius:6px;border:1px solid #94a3b8;background:#fff;color:#0f172a;cursor:pointer;outline:none}
 #setSelect:focus{border-color:#2563eb}
@@ -103,9 +104,9 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .finish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
 /* Màn hình đăng nhập Tên và Lớp trước khi chơi */
-#playerModal{position:fixed;inset:0;background:#eef2f6;display:none;align-items:center;justify-content:center;z-index:160;padding:70px 16px 20px}
+#playerModal{position:fixed;inset:0;background:#eef2f6;display:none;align-items:center;justify-content:center;z-index:160;padding:70px 16px 20px;overflow-y:auto}
 #playerModal.show{display:flex}
-.player-box{background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;width:min(460px,95vw);padding:28px 26px;box-shadow:0 20px 45px rgba(15,23,42,0.12);animation:popIn .25s ease}
+.player-box{background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;width:min(460px,95vw);margin:auto;padding:28px 26px;box-shadow:0 20px 45px rgba(15,23,42,0.12);animation:popIn .25s ease}
 .player-box h3{margin:0 0 6px;font-size:22px;font-weight:800;color:#0f172a}
 .player-box p{margin:0 0 14px;font-size:14px;color:#475569}
 .login-set-pill{display:inline-block;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:14px}
@@ -147,7 +148,7 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 <div class="header-bar">
   <div class="header-left">
     <a href="../index.html" class="back-link">⬅ Về kho Minigame Hóa học 10</a>
-    <h1 class="app-title">Tô Hình Đoán Chữ (20-11)</h1>
+    <h1 class="app-title">Tô Hình Đoán Chữ</h1>
   </div>
   
   <div class="set-selector-wrap">
@@ -698,7 +699,7 @@ async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
     icon.textContent = '💪📚';
     title.textContent = 'Bạn cần cố gắng hơn';
     title.className = 'finish-title';
-    sub.textContent = 'Hãy ôn tập thêm và thử chinh phục lại bức tranh 20-11 nhé!';
+    sub.textContent = 'Hãy ôn tập thêm và thử chinh phục lại bức tranh bí mật nhé!';
     sub.className = 'finish-sub lose';
   }
   const pLabel = playerInfo.isDemo ? 'Chế độ chơi thử' : `${playerInfo.name}${playerInfo.className ? ' - ' + playerInfo.className : ''}`;
@@ -1124,7 +1125,7 @@ eSaveLocal.onclick = () => {
 };
 
 eDefault.onclick = () => {
-  if(confirm('Khôi phục lại 4 bộ đề mẫu Hóa 10 & 20-11?')){
+  if(confirm('Khôi phục lại 4 bộ đề mẫu Hóa 10?')){
     allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
     updateSetSelectUI();
     selectSet(0);
