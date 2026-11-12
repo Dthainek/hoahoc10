@@ -56,7 +56,8 @@ html,body{min-height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-syste
 
 /* Chú thích ảnh khi mở hết */
 .reveal-caption{display:none;margin-top:14px;background:#f0fdf4;border:2px solid #86efac;color:#166534;padding:12px 20px;border-radius:14px;font-size:clamp(17px,1.8vw,22px);font-weight:800;text-align:center}
-.reveal-caption.show{display:block;animation:slideFadeIn .3s ease}
+.reveal-caption.show{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;animation:slideFadeIn .3s ease}
+.keyword-pill{display:inline-flex;align-items:center;gap:8px;background:linear-gradient(135deg,#fef08a,#fde047);border:2.5px solid #ca8a04;color:#854d0e;padding:6px 20px;border-radius:999px;font-size:clamp(20px,2.2vw,28px);font-weight:900;letter-spacing:0.5px;box-shadow:0 4px 12px rgba(202,138,4,0.2)}
 
 /* Thanh nút dưới Slide 1 */
 .controls{display:flex;justify-content:center;align-items:center;margin-top:16px;gap:14px;flex-wrap:wrap}
@@ -235,6 +236,7 @@ function resetGame(){
   isRevealedAll = false;
   document.getElementById('boardWrap').classList.remove('reveal-all');
   document.getElementById('revealCaption').classList.remove('show');
+  document.getElementById('btnRevealAll').textContent = '👁️ Mở toàn bức tranh';
   showSlide('board');
   renderBoard();
 }
@@ -418,11 +420,14 @@ document.getElementById('btnReset').onclick = resetGame;
 document.getElementById('btnRevealAll').onclick = () => {
   isRevealedAll = !isRevealedAll;
   document.getElementById('boardWrap').classList.toggle('reveal-all', isRevealedAll);
+  const btn = document.getElementById('btnRevealAll');
   const cap = document.getElementById('revealCaption');
   if(isRevealedAll){
+    btn.textContent = '🙈 Ẩn lại mảnh ghép';
     cap.classList.add('show');
-    cap.textContent = '🖼️ Bức ảnh bí mật: Nông dân thu hoạch muối trên ruộng muối!';
+    cap.innerHTML = '<span>🖼️ Bức ảnh bí mật: Nông dân thu hoạch muối trên ruộng muối!</span> <span class="keyword-pill">🔑 Từ khóa: MUỐI ĂN</span>';
   } else {
+    btn.textContent = '👁️ Mở toàn bức tranh';
     renderBoard();
   }
 };
