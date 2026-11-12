@@ -6,155 +6,103 @@
 <title>Lật Mảnh Ghép Bí Mật (4 Mảnh) - Hóa Học 10</title>
 <style>
 *{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#eef2f6;color:#1e293b}
+html,body{min-height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#eef2f6;color:#0f172a}
 
-/* Header */
-.header-bar{position:relative;z-index:165;background:#ffffff;border-bottom:1px solid #cbd5e1;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
-.header-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
-.back-link{color:#2563eb;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#eff6ff;border-radius:8px;transition:background .2s}
+/* Header tối giản cho máy chiếu */
+.header-bar{background:#ffffff;border-bottom:1px solid #cbd5e1;padding:10px 24px;display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;box-shadow:0 2px 6px rgba(15,23,42,0.05)}
+.header-left{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+.back-link{color:#2563eb;text-decoration:none;font-weight:700;font-size:15px;display:inline-flex;align-items:center;gap:6px;padding:7px 14px;background:#eff6ff;border-radius:10px;transition:background .2s;white-space:nowrap}
 .back-link:hover{background:#dbeafe}
-.app-title{font-size:17px;font-weight:800;color:#0f172a;margin:0}
-.set-selector-wrap{display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:10px}
-.set-selector-wrap label{font-size:13px;font-weight:700;color:#475569;white-space:nowrap}
-#setSelect{font:inherit;font-size:14px;font-weight:600;padding:5px 8px;border-radius:6px;border:1px solid #94a3b8;background:#fff;color:#0f172a;cursor:pointer;outline:none}
+.app-title{font-size:clamp(20px,2.1vw,26px);font-weight:800;color:#0f172a;margin:0}
+.header-actions{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.stats-pill{background:#eff6ff;border:2px solid #93c5fd;color:#1d4ed8;padding:7px 18px;border-radius:999px;font-size:clamp(15px,1.5vw,19px);font-weight:800;white-space:nowrap}
 
-/* Sân khấu Slide chính */
-.stage{min-height:calc(100vh - 61px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
-.slide-card{width:100%;max-width:1080px;background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;box-shadow:0 10px 30px rgba(15,23,42,0.08);padding:24px 28px;display:none;flex-direction:column}
+/* Sân khấu trình chiếu chính */
+.stage{min-height:calc(100vh - 64px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 24px}
+.slide-card{width:100%;max-width:1240px;background:#ffffff;border:1px solid #e2e8f0;border-radius:24px;box-shadow:0 14px 36px rgba(15,23,42,0.09);padding:24px 32px;display:none;flex-direction:column}
 .slide-card.active{display:flex;animation:slideFadeIn .3s ease}
 @keyframes slideFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
 /* SLIDE 1: Bảng 4 mảnh ghép */
-.s1-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
-.s1-top h2{margin:0;font-size:22px;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:8px}
-.s1-sub{margin:4px 0 0;font-size:14px;color:#475569}
-.stats-pill{background:#eff6ff;border:1.5px solid #bfdbfe;color:#1d4ed8;padding:6px 14px;border-radius:999px;font-size:14px;font-weight:800}
+.s1-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:14px;flex-wrap:wrap}
+.s1-top h2{margin:0;font-size:clamp(22px,2.4vw,30px);font-weight:800;color:#0f172a;display:flex;align-items:center;gap:10px}
+.s1-sub{margin:4px 0 0;font-size:clamp(15px,1.55vw,20px);font-weight:500;color:#475569}
 
-/* Khung bức ảnh & lưới 2x2 */
-.board-wrap{position:relative;width:100%;max-width:860px;margin:0 auto;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:3px solid #0f172a;box-shadow:0 6px 20px rgba(0,0,0,0.12);background:#cbd5e1}
+/* Khung bức ảnh & lưới 2x2 vừa gọn khung máy chiếu */
+.board-wrap{position:relative;width:100%;max-width:min(1040px,calc((100vh - 265px) * 16 / 9));min-height:240px;margin:0 auto;aspect-ratio:16/9;border-radius:16px;overflow:hidden;border:4px solid #0f172a;box-shadow:0 10px 28px rgba(0,0,0,0.16);background:#cbd5e1}
 .secret-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
 .puzzle-grid{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
 
 /* Mảnh ghép */
-.tile{position:relative;border:2px solid rgba(255,255,255,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:transform .55s cubic-bezier(.4,0,.2,1), opacity .55s ease, background .25s;transform-origin:center}
+.tile{position:relative;border:2.5px solid rgba(255,255,255,0.88);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:transform .55s cubic-bezier(.4,0,.2,1), opacity .55s ease, filter .2s;transform-origin:center}
 .tile-1{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
 .tile-2{background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff}
 .tile-3{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff}
 .tile-4{background:linear-gradient(135deg,#d97706,#b45309);color:#fff}
-.tile:not(.locked):not(.opened):hover{filter:brightness(1.08);transform:scale(0.985)}
-.tile-num{font-size:clamp(34px,5.5vw,58px);font-weight:900;line-height:1;text-shadow:0 3px 8px rgba(0,0,0,0.25)}
-.tile-label{margin-top:8px;font-size:clamp(14px,1.8vw,18px);font-weight:700;background:rgba(255,255,255,0.2);padding:4px 14px;border-radius:999px;backdrop-filter:blur(2px)}
+.tile:not(.locked):not(.opened):hover{filter:brightness(1.09);transform:scale(0.985)}
+.tile-num{font-size:clamp(46px,6.2vw,80px);font-weight:900;line-height:1;text-shadow:0 4px 10px rgba(0,0,0,0.28)}
+.tile-label{margin-top:10px;font-size:clamp(18px,2.1vw,26px);font-weight:800;background:rgba(255,255,255,0.22);padding:6px 20px;border-radius:999px;backdrop-filter:blur(2px)}
 
 /* Trạng thái ĐÃ LẬT ĐÚNG: Mở lộ ảnh phía dưới */
 .tile.opened{opacity:0;transform:rotateY(90deg) scale(0.92);pointer-events:none}
 
 /* Trạng thái SAI / QUÁ GIỜ: Bôi đen & khóa, không lật lên */
 .tile.locked{background:#090d16!important;color:#94a3b8!important;border-color:#1e293b!important;cursor:not-allowed}
-.tile.locked .tile-num{font-size:clamp(26px,3.5vw,40px);color:#ef4444;text-shadow:none}
-.tile.locked .tile-label{background:rgba(239,68,68,0.16);color:#fca5a5;border:1px solid rgba(239,68,68,0.35)}
+.tile.locked .tile-num{font-size:clamp(34px,4.2vw,54px);color:#ef4444;text-shadow:none}
+.tile.locked .tile-label{background:rgba(239,68,68,0.18);color:#fca5a5;border:1.5px solid rgba(239,68,68,0.4);font-size:clamp(15px,1.65vw,21px)}
 
-/* Khi bấm Xem toàn bức tranh */
+/* Khi bấm Mở toàn bức tranh */
 .board-wrap.reveal-all .tile{opacity:0;pointer-events:none}
 
 /* Chú thích ảnh khi mở hết */
-.reveal-caption{display:none;margin-top:14px;background:#f0fdf4;border:1.5px solid #86efac;color:#166534;padding:12px 18px;border-radius:12px;font-size:15px;font-weight:700;text-align:center}
+.reveal-caption{display:none;margin-top:14px;background:#f0fdf4;border:2px solid #86efac;color:#166534;padding:12px 20px;border-radius:14px;font-size:clamp(17px,1.8vw,22px);font-weight:800;text-align:center}
 .reveal-caption.show{display:block;animation:slideFadeIn .3s ease}
 
 /* Thanh nút dưới Slide 1 */
-.controls{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px;flex-wrap:wrap}
-.btns{display:flex;gap:8px;flex-wrap:wrap}
+.controls{display:flex;justify-content:center;align-items:center;margin-top:16px;gap:14px;flex-wrap:wrap}
 button{font:inherit;cursor:pointer;transition:all .15s}
-.btn-ui{border:1px solid #cbd5e1;background:#f8fafc;color:#334155;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:700}
+.btn-ui{border:1.5px solid #cbd5e1;background:#f8fafc;color:#334155;border-radius:12px;padding:10px 22px;font-size:clamp(15px,1.45vw,18px);font-weight:700;white-space:nowrap}
 .btn-ui:hover{background:#e2e8f0;color:#0f172a}
-.btn-primary{background:#2563eb;color:#ffffff;border:1px solid #1d4ed8}
-.btn-primary:hover{background:#1d4ed8}
-.btn-accent{background:#16a34a;color:#ffffff;border:1px solid #15803d}
-.btn-accent:hover{background:#15803d}
-.btn-amber{background:#f59e0b;color:#ffffff;border:1px solid #d97706}
+.btn-amber{background:#f59e0b;color:#ffffff;border:1.5px solid #d97706}
 .btn-amber:hover{background:#d97706}
 
-/* SLIDE 2: Câu hỏi trắc nghiệm + Đếm ngược 30s */
-.q-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
-.q-badge{background:#eff6ff;border:1.5px solid #bfdbfe;color:#1d4ed8;padding:6px 16px;border-radius:999px;font-size:16px;font-weight:800}
-.timer-badge{display:inline-flex;align-items:center;gap:8px;background:#eff6ff;border:2px solid #93c5fd;color:#1d4ed8;padding:6px 18px;border-radius:999px;font-size:18px;font-weight:900;min-width:110px;justify-content:center}
+/* SLIDE 2: Câu hỏi trắc nghiệm + Đếm ngược 30s cỡ lớn cho máy chiếu */
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:14px;margin-bottom:14px;flex-wrap:wrap}
+.q-badge{background:#eff6ff;border:2px solid #93c5fd;color:#1d4ed8;padding:8px 22px;border-radius:999px;font-size:clamp(18px,1.9vw,24px);font-weight:800}
+.q-top-right{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.timer-badge{display:inline-flex;align-items:center;gap:8px;background:#eff6ff;border:2.5px solid #93c5fd;color:#1d4ed8;padding:8px 22px;border-radius:999px;font-size:clamp(20px,2.2vw,28px);font-weight:900;min-width:130px;justify-content:center}
 .timer-badge.warning{background:#fffbeb;border-color:#fcd34d;color:#b45309}
 .timer-badge.danger{background:#fef2f2;border-color:#fca5a5;color:#dc2626;animation:pulseTimer .7s infinite alternate}
 .timer-badge.done{background:#f1f5f9;border-color:#cbd5e1;color:#64748b}
 @keyframes pulseTimer{from{transform:scale(1)}to{transform:scale(1.06)}}
-.timer-bar-wrap{height:7px;width:100%;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:22px}
+
+.timer-bar-wrap{height:10px;width:100%;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:24px}
 .timer-bar{height:100%;width:100%;background:#2563eb;transition:width .25s linear,background-color .3s;border-radius:999px}
 .timer-bar.warning{background:#f59e0b}
 .timer-bar.danger{background:#dc2626}
 
-#qText{font-size:clamp(20px,2.5vw,26px);font-weight:700;line-height:1.45;color:#0f172a;margin:0 0 24px;padding:18px 22px;background:#f8fafc;border-left:5px solid #2563eb;border-radius:10px}
-.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
-.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2px solid #cbd5e1;background:#ffffff;color:#1e293b;border-radius:14px;padding:16px 18px;font-size:18px;font-weight:600;transition:all .15s}
-.opt b{flex:0 0 40px;height:40px;border-radius:50%;background:#f1f5f9;color:#0f172a;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;border:1.5px solid #cbd5e1}
-.opt:hover:not(:disabled){border-color:#2563eb;background:#eff6ff;transform:translateY(-2px)}
+#qText{font-size:clamp(23px,2.6vw,34px);font-weight:700;line-height:1.45;color:#0f172a;margin:0 0 26px;padding:22px 26px;background:#f8fafc;border-left:7px solid #2563eb;border-radius:14px}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-bottom:24px}
+.opt{display:flex;align-items:center;gap:16px;width:100%;min-height:82px;text-align:left;border:2.5px solid #cbd5e1;background:#ffffff;color:#0f172a;border-radius:16px;padding:18px 22px;font-size:clamp(20px,2.2vw,30px);font-weight:700;line-height:1.35;transition:all .15s}
+.opt b{flex:0 0 52px;height:52px;border-radius:50%;background:#f1f5f9;color:#0f172a;display:flex;align-items:center;justify-content:center;font-size:clamp(19px,1.9vw,25px);font-weight:800;border:2px solid #cbd5e1}
+.opt:hover:not(:disabled){border-color:#2563eb;background:#eff6ff;transform:translateY(-2px);box-shadow:0 6px 16px rgba(37,99,235,0.12)}
 .opt:disabled{cursor:default}
 .opt.right{border-color:#16a34a!important;background:#dcfce7!important;color:#166534!important}
 .opt.right b{background:#16a34a;color:#ffffff;border-color:#15803d}
 .opt.wrong{border-color:#dc2626!important;background:#fee2e2!important;color:#991b1b!important}
 .opt.wrong b{background:#dc2626;color:#ffffff;border-color:#b91c1c}
 
-.q-feedback{min-height:54px;border-radius:12px;padding:12px 18px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f8fafc;border:2px dashed #cbd5e1;color:#64748b}
-.q-feedback.ok{background:#f0fdf4;border-color:#16a34a;color:#15803d}
-.q-feedback.no{background:#fef2f2;border-color:#dc2626;color:#b91c1c}
+.q-feedback{min-height:64px;border-radius:14px;padding:14px 22px;font-size:clamp(18px,1.85vw,24px);font-weight:700;display:flex;align-items:center;justify-content:center;text-align:center;gap:12px;background:#f8fafc;border:2px dashed #cbd5e1;color:#475569}
+.q-feedback.ok{background:#f0fdf4;border-style:solid;border-color:#16a34a;color:#15803d}
+.q-feedback.no{background:#fef2f2;border-style:solid;border-color:#dc2626;color:#b91c1c}
 
-/* Modal soạn bộ câu hỏi */
-#modal{position:fixed;inset:0;background:rgba(15,23,42,0.68);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
-#modal.show{display:flex}
-.box{background:#ffffff;border-radius:16px;width:min(880px,96vw);max-height:92vh;overflow:auto;padding:22px;color:#1e293b;box-shadow:0 20px 40px rgba(0,0,0,0.22)}
-.box-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:10px}
-.box-header h3{margin:0;font-size:18px;color:#0f172a}
-.set-edit-bar{display:flex;gap:10px;align-items:center;background:#f1f5f9;padding:10px 14px;border-radius:10px;margin-bottom:14px;flex-wrap:wrap}
-.set-edit-bar input{flex:1;font:inherit;padding:8px 12px;border:1.5px solid #cbd5e1;border-radius:8px}
-.gh-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:14px;margin-bottom:16px}
-.gh-card input{background:#ffffff;border:1.5px solid #86efac;color:#0f172a;padding:8px 12px;border-radius:8px;width:100%;font-family:monospace;font-size:13px}
-.qe{border:1px solid #e2e8f0;background:#f8fafc;border-radius:10px;padding:12px;margin-bottom:12px}
-.qe textarea,.qe input,.qe select{width:100%;font:inherit;padding:7px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#ffffff;color:#0f172a;margin-top:4px}
-.qe .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
-.qe label{font-size:13px;font-weight:700;color:#475569}
-
-.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#15803d;color:#ffffff;padding:12px 24px;border-radius:10px;display:none;z-index:240;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.25)}
-.score-pill{background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800;white-space:nowrap}
-
-/* Popup kết thúc + Bảng xếp hạng điểm */
-#finishModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:175}
-#finishModal.show{display:flex}
-.finish-box{background:#ffffff;border-radius:20px;width:min(780px,95vw);max-height:92vh;overflow:auto;padding:24px 22px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .3s cubic-bezier(.16,1,.3,1)}
-@keyframes popIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
-.finish-icon{font-size:46px;margin-bottom:6px}
-.finish-title{margin:0 0 6px;font-size:22px;font-weight:800;color:#0f172a}
-.finish-title.win{color:#15803d}
-.finish-sub{margin:0 0 12px;font-size:15px;font-weight:700;color:#b45309}
-.finish-sub.lose{color:#475569;font-weight:600;font-size:14px}
-.finish-score{display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:700;color:#334155;margin-bottom:8px;line-height:1.6}
-.finish-sync{font-size:13px;font-weight:700;margin-bottom:10px;padding:6px 12px;border-radius:8px;background:#f8fafc;color:#475569}
-.finish-lb-title{font-size:15px;font-weight:800;color:#0f172a;margin:10px 0 6px;text-align:left;display:flex;justify-content:space-between;align-items:center}
-#finishLeaderboardWrap{max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:16px;text-align:left}
-.finish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
-
-/* Màn hình đăng nhập Tên và Lớp trước khi chơi */
-#playerModal{position:fixed;inset:0;background:#eef2f6;display:none;align-items:center;justify-content:center;z-index:160;padding:70px 16px 20px}
-#playerModal.show{display:flex}
-.player-box{background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;width:min(460px,95vw);padding:28px 26px;box-shadow:0 20px 45px rgba(15,23,42,0.12);animation:popIn .25s ease}
-.player-box h3{margin:0 0 6px;font-size:22px;font-weight:800;color:#0f172a}
-.player-box p{margin:0 0 14px;font-size:14px;color:#475569}
-.login-set-pill{display:inline-block;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:14px}
-.player-box label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:4px}
-.player-box input{width:100%;padding:11px 13px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;margin-bottom:12px;outline:none}
-.player-box input:focus{border-color:#2563eb}
-
-/* Modal Mời tham gia QR */
-#inviteModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:180}
-#inviteModal.show{display:flex}
-.invite-box{background:#ffffff;border-radius:20px;width:min(480px,94vw);padding:24px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .25s ease}
-.qr-frame{display:inline-flex;padding:12px;background:#ffffff;border:2px solid #cbd5e1;border-radius:16px;margin:12px 0;box-shadow:0 4px 14px rgba(0,0,0,0.06)}
-.qr-frame img{width:240px;height:240px;display:block;border-radius:6px}
-.invite-link-row{display:flex;gap:8px;margin-top:8px}
-.invite-link-row input{flex:1;padding:9px 10px;border:1.5px solid #cbd5e1;border-radius:8px;font-family:monospace;font-size:13px;background:#f8fafc;color:#0f172a}
-@media(max-width:760px){.opts-grid{grid-template-columns:1fr}.slide-card{padding:16px}}
+@media(max-width:860px){
+  .opts-grid{grid-template-columns:1fr}
+  .slide-card{padding:18px}
+  .board-wrap{max-width:100%}
+  .opt{min-height:68px;padding:14px 16px}
+  .opt b{flex:0 0 42px;height:42px}
+}
 </style>
 </head>
 <body>
@@ -162,16 +110,10 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 <div class="header-bar">
   <div class="header-left">
     <a href="../index.html" class="back-link">⬅ Về kho Minigame Hóa học 10</a>
-    <h1 class="app-title">Lật Mảnh Ghép Bí Mật (4 Mảnh)</h1>
+    <h1 class="app-title">🧩 Lật Mảnh Ghép Bí Mật (4 Mảnh)</h1>
   </div>
-  <div class="set-selector-wrap">
-    <span class="score-pill" id="scorePill">🏆 0đ</span>
-    <label for="setSelect">📚 Bộ:</label>
-    <select id="setSelect"></select>
-    <button class="btn-ui btn-accent" id="btnInvite" style="padding:5px 10px;font-size:13px" title="Hiện mã QR mời học sinh tham gia">📲 Mời tham gia</button>
-    <button class="btn-ui" id="btnLeaderboard" style="padding:5px 10px;font-size:13px">🏆 BXH</button>
-    <button class="btn-ui" id="btnSheets" style="padding:5px 10px;font-size:13px">📊 Sheets</button>
-    <button class="btn-ui" id="btnEditHeader" style="padding:5px 10px;font-size:13px">✏️ Quản lý</button>
+  <div class="header-actions">
+    <span class="stats-pill" id="statsPill">Đã lật: 0/4 mảnh</span>
   </div>
 </div>
 
@@ -180,10 +122,9 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   <section class="slide-card active" id="slideBoard">
     <div class="s1-top">
       <div>
-        <h2>🧩 Bấm chọn một mảnh ghép để mở câu hỏi</h2>
+        <h2>👆 Chọn một mảnh ghép để mở câu hỏi</h2>
         <p class="s1-sub">Trả lời đúng trong 30 giây để lật mở mảnh ghép. Nếu sai hoặc quá giờ, mảnh ghép sẽ bị bôi đen!</p>
       </div>
-      <span class="stats-pill" id="statsPill">Đã lật: 0/4 mảnh</span>
     </div>
 
     <div class="board-wrap" id="boardWrap">
@@ -211,13 +152,8 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <div class="reveal-caption" id="revealCaption"></div>
 
     <div class="controls">
-      <div class="btns">
-        <button class="btn-ui" id="btnReset">🔄 Chơi lại</button>
-        <button class="btn-ui btn-amber" id="btnRevealAll">👁️ Mở toàn bức tranh</button>
-      </div>
-      <div class="btns">
-        <button class="btn-ui btn-primary" id="btnEdit">✏️ Soạn & Lưu câu hỏi</button>
-      </div>
+      <button class="btn-ui" id="btnReset">🔄 Chơi lại</button>
+      <button class="btn-ui btn-amber" id="btnRevealAll">👁️ Mở toàn bức tranh</button>
     </div>
   </section>
 
@@ -225,7 +161,7 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   <section class="slide-card" id="slideQuiz">
     <div class="q-top">
       <div class="q-badge" id="qBadge">🧩 MẢNH GHÉP 1 — CÂU HỎI 1</div>
-      <div style="display:flex;align-items:center;gap:10px">
+      <div class="q-top-right">
         <div class="timer-badge" id="timerBadge">⏱️ <span id="timerText">30s</span></div>
         <button class="btn-ui" id="btnBackToBoard">⬅ Về bảng mảnh ghép</button>
       </div>
@@ -240,338 +176,67 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <div class="opts-grid" id="optsGrid"></div>
 
     <div class="q-feedback" id="qFeedback">
-      <span id="qFeedbackText">Hãy chọn đáp án đúng trước khi hết 30 giây!</span>
+      <span id="qFeedbackText">Hãy chọn đáp án đúng trong vòng 30 giây!</span>
     </div>
   </section>
 </main>
 
-<!-- Modal quản lý & đồng bộ bộ câu hỏi -->
-<div id="modal">
-  <div class="box">
-    <div class="box-header">
-      <h3>✏️ Quản lý & Soạn bộ 4 câu hỏi</h3>
-      <button class="btn-ui" id="eClose">✖ Đóng</button>
-    </div>
-
-    <div class="set-edit-bar">
-      <label style="font-weight:700;font-size:13px">Bộ đề:</label>
-      <select id="modalSetSelect" style="padding:6px;border-radius:6px;font:inherit;font-weight:600"></select>
-      <input type="text" id="setNameInput" placeholder="Tên bộ câu hỏi...">
-      <button class="btn-ui btn-primary" id="btnNewSet">➕ Tạo bộ mới</button>
-      <button class="btn-ui" id="btnDeleteSet" style="color:#b91c1c;border-color:#fca5a5">🗑 Xóa</button>
-    </div>
-
-    <div class="gh-card">
-      <div style="font-weight:800;color:#15803d;margin-bottom:6px">🌐 Lưu & Xuất bản vĩnh viễn lên GitHub (dthainek.github.io/hoahoc10)</div>
-      <p style="font-size:13px;color:#334155;margin:0 0 8px 0">
-        Nhập <b>GitHub Token</b> (được lưu chung nếu bạn đã nhập ở trò chơi trước) để cập nhật bộ câu hỏi vĩnh viễn lên web:
-      </p>
-      <input type="password" id="ghToken" placeholder="Dán token ghp_xxxx hoặc github_pat_xxxx...">
-      <div style="display:flex;gap:10px;margin-top:8px;align-items:center;flex-wrap:wrap">
-        <button class="btn-ui btn-accent" id="btnSyncGH">🚀 Xuất bản lên GitHub ngay</button>
-      </div>
-    </div>
-
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;flex-wrap:wrap;gap:8px">
-      <span style="font-weight:800">4 câu hỏi trắc nghiệm:</span>
-      <div class="btns">
-        <button class="btn-ui" id="eExport">⬇ Xuất JSON</button>
-        <button class="btn-ui" id="eImport">⬆ Nhập JSON</button>
-        <button class="btn-ui" id="eDefault">🔄 Khôi phục mẫu</button>
-      </div>
-    </div>
-
-    <div id="editor"></div>
-
-    <div class="btns" style="margin-top:16px">
-      <button class="btn-ui btn-primary" id="eSaveLocal" style="padding:10px 20px">💾 Lưu vào trình duyệt máy này</button>
-      <input type="file" id="file" accept=".json" hidden>
-    </div>
-  </div>
-</div>
-
-<!-- Popup kết thúc trò chơi + Bảng xếp hạng điểm -->
-<div id="finishModal">
-  <div class="finish-box">
-    <div class="finish-icon" id="finishIcon">🎉</div>
-    <h2 class="finish-title" id="finishTitle">Chúc mừng bạn đã hoàn thành!</h2>
-    <p class="finish-sub" id="finishSub">Bạn đã mở khóa toàn bộ bức ảnh bí mật!</p>
-    <div class="finish-score" id="finishScore">Kết quả: 4/4 mảnh</div>
-    <div class="finish-sync" id="finishSyncStatus"></div>
-    <div class="finish-lb-title">
-      <span>🏆 Bảng xếp hạng điểm</span>
-      <button class="btn-ui" id="btnRefreshFinishLb" style="padding:3px 10px;font-size:12px">🔄 Làm mới</button>
-    </div>
-    <div id="finishLeaderboardWrap"></div>
-    <div class="finish-actions">
-      <button class="btn-ui" id="btnFinishView">👀 Xem lại bức tranh</button>
-      <button class="btn-ui btn-accent" id="btnFinishLb">📊 Mở toàn màn hình BXH</button>
-      <button class="btn-ui btn-primary" id="btnFinishReplay">🔄 Chơi lại</button>
-    </div>
-  </div>
-</div>
-
-<!-- Màn hình đăng nhập Tên và Lớp trước khi chơi -->
-<div id="playerModal">
-  <div class="player-box">
-    <h3>🎮 Đăng nhập tham gia trò chơi</h3>
-    <div class="login-set-pill" id="loginSetName">📚 Bộ câu hỏi</div>
-    <p>Nhập <b>Họ và tên</b> và <b>Lớp</b> rồi ấn <b>Bắt đầu</b> để vào màn hình chơi và tính thời gian.</p>
-    <label for="pName">Họ và tên học sinh *</label>
-    <input type="text" id="pName" placeholder="Ví dụ: Nguyễn Văn A">
-    <label for="pClass">Lớp *</label>
-    <input type="text" id="pClass" placeholder="Ví dụ: 10A1">
-    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-      <button class="btn-ui btn-primary" id="btnStartPlay" style="flex:1;padding:11px 16px;font-size:15px">🚀 Bắt đầu</button>
-      <button class="btn-ui" id="btnPlayDemo" style="padding:11px 14px">Chơi thử</button>
-    </div>
-    <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #cbd5e1;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
-      <button class="btn-ui btn-accent" id="btnLoginInvite" style="padding:6px 12px;font-size:12.5px">📲 Mời tham gia (Mã QR)</button>
-      <button class="btn-ui" id="btnLoginLb" style="padding:6px 12px;font-size:12.5px">🏆 Xem BXH</button>
-    </div>
-  </div>
-</div>
-
-<!-- Modal Mời tham gia QR -->
-<div id="inviteModal">
-  <div class="invite-box">
-    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
-      <h3 style="margin:0;font-size:19px;color:#0f172a">📲 Mời tham gia trò chơi</h3>
-      <button class="btn-ui" id="btnCloseInvite" style="padding:5px 10px">✖ Đóng</button>
-    </div>
-    <div class="login-set-pill" id="inviteSetTitle" style="margin-bottom:4px">📚 Bộ câu hỏi</div>
-    <p style="margin:4px 0 6px;font-size:13.5px;color:#475569">Học sinh quét mã QR hoặc mở đường dẫn dưới đây để vào trực tiếp trò chơi:</p>
-    <div class="qr-frame">
-      <img id="qrImg" alt="Mã QR vào trò chơi Lật mảnh ghép bí mật">
-    </div>
-    <div class="invite-link-row">
-      <input type="text" id="inviteLinkInput" readonly>
-      <button class="btn-ui btn-primary" id="btnCopyInvite">📋 Sao chép</button>
-    </div>
-    <div style="margin-top:14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
-      <button class="btn-ui btn-accent" id="btnInviteLb">🏆 Theo dõi Bảng xếp hạng</button>
-    </div>
-  </div>
-</div>
-
-<div class="toast" id="toast"></div>
-
-<script src="../sheets_online.js"></script>
 <script>
 const L = ['A','B','C','D'], N = 4, MAX_TIME = 30;
-const LOCAL_KEY = 'hoahoc10_latmanhghep_v2';
-const GH_TOKEN_KEY = 'hoahoc10_gh_token';
-const REPO_OWNER = 'Dthainek';
-const REPO_NAME = 'hoahoc10';
-const FILE_PATH = 'latmanhghep/questions.json';
 
-const DEFAULT_SETS = [
+const DEFAULT_QUESTIONS = [
   {
-    id: "lat_manh_ghep_1",
-    title: "Bài 11: Lật mảnh ghép bí mật - Liên kết ion",
-    questions: [
-      {
-        q: "Kim loại kiềm nào có số hiệu nguyên tử Z = 11, ở trạng thái rắn mềm màu trắng bạc và dễ dàng nhường đi 1 electron lớp ngoài cùng để tạo thành ion dương (+1)?",
-        o: ["Na", "K", "Ca", "Mg"],
-        a: 0
-      },
-      {
-        q: "Nguyên tố phi kim thuộc nhóm VIIA (Z = 17) tồn tại ở điều kiện thường dưới dạng đơn chất nào có màu vàng lục, mùi hắc và dễ nhận 1 electron tạo ion âm (-1)?",
-        o: ["Khí O₂", "Khí Cl₂", "Khí H₂", "Khí N₂"],
-        a: 1
-      },
-      {
-        q: "Nguồn tài nguyên nước tự nhiên nào bao phủ khoảng 71% bề mặt Trái Đất, chứa lượng lớn khoáng chất hòa tan và là môi trường sống của hệ sinh thái đại dương?",
-        o: ["Nước mưa", "Nước cất", "Nước biển", "Nước sông"],
-        a: 2
-      },
-      {
-        q: "Ở trạng thái rắn, khi các nguyên tử, phân tử hoặc ion sắp xếp đều đặn theo một trật tự hình học xác định trong không gian, chúng tạo thành cấu trúc gọi là gì?",
-        o: ["Chất lỏng", "Chất khí", "Dung dịch", "Tinh thể"],
-        a: 3
-      }
-    ]
+    q: "Tôi là một kim loại được tìm thấy ở nhóm IA, cơ thể tôi rất mềm có thể dùng dao để cắt. Tôi rất sợ nước, tôi sẽ tan nhanh và phát nổ khi gặp nước. Tôi tạo ra được dung dịch có tên \"xút ăn da\" (NaOH). Tôi là ai?",
+    o: ["Na", "K", "Ca", "Mg"],
+    a: 0
+  },
+  {
+    q: "Tôi là một loại khí rất độc, màu vàng được sử dụng làm vũ khí hóa học trong thế chiến thứ 1. Tôi là ai?",
+    o: ["Khí O₂", "Khí Cl₂", "Khí H₂", "Khí N₂"],
+    a: 1
+  },
+  {
+    q: "Nguồn tài nguyên nước tự nhiên nào bao phủ khoảng 71% bề mặt Trái Đất, chứa lượng lớn khoáng chất hòa tan và là môi trường sống của hệ sinh thái đại dương?",
+    o: ["Nước mưa", "Nước cất", "Nước biển", "Nước sông"],
+    a: 2
+  },
+  {
+    q: "Ở trạng thái rắn, khi các nguyên tử, phân tử hoặc ion sắp xếp đều đặn theo một trật tự hình học xác định trong không gian, chúng tạo thành cấu trúc gọi là gì?",
+    o: ["Chất lỏng", "Chất khí", "Dung dịch", "Tinh thể"],
+    a: 3
   }
 ];
 
-let allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
-let currentSetIndex = 0;
-let questions = allSets[0].questions;
+let questions = JSON.parse(JSON.stringify(DEFAULT_QUESTIONS));
 // Trạng thái của 4 mảnh ghép: null (chưa mở), 'right' (đã lật), 'wrong' (bôi đen do sai), 'timeout' (bôi đen do quá giờ)
 let tileStatus = Array(N).fill(null);
-let elapsedMs = Array(N).fill(0);
-let qScores = Array(N).fill(0);
 let activeTile = 0;
-let questionStartedAt = null;
 let timerInterval = null;
 let autoReturnTimer = null;
-let autoNextTimer = null;
 let timeLeft = MAX_TIME;
 let isRevealedAll = false;
-let scoreSubmitted = false;
-let finishShown = false;
-let playerInfo = { name: '', className: '', isDemo: false, startTime: '', started: false };
 
-async function initData(){
-  if(window.SheetsOnline) await SheetsOnline.initConfig();
+async function initGame(){
   try {
     const res = await fetch('./questions.json?t=' + Date.now());
     if(res.ok){
       const data = await res.json();
-      if(data.sets && Array.isArray(data.sets) && data.sets.length > 0){
-        allSets = data.sets;
+      if(data.sets && Array.isArray(data.sets) && data.sets[0] && Array.isArray(data.sets[0].questions) && data.sets[0].questions.length === N){
+        questions = data.sets[0].questions;
       }
     }
   } catch(e){}
-
-  try {
-    const local = JSON.parse(localStorage.getItem(LOCAL_KEY));
-    if(local && Array.isArray(local) && local.length > 0){
-      allSets = local;
-    }
-  } catch(e){}
-
-  updateSetSelectUI();
-  selectSet(0);
-}
-
-function updateSetSelectUI(){
-  const s = document.getElementById('setSelect');
-  const ms = document.getElementById('modalSetSelect');
-  s.innerHTML = ''; ms.innerHTML = '';
-  allSets.forEach((set, i) => {
-    const o1 = document.createElement('option'); o1.value = i; o1.textContent = set.title; s.appendChild(o1);
-    const o2 = document.createElement('option'); o2.value = i; o2.textContent = set.title; ms.appendChild(o2);
-  });
-  s.value = currentSetIndex;
-  ms.value = currentSetIndex;
-}
-
-function selectSet(idx){
-  currentSetIndex = idx;
-  questions = allSets[currentSetIndex].questions;
-  document.getElementById('setSelect').value = idx;
-  document.getElementById('modalSetSelect').value = idx;
   resetGame();
 }
 
-document.getElementById('setSelect').onchange = e => selectSet(+e.target.value);
-
-function updateScoreUI(){
-  const total = qScores.reduce((a, b) => a + b, 0);
-  const el = document.getElementById('scorePill');
-  if(el) el.textContent = `🏆 ${total}đ`;
-}
-
-function openPlayerModal(){
-  const loginSetEl = document.getElementById('loginSetName');
-  if(loginSetEl && allSets[currentSetIndex]){
-    loginSetEl.textContent = '📚 ' + allSets[currentSetIndex].title;
-  }
-  try {
-    const last = JSON.parse(localStorage.getItem('hoahoc10_last_player') || '{}');
-    if(last.name) document.getElementById('pName').value = last.name;
-    if(last.className) document.getElementById('pClass').value = last.className;
-  } catch(e){}
-  document.getElementById('playerModal').classList.add('show');
-  setTimeout(() => document.getElementById('pName').focus(), 100);
-}
-
-function startPlayFromLogin(){
-  const n = document.getElementById('pName').value.trim();
-  const c = document.getElementById('pClass').value.trim();
-  if(!n){ alert('Vui lòng nhập họ và tên để lưu điểm!'); document.getElementById('pName').focus(); return; }
-  if(!c){ alert('Vui lòng nhập lớp của bạn!'); document.getElementById('pClass').focus(); return; }
-  localStorage.setItem('hoahoc10_last_player', JSON.stringify({name: n, className: c}));
-  playerInfo = { name: n, className: c, isDemo: false, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
-  document.getElementById('playerModal').classList.remove('show');
-  showSlide('board');
-}
-
-document.getElementById('btnStartPlay').onclick = startPlayFromLogin;
-document.getElementById('pName').addEventListener('keydown', e => {
-  if(e.key === 'Enter'){
-    e.preventDefault();
-    if(!document.getElementById('pClass').value.trim()) document.getElementById('pClass').focus();
-    else startPlayFromLogin();
-  }
-});
-document.getElementById('pClass').addEventListener('keydown', e => {
-  if(e.key === 'Enter'){ e.preventDefault(); startPlayFromLogin(); }
-});
-
-document.getElementById('btnPlayDemo').onclick = () => {
-  playerInfo = { name: 'Chơi thử', className: '', isDemo: true, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
-  document.getElementById('playerModal').classList.remove('show');
-  showSlide('board');
-};
-
-function getInviteUrl(){
-  if(window.location.protocol === 'file:'){
-    return 'https://dthainek.github.io/hoahoc10/latmanhghep/';
-  }
-  return window.location.href.split('#')[0];
-}
-
-function openInviteModal(){
-  const url = getInviteUrl();
-  const setTitle = (allSets[currentSetIndex] && allSets[currentSetIndex].title) || 'Lật mảnh ghép bí mật';
-  const setTitleEl = document.getElementById('inviteSetTitle');
-  const linkInput = document.getElementById('inviteLinkInput');
-  const qrImg = document.getElementById('qrImg');
-  if(setTitleEl) setTitleEl.textContent = '📚 Bộ câu hỏi: ' + setTitle;
-  if(linkInput) linkInput.value = url;
-  if(qrImg){
-    qrImg.onerror = () => {
-      qrImg.onerror = null;
-      qrImg.src = `https://quickchart.io/qr?size=260&text=${encodeURIComponent(url)}`;
-    };
-    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(url)}`;
-  }
-  document.getElementById('inviteModal').classList.add('show');
-}
-
-document.getElementById('btnInvite').onclick = openInviteModal;
-document.getElementById('btnLoginInvite').onclick = openInviteModal;
-document.getElementById('btnCloseInvite').onclick = () => document.getElementById('inviteModal').classList.remove('show');
-document.getElementById('btnCopyInvite').onclick = async () => {
-  const linkInput = document.getElementById('inviteLinkInput');
-  const url = linkInput ? linkInput.value : getInviteUrl();
-  try {
-    await navigator.clipboard.writeText(url);
-    toast('📋 Đã sao chép link trò chơi!', '#16a34a');
-  } catch(e) {
-    if(linkInput){ linkInput.select(); document.execCommand('copy'); }
-    toast('📋 Đã sao chép link trò chơi!', '#16a34a');
-  }
-};
-document.getElementById('btnInviteLb').onclick = () => {
-  document.getElementById('inviteModal').classList.remove('show');
-  SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
-};
-document.getElementById('btnLoginLb').onclick = () => SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
-document.getElementById('btnLeaderboard').onclick = () => SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
-document.getElementById('btnSheets').onclick = () => SheetsOnline.openSetup();
-
-/* ---------- Chuyển đổi Slide & Logic trò chơi ---------- */
-function resetGame(askPlayer = true){
+function resetGame(){
   stopTimers();
-  document.getElementById('finishModal').classList.remove('show');
   tileStatus = Array(N).fill(null);
-  elapsedMs = Array(N).fill(0);
-  qScores = Array(N).fill(0);
-  scoreSubmitted = false;
-  finishShown = false;
   isRevealedAll = false;
-  updateScoreUI();
   document.getElementById('boardWrap').classList.remove('reveal-all');
   document.getElementById('revealCaption').classList.remove('show');
   showSlide('board');
   renderBoard();
-  if(askPlayer){
-    playerInfo.started = false;
-    openPlayerModal();
-  }
 }
 
 function showSlide(which){
@@ -582,15 +247,6 @@ function showSlide(which){
 function stopTimers(){
   if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
   if(autoReturnTimer){ clearTimeout(autoReturnTimer); autoReturnTimer = null; }
-  if(autoNextTimer){ clearTimeout(autoNextTimer); autoNextTimer = null; }
-}
-
-function findNextUnanswered(fromIdx){
-  for(let offset = 1; offset < N; offset++){
-    const idx = (fromIdx + offset) % N;
-    if(tileStatus[idx] === null) return idx;
-  }
-  return tileStatus[fromIdx] === null ? fromIdx : -1;
 }
 
 function renderBoard(){
@@ -630,132 +286,21 @@ function renderBoard(){
   const cap = document.getElementById('revealCaption');
   if(doneCount === N){
     cap.classList.add('show');
-    const totalScore = qScores.reduce((a, b) => a + b, 0);
-    const totalTimeSec = Math.round(elapsedMs.reduce((a, b) => a + b, 0) / 100) / 10;
     if(openedCount === N){
       document.getElementById('boardWrap').classList.add('reveal-all');
-      cap.innerHTML = `🎉 Xuất sắc! Cả 4 mảnh ghép đã mở — Bức ảnh bí mật: Nông dân thu hoạch muối trên ruộng muối!<br><span style="font-size:14px">🏆 Điểm: <b>${totalScore}</b> &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b></span> <span id="lmSyncMsg"></span>`;
+      cap.textContent = '🎉 Xuất sắc! Cả 4 mảnh ghép đã mở — Bức ảnh bí mật: Nông dân thu hoạch muối trên ruộng muối!';
     } else {
-      cap.innerHTML = `Hoàn thành trò chơi: Đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa).<br><span style="font-size:14px">🏆 Điểm: <b>${totalScore}</b> &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b></span> <span id="lmSyncMsg"></span>`;
-    }
-    if(!finishShown){
-      finishShown = true;
-      const endTime = window.SheetsOnline ? SheetsOnline.formatVNTime(new Date()) : '';
-      setTimeout(() => showFinishPopup(openedCount, totalScore, totalTimeSec, endTime), 750);
+      cap.textContent = `Hoàn thành trò chơi: Đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa).`;
     }
   } else if(!isRevealedAll){
     cap.classList.remove('show');
   }
 }
 
-async function showFinishPopup(openedCount, totalScore, totalTimeSec, endTime){
-  const modal = document.getElementById('finishModal');
-  const icon = document.getElementById('finishIcon');
-  const title = document.getElementById('finishTitle');
-  const sub = document.getElementById('finishSub');
-  const scoreEl = document.getElementById('finishScore');
-  const syncEl = document.getElementById('finishSyncStatus');
-  const lbWrap = document.getElementById('finishLeaderboardWrap');
-
-  if(openedCount === N){
-    icon.textContent = '🎉💐';
-    title.textContent = 'Chúc mừng bạn đã hoàn thành!';
-    title.className = 'finish-title win';
-    sub.textContent = 'Bạn đã mở khóa toàn bộ bức ảnh bí mật: Nông dân thu hoạch muối!';
-    sub.className = 'finish-sub';
-  } else {
-    icon.textContent = '💪📚';
-    title.textContent = 'Bạn cần cố gắng hơn';
-    title.className = 'finish-title';
-    sub.textContent = `Bạn đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa). Hãy thử lại nhé!`;
-    sub.className = 'finish-sub lose';
-  }
-
-  const pLabel = playerInfo.isDemo ? 'Chế độ chơi thử' : `${playerInfo.name}${playerInfo.className ? ' - ' + playerInfo.className : ''}`;
-  scoreEl.innerHTML = `👤 <b>${esc(pLabel)}</b><br>🧩 Đã mở: <b>${openedCount}/${N}</b> mảnh &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b> &nbsp;|&nbsp; 🏆 Điểm: <b style="color:#dc2626">${totalScore}</b>`;
-  if(lbWrap){
-    lbWrap.innerHTML = '<div style="padding:18px;text-align:center;color:#64748b;font-size:13px">⏳ Đang tải bảng xếp hạng...</div>';
-  }
-  modal.classList.add('show');
-
-  const setTitle = allSets[currentSetIndex].title;
-  const highlightName = playerInfo.isDemo ? '' : playerInfo.name;
-
-  if(!scoreSubmitted){
-    scoreSubmitted = true;
-    await submitLatManhGhepScore(openedCount, totalScore, totalTimeSec, endTime, syncEl);
-  }
-
-  if(lbWrap && window.SheetsOnline && SheetsOnline.renderLeaderboardInto){
-    await SheetsOnline.renderLeaderboardInto(lbWrap, 'LatManhGhep', setTitle, highlightName);
-  }
-}
-
-document.getElementById('btnFinishView').onclick = () => {
-  document.getElementById('finishModal').classList.remove('show');
-};
-document.getElementById('btnFinishLb').onclick = () => {
-  document.getElementById('finishModal').classList.remove('show');
-  SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
-};
-document.getElementById('btnFinishReplay').onclick = () => {
-  document.getElementById('finishModal').classList.remove('show');
-  resetGame(true);
-};
-const btnRefreshFinishLb = document.getElementById('btnRefreshFinishLb');
-if(btnRefreshFinishLb){
-  btnRefreshFinishLb.onclick = () => {
-    const lbWrap = document.getElementById('finishLeaderboardWrap');
-    if(lbWrap && window.SheetsOnline && SheetsOnline.renderLeaderboardInto){
-      SheetsOnline.renderLeaderboardInto(lbWrap, 'LatManhGhep', allSets[currentSetIndex].title, playerInfo.isDemo ? '' : playerInfo.name);
-    }
-  };
-}
-
-async function submitLatManhGhepScore(openedCount, totalScore, totalTimeSec, endTime, syncEl){
-  const el = document.getElementById('lmSyncMsg');
-  if(playerInfo.isDemo || !playerInfo.name){
-    if(syncEl){ syncEl.textContent = 'ℹ️ Chế độ chơi thử: không lưu kết quả lên Google Sheets.'; syncEl.style.color = '#64748b'; }
-    if(el) el.innerHTML = '— <i>(Chơi thử: không lưu điểm)</i>';
-    return;
-  }
-  if(!window.SheetsOnline || !SheetsOnline.isConfigured()){
-    if(syncEl){
-      syncEl.innerHTML = '⚠️ Chưa kết nối URL Apps Script Google Sheets (<a href="#" onclick="document.getElementById(\'finishModal\').classList.remove(\'show\');SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt ngay</a>)';
-      syncEl.style.color = '#b45309';
-    }
-    if(el) el.innerHTML = '— <a href="#" onclick="SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt Google Sheets để lưu điểm</a>';
-    return;
-  }
-  if(syncEl){ syncEl.textContent = '⏳ Đang lưu điểm lên Google Sheets...'; syncEl.style.color = '#2563eb'; }
-  if(el) el.textContent = '— ⏳ Đang lưu lên Google Sheets...';
-  const res = await SheetsOnline.submitScore({
-    game: 'LatManhGhep',
-    name: playerInfo.name,
-    className: playerInfo.className,
-    setTitle: allSets[currentSetIndex].title,
-    startTime: playerInfo.startTime,
-    endTime: endTime || SheetsOnline.formatVNTime(new Date()),
-    totalTime: totalTimeSec,
-    correctCount: `${openedCount}/${N}`,
-    score: totalScore
-  });
-  if(res.ok){
-    if(syncEl){ syncEl.textContent = '✅ Đã lưu thành công tên, thời gian và điểm lên Google Sheets!'; syncEl.style.color = '#15803d'; }
-    if(el) el.innerHTML = '— ✅ <b>Đã lưu vào Google Sheets!</b> (<a href="#" onclick="SheetsOnline.openLeaderboard(\'LatManhGhep\', allSets[currentSetIndex].title);return false;" style="color:#15803d">Xem BXH</a>)';
-  } else {
-    if(syncEl){ syncEl.textContent = '❌ Lưu lên Google Sheets thất bại: ' + (res.reason || 'Lỗi mạng'); syncEl.style.color = '#dc2626'; }
-    if(el) el.textContent = '— ❌ Lưu thất bại';
-  }
-}
-
 document.querySelectorAll('.tile').forEach(tile => {
   tile.onclick = () => {
     const idx = +tile.dataset.idx;
-    if(tileStatus[idx] !== null) return; // Đã trả lời hoặc bị khóa
-    if(!playerInfo.started){
-      playerInfo = { name: 'Chơi thử', className: '', isDemo: true, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
-    }
+    if(tileStatus[idx] !== null) return;
     openQuestionSlide(idx);
   };
 });
@@ -764,7 +309,6 @@ function openQuestionSlide(idx){
   stopTimers();
   activeTile = idx;
   timeLeft = MAX_TIME;
-  questionStartedAt = Date.now();
   const q = questions[idx];
 
   document.getElementById('qBadge').textContent = `🧩 MẢNH GHÉP ${idx + 1} — CÂU HỎI ${idx + 1}`;
@@ -830,10 +374,6 @@ function handleAnswer(chosenIdx){
   stopTimers();
   lockOptions();
 
-  const elapsed = questionStartedAt ? Math.min(30000, Date.now() - questionStartedAt) : 0;
-  elapsedMs[activeTile] = elapsed;
-  const secLeft = Math.max(0, 30 - elapsed / 1000);
-
   const q = questions[activeTile];
   const btns = document.querySelectorAll('#optsGrid .opt');
   const fb = document.getElementById('qFeedback');
@@ -842,19 +382,16 @@ function handleAnswer(chosenIdx){
   if(chosenIdx === q.a){
     btns[chosenIdx].classList.add('right');
     tileStatus[activeTile] = 'right';
-    qScores[activeTile] = window.SheetsOnline ? SheetsOnline.calcQuestionScore(true, secLeft) : 100;
     fb.className = 'q-feedback ok';
-    fbText.textContent = `✅ Chính xác! (+${qScores[activeTile]}đ) Đang quay lại lật mảnh ghép ${activeTile + 1}...`;
+    fbText.textContent = `✅ Chính xác! Đang quay lại lật mảnh ghép ${activeTile + 1}...`;
   } else {
     btns[chosenIdx].classList.add('wrong');
     tileStatus[activeTile] = 'wrong';
-    qScores[activeTile] = 0;
     fb.className = 'q-feedback no';
     fbText.textContent = `❌ Sai rồi! Mảnh ghép ${activeTile + 1} bị bôi đen (không lật thẻ)...`;
   }
-  updateScoreUI();
 
-  autoReturnTimer = setTimeout(() => returnToBoard(true), 1000);
+  autoReturnTimer = setTimeout(() => returnToBoard(), 1350);
 }
 
 function handleTimeout(){
@@ -862,38 +399,22 @@ function handleTimeout(){
   stopTimers();
   lockOptions();
 
-  elapsedMs[activeTile] = 30000;
-  qScores[activeTile] = 0;
   tileStatus[activeTile] = 'timeout';
   const fb = document.getElementById('qFeedback');
   fb.className = 'q-feedback no';
   document.getElementById('qFeedbackText').textContent = `⏰ Quá 30 giây! Mảnh ghép ${activeTile + 1} bị bôi đen (không lật thẻ)...`;
 
-  autoReturnTimer = setTimeout(() => returnToBoard(true), 1150);
+  autoReturnTimer = setTimeout(() => returnToBoard(), 1500);
 }
 
-function returnToBoard(autoAdvance = false){
+function returnToBoard(){
   stopTimers();
   showSlide('board');
   renderBoard();
-  if(autoAdvance){
-    const nextIdx = findNextUnanswered(activeTile);
-    if(nextIdx !== -1){
-      autoNextTimer = setTimeout(() => {
-        autoNextTimer = null;
-        if(tileStatus[nextIdx] === null){
-          openQuestionSlide(nextIdx);
-        } else {
-          const fallback = findNextUnanswered(activeTile);
-          if(fallback !== -1) openQuestionSlide(fallback);
-        }
-      }, 1050);
-    }
-  }
 }
 
-document.getElementById('btnBackToBoard').onclick = () => returnToBoard(false);
-document.getElementById('btnReset').onclick = () => resetGame(true);
+document.getElementById('btnBackToBoard').onclick = returnToBoard;
+document.getElementById('btnReset').onclick = resetGame;
 document.getElementById('btnRevealAll').onclick = () => {
   isRevealedAll = !isRevealedAll;
   document.getElementById('boardWrap').classList.toggle('reveal-all', isRevealedAll);
@@ -907,154 +428,8 @@ document.getElementById('btnRevealAll').onclick = () => {
 };
 
 function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
-function toast(msg, bg='#15803d'){
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.style.background = bg; t.style.display = 'block';
-  setTimeout(() => t.style.display = 'none', 4500);
-}
 
-/* ---------- Quản lý & Soạn bộ 4 câu hỏi ---------- */
-function openEditorModal(setIdx){
-  buildEditor(allSets[setIdx].questions);
-  document.getElementById('setNameInput').value = allSets[setIdx].title;
-  document.getElementById('ghToken').value = localStorage.getItem(GH_TOKEN_KEY) || '';
-  document.getElementById('modal').classList.add('show');
-}
-
-document.getElementById('btnEdit').onclick = () => openEditorModal(currentSetIndex);
-document.getElementById('btnEditHeader').onclick = () => openEditorModal(currentSetIndex);
-document.getElementById('eClose').onclick = () => document.getElementById('modal').classList.remove('show');
-document.getElementById('modalSetSelect').onchange = e => openEditorModal(+e.target.value);
-
-document.getElementById('btnNewSet').onclick = () => {
-  allSets.push({
-    id: 'set_' + Date.now(),
-    title: 'Bộ câu hỏi mới ' + (allSets.length + 1),
-    questions: JSON.parse(JSON.stringify(DEFAULT_SETS[0].questions))
-  });
-  updateSetSelectUI();
-  selectSet(allSets.length - 1);
-  openEditorModal(allSets.length - 1);
-  toast('Đã tạo bộ 4 câu hỏi mới!');
-};
-
-document.getElementById('btnDeleteSet').onclick = () => {
-  if(allSets.length <= 1) return alert('Không thể xóa bộ câu hỏi cuối cùng!');
-  if(confirm(`Xóa "${allSets[currentSetIndex].title}"?`)){
-    allSets.splice(currentSetIndex, 1);
-    currentSetIndex = 0;
-    updateSetSelectUI(); selectSet(0); openEditorModal(0);
-  }
-};
-
-function buildEditor(list){
-  const e = document.getElementById('editor');
-  e.innerHTML = '';
-  list.forEach((q, i) => {
-    const d = document.createElement('div');
-    d.className = 'qe';
-    d.innerHTML = `<b>Mảnh ghép ${i+1} (Câu ${i+1}):</b><textarea rows="2" class="qq"></textarea>` +
-      `<div class="g">` + L.map((l, k) => `<label>${l}: <input class="oo" data-k="${k}"></label>`).join('') + `</div>` +
-      `<label style="display:block;margin-top:6px">Đáp án đúng: <select class="aa">${L.map((l, k) => `<option value="${k}">${l}</option>`).join('')}</select></label>`;
-    d.querySelector('.qq').value = q.q;
-    d.querySelectorAll('.oo').forEach(inp => inp.value = q.o[inp.dataset.k]);
-    d.querySelector('.aa').value = q.a;
-    e.appendChild(d);
-  });
-}
-
-function readEditor(){
-  return [...document.querySelectorAll('.qe')].map(d => ({
-    q: d.querySelector('.qq').value.trim() || '(Chưa có nội dung)',
-    o: [...d.querySelectorAll('.oo')].map(i => i.value.trim() || '—'),
-    a: +d.querySelector('.aa').value
-  }));
-}
-
-document.getElementById('eSaveLocal').onclick = () => {
-  const idx = +document.getElementById('modalSetSelect').value;
-  allSets[idx].title = document.getElementById('setNameInput').value.trim() || allSets[idx].title;
-  allSets[idx].questions = readEditor();
-  localStorage.setItem(LOCAL_KEY, JSON.stringify(allSets));
-  updateSetSelectUI(); selectSet(idx);
-  document.getElementById('modal').classList.remove('show');
-  toast('Đã lưu bộ câu hỏi vào trình duyệt!');
-};
-
-document.getElementById('eDefault').onclick = () => {
-  if(confirm('Khôi phục bộ câu hỏi mẫu?')){
-    allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
-    updateSetSelectUI(); selectSet(0); openEditorModal(0);
-  }
-};
-
-document.getElementById('eExport').onclick = () => {
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(new Blob([JSON.stringify({sets: allSets}, null, 2)], {type: 'application/json'}));
-  a.download = 'lat-manh-ghep-4-cau.json';
-  a.click();
-};
-
-document.getElementById('eImport').onclick = () => document.getElementById('file').click();
-document.getElementById('file').onchange = () => {
-  const f = document.getElementById('file').files[0];
-  if(!f) return;
-  const r = new FileReader();
-  r.onload = () => {
-    try {
-      const s = JSON.parse(r.result);
-      if(s.sets && Array.isArray(s.sets)) allSets = s.sets;
-      else if(Array.isArray(s) && s.length === N) allSets[currentSetIndex].questions = s;
-      else throw new Error();
-      updateSetSelectUI(); selectSet(0); openEditorModal(0);
-      toast('Đã nhập file JSON thành công!');
-    } catch(e){ alert('File JSON không hợp lệ (cần đúng 4 câu hỏi).'); }
-  };
-  r.readAsText(f);
-  document.getElementById('file').value = '';
-};
-
-document.getElementById('btnSyncGH').onclick = async () => {
-  const token = document.getElementById('ghToken').value.trim();
-  if(!token) return alert('Vui lòng nhập GitHub Token!');
-  localStorage.setItem(GH_TOKEN_KEY, token);
-
-  const idx = +document.getElementById('modalSetSelect').value;
-  allSets[idx].title = document.getElementById('setNameInput').value.trim() || allSets[idx].title;
-  allSets[idx].questions = readEditor();
-
-  const btn = document.getElementById('btnSyncGH');
-  btn.disabled = true; btn.textContent = '⏳ Đang xuất bản...';
-  try {
-    let sha = null;
-    const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
-      headers: {'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json'}
-    });
-    if(getRes.ok) sha = (await getRes.json()).sha;
-
-    const jsonStr = JSON.stringify({sets: allSets}, null, 2);
-    const bytes = new TextEncoder().encode(jsonStr);
-    let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
-
-    const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
-      method: 'PUT',
-      headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json'},
-      body: JSON.stringify({message: 'Cập nhật câu hỏi Lật mảnh ghép 4 mảnh', content: btoa(bin), sha: sha || undefined})
-    });
-    if(!putRes.ok) throw new Error((await putRes.json()).message || 'Lỗi GitHub');
-
-    localStorage.setItem(LOCAL_KEY, JSON.stringify(allSets));
-    updateSetSelectUI(); selectSet(idx);
-    document.getElementById('modal').classList.remove('show');
-    toast('🎉 Đã xuất bản lên GitHub thành công!');
-  } catch(err){
-    alert('Lỗi lưu GitHub: ' + err.message);
-  } finally {
-    btn.disabled = false; btn.textContent = '🚀 Xuất bản lên GitHub ngay';
-  }
-};
-
-initData();
+initGame();
 </script>
 </body>
 </html>
