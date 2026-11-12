@@ -15,6 +15,27 @@
     var sheet = ss.getSheetByName(sheetName);
     if (!sheet) return jsonOut({ ok: false, error: 'Sheet not found' });
 
+    if (data.action === 'reset') {
+      var lastRow = sheet.getLastRow();
+      var deleted = 0;
+      var targetSet = data.setTitle ? String(data.setTitle) : '';
+      if (lastRow > 1) {
+        if (!targetSet) {
+          deleted = lastRow - 1;
+          sheet.deleteRows(2, lastRow - 1);
+        } else {
+          var vals = sheet.getRange(2, 1, lastRow - 1, 9).getValues();
+          for (var r = vals.length - 1; r >= 0; r--) {
+            if (String(vals[r][3]) === targetSet) {
+              sheet.deleteRow(r + 2);
+              deleted++;
+            }
+          }
+        }
+      }
+      return jsonOut({ ok: true, reset: true, deleted: deleted });
+    }
+
     var stt = sheet.getLastRow();
     sheet.appendRow([
       stt,
@@ -354,12 +375,34 @@ function jsonOut(obj) {
     document.getElementById('shSetupModal').classList.add('show');
   }
 
+  async function resetLeaderboard(gameName, setTitle){
+    const url = appsScriptUrl || (localStorage.getItem(LOCAL_API_KEY) || '').trim();
+    if(!url) return { ok: false, reason: 'not_configured' };
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'reset', game: gameName || 'ToHinhDoanChu', setTitle: setTitle || '' })
+      });
+      if(res.ok){
+        const data = await res.json();
+        if(data && data.ok && data.reset){
+          return { ok: true, deleted: data.deleted || 0 };
+        }
+        return { ok: false, reason: 'needs_script_update' };
+      }
+      return { ok: false, reason: 'http_' + res.status };
+    } catch(e){
+      return { ok: false, reason: e.message || 'network_error' };
+    }
+  }
+
   global.SheetsOnline = {
     SPREADSHEET_URL,
     initConfig,
     formatVNTime,
     calcQuestionScore,
     submitScore,
+    resetLeaderboard,
     renderLeaderboardInto,
     openLeaderboard,
     openSetup,

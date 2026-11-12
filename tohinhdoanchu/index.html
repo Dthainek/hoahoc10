@@ -14,31 +14,34 @@ html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sa
 .back-link:hover{background:#dbeafe}
 .app-title{font-size:17px;font-weight:800;color:#0f172a;margin:0}
 
-/* Bộ câu hỏi selector trên header */
+/* Bộ điều khiển trên header */
 .set-selector-wrap{display:flex;align-items:center;gap:8px;flex-wrap:wrap;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:10px}
 .header-bar .btn-ui{white-space:nowrap}
-.set-selector-wrap label{font-size:13px;font-weight:700;color:#475569;white-space:nowrap}
-#setSelect{font:inherit;font-size:14px;font-weight:600;padding:5px 8px;border-radius:6px;border:1px solid #94a3b8;background:#fff;color:#0f172a;cursor:pointer;outline:none}
-#setSelect:focus{border-color:#2563eb}
+.btn-gm{background:#312e81;color:#ffffff;border:1px solid #1e1b4b}
+.btn-gm:hover{background:#1e1b4b;color:#ffffff}
+.btn-danger{background:#dc2626;color:#ffffff;border:1px solid #b91c1c}
+.btn-danger:hover{background:#b91c1c;color:#ffffff}
 
-/* Layout 2 nửa */
-.app{display:flex;height:calc(100vh - 61px);gap:16px;padding:14px 18px}
-.half{flex:1 1 50%;min-width:0;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.05);padding:16px;display:flex;flex-direction:column}
+/* Layout 2 nửa tối ưu cho máy chiếu */
+.app{display:flex;height:calc(100vh - 61px);gap:16px;padding:12px 16px}
+.half{flex:1 1 50%;min-width:0;min-height:0;background:#ffffff;border:1px solid #e2e8f0;border-radius:16px;box-shadow:0 4px 16px rgba(0,0,0,0.05);padding:16px;display:flex;flex-direction:column}
+.half.left-panel{flex:0.94 1 47%}
+.half.right-panel{flex:1.06 1 53%}
 
 /* Nửa trái: Mảnh ghép */
-.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap}
-.top h2{margin:0;font-size:15px;color:#1e293b;font-weight:700;display:flex;align-items:center;gap:6px}
+.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
+.top h2{margin:0;font-size:clamp(15px,1.25vw,18px);color:#1e293b;font-weight:700;display:flex;align-items:center;gap:6px}
 .top h2 span.icon{color:#4f46e5;font-size:18px}
 .mosaic-wrap{flex:1;display:flex;align-items:center;justify-content:center;min-height:0;padding:4px}
-#mosaic{position:relative;width:100%;aspect-ratio:36/21;max-height:100%;max-width:calc((100vh - 180px) * 36 / 21);background:#ffffff;border:2px solid #0f172a;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
-.cell{position:absolute;border:1.5px solid #0f172a;background:#ffffff;color:#0f172a;display:flex;align-items:center;justify-content:center;
+#mosaic{position:relative;width:100%;aspect-ratio:72/42;max-height:100%;max-width:calc((100vh - 175px) * 72 / 42);background:#ffffff;border:2px solid #0f172a;border-radius:6px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,0.08)}
+.cell{position:absolute;border:1px solid #334155;background:#ffffff;color:#0f172a;display:flex;align-items:center;justify-content:center;
   container-type:size;cursor:pointer;overflow:hidden;transition:background .25s;user-select:none}
-.cell span{font-weight:800;font-size:clamp(8px,min(45cqh,28cqw),25px);line-height:1;letter-spacing:0.3px}
+.cell span{font-weight:800;font-size:clamp(8px,min(48cqh,30cqw),22px);line-height:1;letter-spacing:0px}
 .cell:hover{background:#f1f5f9;z-index:1}
 .cell.red{background:#dc2626!important;color:#ffffff!important;border-color:#991b1b!important}
 .cell.black{background:#0f172a!important;color:#ffffff!important;border-color:#020617!important}
-.cell.cur{outline:4px solid #2563eb;outline-offset:-4px;z-index:3}
-.left-controls{display:flex;justify-content:space-between;align-items:center;margin-top:10px;flex-wrap:wrap;gap:8px}
+.cell.cur{outline:3px solid #2563eb;outline-offset:-3px;z-index:3}
+.left-controls{display:flex;justify-content:space-between;align-items:center;margin-top:8px;flex-wrap:wrap;gap:8px}
 .btns{display:flex;gap:8px;flex-wrap:wrap}
 button{font:inherit;cursor:pointer;transition:all .15s}
 .btn-ui{border:1px solid #cbd5e1;background:#f8fafc;color:#334155;border-radius:8px;padding:7px 14px;font-size:13px;font-weight:700}
@@ -48,40 +51,41 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .btn-accent{background:#16a34a;color:#ffffff;border:1px solid #15803d}
 .btn-accent:hover{background:#15803d}
 
-/* Nửa phải: Khu vực trắc nghiệm */
-.q-container{display:flex;flex-direction:column;height:100%}
+/* Nửa phải: Khu vực trắc nghiệm cỡ lớn cho máy chiếu */
+.q-container{display:flex;flex-direction:column;height:100%;min-height:0;overflow-y:auto;padding-right:2px}
 .q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;gap:8px;flex-wrap:wrap}
-.qno{font-weight:800;color:#2563eb;font-size:17px}
-.set-badge{background:#e0e7ff;color:#3730a3;font-size:12px;font-weight:700;padding:3px 10px;border-radius:6px}
+.qno{font-weight:800;color:#2563eb;font-size:clamp(20px,1.8vw,27px)}
+.set-badge{background:#e0e7ff;color:#3730a3;font-size:clamp(12px,1.05vw,15px);font-weight:700;padding:4px 12px;border-radius:8px}
 
 /* Bộ đếm giờ 30s */
-.timer-badge{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;border:1.5px solid #93c5fd;color:#1d4ed8;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:800;transition:all .25s ease}
+.timer-badge{display:inline-flex;align-items:center;gap:6px;background:#eff6ff;border:2px solid #93c5fd;color:#1d4ed8;padding:5px 15px;border-radius:999px;font-size:clamp(16px,1.4vw,21px);font-weight:800;transition:all .25s ease}
 .timer-badge.warning{background:#fffbeb;border-color:#fcd34d;color:#b45309}
 .timer-badge.danger{background:#fef2f2;border-color:#fca5a5;color:#b91c1c;animation:timerPulse 0.8s infinite alternate ease-in-out}
 .timer-badge.done{background:#f1f5f9;border-color:#cbd5e1;color:#64748b}
 @keyframes timerPulse{from{transform:scale(1)}to{transform:scale(1.06)}}
-.timer-bar-wrap{height:4px;width:100%;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:12px}
+.timer-bar-wrap{height:6px;width:100%;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:14px;flex-shrink:0}
 .timer-bar{height:100%;width:100%;background:#2563eb;transition:width 0.25s linear,background-color 0.3s;border-radius:999px}
 .timer-bar.warning{background:#f59e0b}
 .timer-bar.danger{background:#dc2626}
-#qtext{font-size:21px;font-weight:600;line-height:1.42;margin-bottom:18px;min-height:75px;color:#0f172a}
-.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2px solid #e2e8f0;background:#ffffff;color:#1e293b;border-radius:12px;padding:12px 16px;margin-bottom:10px;font-size:17px;cursor:pointer;transition:all .15s}
-.opt b{flex:0 0 36px;height:36px;border-radius:50%;background:#f1f5f9;color:#0f172a;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;border:1px solid #cbd5e1}
+#qtext{font-size:clamp(23px,2.2vw,33px);font-weight:700;line-height:1.38;margin-bottom:14px;padding:14px 18px;background:#f8fafc;border-left:6px solid #2563eb;border-radius:12px;color:#0f172a}
+#opts{display:flex;flex-direction:column;gap:10px;margin-bottom:10px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2.5px solid #e2e8f0;background:#ffffff;color:#0f172a;border-radius:14px;padding:clamp(11px,1.35vh,17px) 18px;margin-bottom:0;font-size:clamp(19px,1.8vw,27px);font-weight:700;line-height:1.3;cursor:pointer;transition:all .15s}
+.opt b{flex:0 0 46px;height:46px;border-radius:50%;background:#f1f5f9;color:#0f172a;display:flex;align-items:center;justify-content:center;font-size:clamp(17px,1.5vw,22px);font-weight:800;border:2px solid #cbd5e1}
 .opt:hover:not(:disabled){border-color:#2563eb;background:#eff6ff}
 .opt:disabled{cursor:default}
-.opt.right{border-color:#16a34a!important;background:#dcfce7!important;color:#166534!important;font-weight:600}
+.opt.right{border-color:#16a34a!important;background:#dcfce7!important;color:#166534!important}
 .opt.right b{background:#16a34a;color:#ffffff;border-color:#15803d}
 .opt.wrong{border-color:#dc2626!important;background:#fee2e2!important;color:#991b1b!important}
 .opt.wrong b{background:#dc2626;color:#ffffff;border-color:#b91c1c}
-.nav{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:12px}
-.nav .nb{background:#2563eb;color:#ffffff;border:0;border-radius:10px;padding:12px 20px;font-size:15px;font-weight:700}
+.nav{display:flex;align-items:center;gap:12px;margin-top:auto;padding-top:10px}
+.nav .nb{background:#2563eb;color:#ffffff;border:0;border-radius:10px;padding:12px 20px;font-size:clamp(15px,1.35vw,18px);font-weight:700}
 .nav .nb:hover:not(:disabled){background:#1d4ed8}
 .nav .nb:disabled{background:#cbd5e1;color:#64748b;cursor:default}
-#result{flex:1;text-align:center;border:2px dashed #cbd5e1;background:#f8fafc;border-radius:10px;padding:10px 14px;font-weight:700;min-height:48px;display:flex;align-items:center;justify-content:center;font-size:15px;color:#64748b}
+#result{flex:1;text-align:center;border:2px dashed #cbd5e1;background:#f8fafc;border-radius:10px;padding:10px 14px;font-weight:800;min-height:50px;display:flex;align-items:center;justify-content:center;font-size:clamp(17px,1.5vw,22px);color:#64748b}
 #result.ok{color:#15803d;border-color:#16a34a;background:#f0fdf4}
 #result.no{color:#b91c1c;border-color:#dc2626;background:#fef2f2}
-.dots{display:flex;gap:7px;flex-wrap:wrap;margin-top:14px}
-.dot{width:34px;height:34px;border-radius:8px;border:1.5px solid #cbd5e1;background:#ffffff;color:#334155;font-size:13px;font-weight:800}
+.dots{display:flex;gap:7px;flex-wrap:wrap;margin-top:10px}
+.dot{width:36px;height:36px;border-radius:8px;border:1.5px solid #cbd5e1;background:#ffffff;color:#334155;font-size:14px;font-weight:800}
 .dot:hover{background:#f1f5f9;border-color:#94a3b8}
 .dot.cur{outline:2.5px solid #2563eb;border-color:#2563eb;color:#2563eb}
 .dot.ok{background:#dc2626;color:#ffffff;border-color:#dc2626}
@@ -124,22 +128,35 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .invite-link-row{display:flex;gap:8px;margin-top:8px}
 .invite-link-row input{flex:1;padding:9px 10px;border:1.5px solid #cbd5e1;border-radius:8px;font-family:monospace;font-size:13px;background:#f8fafc;color:#0f172a}
 
-/* Modal soạn và quản lý bộ câu hỏi */
-#modal{position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
+/* Modal Game Master & soạn bộ câu hỏi */
+#modal{position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:190}
 #modal.show{display:flex}
-.box{background:#ffffff;border-radius:16px;width:min(900px,96vw);max-height:92vh;overflow:auto;padding:22px;color:#1e293b;box-shadow:0 20px 40px rgba(0,0,0,0.2)}
+.box{background:#ffffff;border-radius:16px;width:min(920px,96vw);max-height:92vh;overflow:auto;padding:22px;color:#1e293b;box-shadow:0 20px 40px rgba(0,0,0,0.2)}
 .box-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:10px}
-.box-header h3{margin:0;font-size:18px;color:#0f172a}
-.set-edit-bar{display:flex;gap:10px;align-items:center;background:#f1f5f9;padding:10px 14px;border-radius:10px;margin-bottom:14px;flex-wrap:wrap}
-.set-edit-bar input{flex:1;font:inherit;padding:8px 12px;border:1.5px solid #cbd5e1;border-radius:8px}
-.gh-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:14px;margin-bottom:16px}
+.box-header h3{margin:0;font-size:19px;color:#0f172a}
+.gm-section{background:#f8fafc;border:1.5px solid #cbd5e1;border-radius:12px;padding:14px;margin-bottom:14px}
+.gm-section-title{font-size:14px;font-weight:800;color:#0f172a;margin:0 0 8px;display:flex;align-items:center;gap:6px}
+.set-edit-bar{display:flex;gap:10px;align-items:center;background:#f1f5f9;padding:10px 14px;border-radius:10px;margin-bottom:12px;flex-wrap:wrap}
+.set-edit-bar input,.set-edit-bar select{font:inherit;padding:7px 10px;border:1.5px solid #cbd5e1;border-radius:8px;background:#fff}
+.set-edit-bar input{flex:1;min-width:180px}
+.gh-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:14px;margin-bottom:14px}
 .gh-card input{background:#ffffff;border:1.5px solid #86efac;color:#0f172a;padding:8px 12px;border-radius:8px;width:100%;font-family:monospace;font-size:13px}
 .qe{border:1px solid #e2e8f0;background:#f8fafc;border-radius:10px;padding:12px;margin-bottom:12px}
 .qe textarea,.qe input,.qe select{width:100%;font:inherit;padding:7px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#ffffff;color:#0f172a;margin-top:4px}
 .qe .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .qe label{font-size:13px;font-weight:700;color:#475569}
-.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#15803d;color:#ffffff;padding:12px 24px;border-radius:10px;display:none;z-index:200;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.25)}
-@media(max-width:920px){.app{flex-direction:column;height:auto}#mosaic{max-width:100%}}
+
+/* Modal xác nhận mật khẩu Game Master */
+#gmPassModal{position:fixed;inset:0;background:rgba(15,23,42,0.75);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:250}
+#gmPassModal.show{display:flex}
+.gm-pass-box{background:#ffffff;border-radius:18px;width:min(400px,92vw);padding:22px;box-shadow:0 24px 48px rgba(0,0,0,0.3);animation:popIn .2s ease}
+.gm-pass-box h4{margin:0 0 6px;font-size:18px;font-weight:800;color:#0f172a}
+.gm-pass-box p{margin:0 0 12px;font-size:13.5px;color:#475569}
+.gm-pass-box input{width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;outline:none;margin-bottom:8px}
+.gm-pass-box input:focus{border-color:#2563eb}
+#gmPassErr{color:#dc2626;font-size:13px;font-weight:700;min-height:18px;margin-bottom:10px}
+.toast{position:fixed;left:50%;bottom:30px;transform:translateX(-50%);background:#15803d;color:#ffffff;padding:12px 24px;border-radius:10px;display:none;z-index:260;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.25)}
+@media(max-width:920px){.app{flex-direction:column;height:auto}#mosaic{max-width:100%}.opt{font-size:18px}.opt b{flex:0 0 38px;height:38px}#qtext{font-size:21px}}
 </style>
 </head>
 <body>
@@ -153,19 +170,16 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   
   <div class="set-selector-wrap">
     <span class="score-pill" id="scorePill">🏆 0đ</span>
-    <label for="setSelect">📚 Bộ:</label>
-    <select id="setSelect"></select>
     <button class="btn-ui btn-accent" id="btnInvite" title="Hiện mã QR mời học sinh tham gia">📲 Mời tham gia</button>
     <button class="btn-ui" id="btnLeaderboard" title="Xem bảng xếp hạng Online">🏆 BXH</button>
-    <button class="btn-ui" id="btnSheets" title="Cấu hình lưu điểm Google Sheets">📊 Sheets</button>
-    <button class="btn-ui" id="btnEditHeader" title="Chỉnh sửa hoặc thêm bộ câu hỏi mới">✏️ Bộ đề</button>
+    <button class="btn-ui btn-gm" id="btnGameMaster" title="Quản lý bộ câu hỏi, Google Sheets và Reset BXH">🛡️ Game Master</button>
   </div>
 </div>
 
 <!-- Nội dung chính -->
 <div class="app">
-  <!-- Nửa trái: 48 ô ngẫu nhiên -->
-  <section class="half">
+  <!-- Nửa trái: Tranh lưới chia nhỏ lặp đáp án -->
+  <section class="half left-panel">
     <div class="top">
       <h2><span class="icon">👆</span> Bấm vào một ô bất kỳ để mở câu hỏi tương ứng</h2>
     </div>
@@ -173,14 +187,13 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <div class="left-controls">
       <div class="btns">
         <button class="btn-ui" id="btnReset">🔄 Chơi lại (Xáo trộn ô)</button>
-        <button class="btn-ui btn-primary" id="btnEdit">✏️ Soạn bộ câu hỏi</button>
       </div>
-      <div style="font-size:13px;font-weight:700;color:#2563eb" id="progress">Đã trả lời: 0/12</div>
+      <div style="font-size:14px;font-weight:700;color:#2563eb" id="progress">Đã trả lời: 0/12</div>
     </div>
   </section>
 
   <!-- Nửa phải: Trắc nghiệm -->
-  <section class="half">
+  <section class="half right-panel">
     <div class="q-container">
       <div class="q-header">
         <div class="qno" id="qno">Câu 01:</div>
@@ -205,50 +218,87 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   </section>
 </div>
 
-<!-- Modal quản lý bộ câu hỏi -->
+<!-- Modal Game Master (Bộ câu hỏi, Google Sheets, Bộ đề, Reset BXH) -->
 <div id="modal">
   <div class="box">
     <div class="box-header">
-      <h3>✏️ Quản lý & Soạn bộ câu hỏi</h3>
+      <h3>🛡️ Game Master — Quản lý trò chơi</h3>
       <button class="btn-ui" id="eClose">✖ Đóng</button>
     </div>
 
-    <!-- Thanh đổi bộ câu hỏi & Đổi tên bộ đề -->
-    <div class="set-edit-bar">
-      <label style="font-weight:700;font-size:13px">Bộ đề đang sửa:</label>
-      <select id="modalSetSelect" style="padding:6px;border-radius:6px;font:inherit;font-weight:600"></select>
-      <input type="text" id="setNameInput" placeholder="Tên bộ đề (ví dụ: Bộ 1: Cấu tạo nguyên tử)...">
-      <button class="btn-ui btn-primary" id="btnNewSet">➕ Tạo bộ mới</button>
-      <button class="btn-ui" id="btnDeleteSet" style="color:#b91c1c;border-color:#fca5a5">🗑 Xóa bộ này</button>
-    </div>
-
-    <!-- Khối đồng bộ GitHub -->
-    <div class="gh-card">
-      <div style="font-weight:800;color:#15803d;margin-bottom:6px">🌐 Lưu & Xuất bản vĩnh viễn lên GitHub (dthainek.github.io/hoahoc10)</div>
-      <p style="font-size:13px;color:#334155;margin:0 0 8px 0">
-        Nhập <b>GitHub Personal Access Token</b> có quyền write repository <code>Dthainek/hoahoc10</code> để lưu vĩnh viễn lên web:
-      </p>
-      <input type="password" id="ghToken" placeholder="Dán token ghp_xxxx hoặc github_pat_xxxx vào đây...">
-      <div style="display:flex;gap:10px;margin-top:8px;align-items:center;flex-wrap:wrap">
-        <button class="btn-ui btn-accent" id="btnSyncGH">🚀 Xuất bản tất cả bộ đề lên GitHub ngay</button>
-        <a href="https://github.com/settings/tokens/new" target="_blank" style="color:#2563eb;font-size:12px;text-decoration:none;font-weight:600">Tạo GitHub Token mới (tick quyền "repo") ↗</a>
+    <!-- Mục 1: Chọn bộ câu hỏi áp dụng cho trò chơi -->
+    <div class="gm-section">
+      <div class="gm-section-title">📚 Chọn bộ câu hỏi áp dụng cho trò chơi</div>
+      <div class="set-edit-bar" style="margin-bottom:0">
+        <select id="setSelect" style="flex:1;min-width:220px;font-weight:700"></select>
+        <button class="btn-ui btn-primary" id="btnApplySet">✅ Áp dụng bộ câu hỏi này</button>
       </div>
     </div>
 
-    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;flex-wrap:wrap;gap:8px">
-      <span style="font-weight:800">12 câu hỏi trắc nghiệm của bộ đề này:</span>
+    <!-- Mục 2: Google Sheets & Reset Bảng xếp hạng -->
+    <div class="gm-section">
+      <div class="gm-section-title">📊 Google Sheets &amp; 🔄 Reset Bảng Xếp Hạng (BXH)</div>
       <div class="btns">
-        <button class="btn-ui" id="eExport">⬇ Xuất file JSON</button>
-        <button class="btn-ui" id="eImport">⬆ Nhập file JSON</button>
-        <button class="btn-ui" id="eDefault">🔄 Khôi phục 4 bộ đề mẫu Hóa 10</button>
+        <button class="btn-ui btn-accent" id="btnOpenSheetsSetup">⚙️ Cài đặt Google Sheets / Cập nhật Apps Script</button>
+        <button class="btn-ui btn-danger" id="btnResetLbSet">🔄 Reset BXH bộ hiện tại</button>
+        <button class="btn-ui btn-danger" id="btnResetLbAll" style="background:#991b1b;border-color:#7f1d1d">⚠️ Reset toàn bộ BXH</button>
       </div>
+      <div id="gmResetStatus" style="margin-top:8px;font-size:13px;font-weight:700;color:#475569"></div>
     </div>
 
-    <div id="editor"></div>
+    <!-- Mục 3: Quản lý & Soạn bộ đề -->
+    <div class="gm-section" style="margin-bottom:0">
+      <div class="gm-section-title">✏️ Quản lý &amp; Soạn nội dung bộ đề (12 câu hỏi)</div>
+      <div class="set-edit-bar">
+        <label style="font-weight:700;font-size:13px">Bộ đề đang sửa:</label>
+        <select id="modalSetSelect" style="font-weight:600"></select>
+        <input type="text" id="setNameInput" placeholder="Tên bộ đề (ví dụ: Bộ 1: Cấu tạo nguyên tử)...">
+        <button class="btn-ui btn-primary" id="btnNewSet">➕ Tạo bộ mới</button>
+        <button class="btn-ui" id="btnDeleteSet" style="color:#b91c1c;border-color:#fca5a5">🗑 Xóa bộ này</button>
+      </div>
 
-    <div class="btns" style="margin-top:16px">
-      <button class="btn-ui btn-primary" id="eSaveLocal" style="padding:10px 20px;font-size:14px">💾 Lưu bộ đề vào máy này</button>
-      <input type="file" id="file" accept=".json" hidden>
+      <!-- Khối đồng bộ GitHub -->
+      <div class="gh-card">
+        <div style="font-weight:800;color:#15803d;margin-bottom:6px">🌐 Lưu & Xuất bản vĩnh viễn lên GitHub (dthainek.github.io/hoahoc10)</div>
+        <p style="font-size:13px;color:#334155;margin:0 0 8px 0">
+          Nhập <b>GitHub Personal Access Token</b> có quyền write repository <code>Dthainek/hoahoc10</code> để lưu vĩnh viễn lên web:
+        </p>
+        <input type="password" id="ghToken" placeholder="Dán token ghp_xxxx hoặc github_pat_xxxx vào đây...">
+        <div style="display:flex;gap:10px;margin-top:8px;align-items:center;flex-wrap:wrap">
+          <button class="btn-ui btn-accent" id="btnSyncGH">🚀 Xuất bản tất cả bộ đề lên GitHub ngay</button>
+          <a href="https://github.com/settings/tokens/new" target="_blank" style="color:#2563eb;font-size:12px;text-decoration:none;font-weight:600">Tạo GitHub Token mới (tick quyền "repo") ↗</a>
+        </div>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;flex-wrap:wrap;gap:8px">
+        <span style="font-weight:800">12 câu hỏi trắc nghiệm của bộ đề này:</span>
+        <div class="btns">
+          <button class="btn-ui" id="eExport">⬇ Xuất file JSON</button>
+          <button class="btn-ui" id="eImport">⬆ Nhập file JSON</button>
+          <button class="btn-ui" id="eDefault">🔄 Khôi phục 4 bộ đề mẫu Hóa 10</button>
+        </div>
+      </div>
+
+      <div id="editor"></div>
+
+      <div class="btns" style="margin-top:16px">
+        <button class="btn-ui btn-primary" id="eSaveLocal" style="padding:10px 20px;font-size:14px">💾 Lưu bộ đề vào máy này</button>
+        <input type="file" id="file" accept=".json" hidden>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal xác nhận mật khẩu Game Master -->
+<div id="gmPassModal">
+  <div class="gm-pass-box">
+    <h4>🔐 Xác nhận mật khẩu Game Master</h4>
+    <p id="gmPassActionLabel">Nhập mật khẩu để xác nhận thay đổi.</p>
+    <input type="password" id="gmPassInput" placeholder="Nhập mật khẩu...">
+    <div id="gmPassErr"></div>
+    <div style="display:flex;gap:8px;justify-content:flex-end">
+      <button class="btn-ui" id="btnGmPassCancel">Hủy</button>
+      <button class="btn-ui btn-primary" id="btnGmPassConfirm">✅ Xác nhận</button>
     </div>
   </div>
 </div>
@@ -477,94 +527,125 @@ function selectSet(index){
   newGame();
 }
 
-document.getElementById('setSelect').onchange = (e) => {
-  selectSet(+e.target.value);
-};
-
 const rnd = (a, b) => a + Math.floor(Math.random() * (b - a + 1));
 const shuffle = a => { for(let i=a.length-1; i>0; i--){ const j=rnd(0, i); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
-/* ---------- Thuật toán bố cục Mosaic 48 ô: 12 ô nét chữ "20-11" ---------- */
-const GW = 36, GH = 21;
+/* ---------- Thuật toán bố cục Mosaic chia nhỏ (~149 ô) lặp đáp án, nét đúng tạo hình "20-11" ---------- */
+const GW = 72, GH = 42, BG_TARGET = 108;
 
-function get2011Rects(){
-  const rects = [];
-  // '2' tại x=2, y=4 (7x12) -> 5 ô
+function splitBar(x, y, w, h, parts){
+  const out = [];
+  if(parts <= 1) return [[x, y, w, h]];
+  if(w >= h){
+    let cur = x;
+    for(let i=0; i<parts; i++){
+      const rem = (x + w) - cur;
+      const pw = (i === parts - 1) ? rem : Math.floor(rem / (parts - i));
+      out.push([cur, y, pw, h]);
+      cur += pw;
+    }
+  } else {
+    let cur = y;
+    for(let i=0; i<parts; i++){
+      const rem = (y + h) - cur;
+      const ph = (i === parts - 1) ? rem : Math.floor(rem / (parts - i));
+      out.push([x, cur, w, ph]);
+      cur += ph;
+    }
+  }
+  return out;
+}
+
+function get2011Groups(){
+  const groups = [];
+  // '2' tại x=4, y=8 (14x24) -> 5 nhóm nét được chia nhỏ thành nhiều ô
   const v2 = rnd(0, 1);
   const two = v2 === 0
-    ? [[0,0,7,2], [5,2,2,3], [0,5,7,2], [0,7,2,3], [0,10,7,2]]
-    : [[0,0,5,2], [5,0,2,5], [0,5,7,2], [0,7,2,5], [2,10,5,2]];
-  two.forEach(r => rects.push([2 + r[0], 4 + r[1], r[2], r[3]]));
+    ? [[0,0,14,4,3], [10,4,4,6,2], [0,10,14,4,3], [0,14,4,6,2], [0,20,14,4,3]]
+    : [[0,0,10,4,2], [10,0,4,10,3], [0,10,14,4,3], [0,14,4,10,3], [4,20,10,4,2]];
+  two.forEach(r => groups.push(splitBar(4 + r[0], 8 + r[1], r[2], r[3], r[4])));
 
-  // '0' tại x=11, y=4 (7x12) -> 4 ô
+  // '0' tại x=22, y=8 (14x24) -> 4 nhóm nét được chia nhỏ
   const v0 = rnd(0, 1);
   const zero = v0 === 0
-    ? [[0,0,7,2], [0,2,2,8], [5,2,2,8], [0,10,7,2]]
-    : [[0,0,2,12], [2,0,3,2], [2,10,3,2], [5,0,2,12]];
-  zero.forEach(r => rects.push([11 + r[0], 4 + r[1], r[2], r[3]]));
+    ? [[0,0,14,4,3], [0,4,4,16,4], [10,4,4,16,4], [0,20,14,4,3]]
+    : [[0,0,4,24,6], [4,0,6,4,2], [4,20,6,4,2], [10,0,4,24,6]];
+  zero.forEach(r => groups.push(splitBar(22 + r[0], 8 + r[1], r[2], r[3], r[4])));
 
-  // '-' tại x=20, y=9 (4x2) -> 1 ô
-  rects.push([20, 9, 4, 2]);
+  // '-' tại x=40, y=18 (8x4) -> chia thành 2 ô
+  groups.push(splitBar(40, 18, 8, 4, 2));
 
-  // '1' tại x=26, y=4 (3x12) -> 1 ô
-  rects.push([26, 4, 3, 12]);
-
-  // '1' tại x=31, y=4 (3x12) -> 1 ô
-  rects.push([31, 4, 3, 12]);
-
-  return rects;
+  // hai chữ '1' tại x=52 và x=62 (6x24 mỗi chữ) -> chia nhỏ thành 6 ô mỗi chữ
+  [52, 62].forEach(bx => {
+    if(rnd(0, 1) === 0){
+      groups.push([[bx,8,6,4],[bx,12,3,8],[bx+3,12,3,8],[bx,20,6,4],[bx,24,3,8],[bx+3,24,3,8]]);
+    } else {
+      groups.push([[bx,8,3,8],[bx+3,8,3,8],[bx,16,6,4],[bx,20,3,8],[bx+3,20,3,8],[bx,28,6,4]]);
+    }
+  });
+  return groups;
 }
 
 function layout(){
   const grid = Array.from({length: GH}, () => Array(GW).fill(-1));
-  const rects = [];
-  const place = (x, y, w, h, stroke) => {
-    const id = rects.length;
-    rects.push({x, y, w, h, stroke});
-    for(let j=y; j<y+h; j++) for(let i=x; i<x+w; i++) grid[j][i] = id;
-  };
-  get2011Rects().forEach(r => place(r[0], r[1], r[2], r[3], true));
-  
-  let best = null;
-  for(let t=0; t<3000; t++){
-    const g = grid.map(r => r.slice()), out = [];
-    const mw = rnd(2, 36), mh = rnd(2, 12);
-    for(let y=0; y<GH; y++) for(let x=0; x<GW; x++){
+  const strokeGroups = get2011Groups();
+  const stroke = [];
+  strokeGroups.forEach((cells, gIdx) => {
+    cells.forEach(([x, y, w, h]) => {
+      stroke.push({x, y, w, h, qSlot: gIdx, stroke: true});
+      for(let j=y; j<y+h; j++) for(let i=x; i<x+w; i++) grid[j][i] = gIdx;
+    });
+  });
+
+  // Lấp nền trên lưới vĩ mô 36x21 (ô tối thiểu 2x2 trên lưới 72x42) rồi chia nhỏ đạt đúng 108 ô sai
+  const MW = GW / 2, MH = GH / 2;
+  const mgrid = Array.from({length: MH}, (_, y) => Array.from({length: MW}, (_, x) => grid[y*2][x*2] !== -1 ? 1 : -1));
+  let bg = null;
+  for(let attempt=0; attempt<300; attempt++){
+    const g = mgrid.map(r => r.slice()), out = [];
+    for(let y=0; y<MH; y++) for(let x=0; x<MW; x++){
       if(g[y][x] !== -1) continue;
-      let w = 1; const wl = rnd(1, mw);
-      while(w < wl && x+w < GW && g[y][x+w] === -1) w++;
-      let h = 1; const hl = rnd(1, mh);
-      while(h < hl && y+h < GH){
+      let w = 1; const wl = rnd(2, 4);
+      while(w < wl && x+w < MW && g[y][x+w] === -1) w++;
+      let h = 1; const hl = rnd(2, 4);
+      while(h < hl && y+h < MH){
         let ok = true;
         for(let i=0; i<w; i++) if(g[y+h][x+i] !== -1){ ok = false; break; }
         if(!ok) break;
         h++;
       }
       for(let j=0; j<h; j++) for(let i=0; i<w; i++) g[y+j][x+i] = 99;
-      out.push({x, y, w, h, stroke: false});
+      out.push({x: x*2, y: y*2, w: w*2, h: h*2, stroke: false});
     }
-    if(!best || out.length < best.length) best = out;
-    if(out.length <= 36 && out.length >= 24){ best = out; break; }
-  }
-  const bg = best;
-  while(bg.length < 36){
-    const c = bg.filter(r => r.w > 1 || r.h > 1);
-    let tot = c.reduce((s, r) => s + r.w * r.h, 0), p = Math.random() * tot, r = c[0];
-    for(const q of c){ p -= q.w * q.h; if(p <= 0){ r = q; break; } }
-    const vert = r.w > 1 && (r.h === 1 || r.w * 1.4 >= r.h);
-    if(vert){ const k = rnd(1, r.w - 1); bg.push({x: r.x + k, y: r.y, w: r.w - k, h: r.h, stroke: false}); r.w = k; }
-    else{ const k = rnd(1, r.h - 1); bg.push({x: r.x, y: r.y + k, w: r.w, h: r.h - k, stroke: false}); r.h = k; }
-  }
-  while(bg.length > 36){
-    let done = false;
-    for(let a=0; a<bg.length && !done; a++) for(let b=a+1; b<bg.length && !done; b++){
-      const A = bg[a], B = bg[b];
-      if(A.y === B.y && A.h === B.h && (A.x + A.w === B.x || B.x + B.w === A.x)){ A.x = Math.min(A.x, B.x); A.w += B.w; bg.splice(b, 1); done = true; }
-      else if(A.x === B.x && A.w === B.w && (A.y + A.h === B.y || B.y + B.h === A.y)){ A.y = Math.min(A.y, B.y); A.h += B.h; bg.splice(b, 1); done = true; }
+    if(out.length <= BG_TARGET && (!bg || Math.abs(out.length - 85) < Math.abs(bg.length - 85))){
+      bg = out;
     }
-    if(!done) return layout();
+    if(out.length <= BG_TARGET && out.length >= 75){ bg = out; break; }
   }
-  return {stroke: rects.slice(), bg};
+  if(!bg) return layout();
+
+  let guard = 0;
+  while(bg.length < BG_TARGET && guard++ < 1000){
+    let candidates = bg.filter(r => r.w >= 6 || r.h >= 6);
+    let minSub = 3;
+    if(!candidates.length){ candidates = bg.filter(r => r.w >= 4 || r.h >= 4); minSub = 2; }
+    if(!candidates.length) break;
+    let tot = candidates.reduce((s, r) => s + r.w * r.h, 0), p = Math.random() * tot, r = candidates[0];
+    for(const q of candidates){ p -= q.w * q.h; if(p <= 0){ r = q; break; } }
+    const canV = r.w >= minSub * 2, canH = r.h >= minSub * 2;
+    const vert = canV && (!canH || r.w * 1.1 >= r.h);
+    if(vert){
+      const k = rnd(minSub, r.w - minSub);
+      bg.push({x: r.x + k, y: r.y, w: r.w - k, h: r.h, stroke: false});
+      r.w = k;
+    } else {
+      const k = rnd(minSub, r.h - minSub);
+      bg.push({x: r.x, y: r.y + k, w: r.w, h: r.h - k, stroke: false});
+      r.h = k;
+    }
+  }
+  if(bg.length !== BG_TARGET) return layout();
+  return {stroke, bg};
 }
 
 /* ---------- Logic trò chơi & Bộ đếm giờ 30s ---------- */
@@ -716,7 +797,7 @@ async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
     syncEl.textContent = 'ℹ️ Chế độ chơi thử: không lưu kết quả lên Google Sheets.';
     syncEl.style.color = '#64748b';
   } else if(!window.SheetsOnline || !SheetsOnline.isConfigured()){
-    syncEl.innerHTML = '⚠️ Chưa kết nối URL Apps Script Google Sheets (<a href="#" onclick="document.getElementById(\'finishModal\').classList.remove(\'show\');SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt ngay</a>)';
+    syncEl.innerHTML = '⚠️ Chưa kết nối URL Apps Script Google Sheets (<a href="#" onclick="document.getElementById(\'finishModal\').classList.remove(\'show\');openGameMasterModal();return false;" style="color:#2563eb">Mở Game Master</a>)';
     syncEl.style.color = '#b45309';
   } else {
     syncEl.textContent = '⏳ Đang lưu điểm lên Google Sheets...';
@@ -800,13 +881,19 @@ function newGame(askPlayer = true){
   const order = shuffle([...Array(N).keys()]);
   const cells = [];
 
-  stroke.forEach((r, i) => {
-    const q = order[i];
+  stroke.forEach((r) => {
+    const q = order[r.qSlot];
     cells.push({...r, q, l: questions[q].a});
   });
-  
+
   const wrong = [];
-  for(let q=0; q<N; q++) for(let l=0; l<4; l++) if(l !== questions[q].a) wrong.push([q, l]);
+  for(let rep=0; rep<3; rep++){
+    for(let q=0; q<N; q++){
+      for(let l=0; l<4; l++){
+        if(l !== questions[q].a) wrong.push([q, l]);
+      }
+    }
+  }
   shuffle(wrong);
   bg.forEach((r, i) => {
     cells.push({...r, q: wrong[i][0], l: wrong[i][1]});
@@ -913,7 +1000,6 @@ document.getElementById('btnInviteLb').onclick = () => {
 };
 document.getElementById('btnLoginLb').onclick = () => SheetsOnline.openLeaderboard('ToHinhDoanChu', allSets[currentSetIndex].title);
 document.getElementById('btnLeaderboard').onclick = () => SheetsOnline.openLeaderboard('ToHinhDoanChu', allSets[currentSetIndex].title);
-document.getElementById('btnSheets').onclick = () => SheetsOnline.openSetup();
 
 function switchQuestion(nextIdx){
   clearAutoNext();
@@ -1038,24 +1124,121 @@ prev.onclick = () => { if(state.cur > 0){ switchQuestion(state.cur - 1); } };
 next.onclick = () => { if(state.cur < N-1){ switchQuestion(state.cur + 1); } };
 btnReset.onclick = () => newGame(true);
 
-/* ---------- Quản lý bộ đề & Soạn câu hỏi ---------- */
-function openEditorModal(setIdx){
+/* ---------- Game Master (Mật khẩu: dnt) ---------- */
+const GM_PASSWORD = 'dnt';
+
+function requireGmPassword(actionLabel){
+  return new Promise(resolve => {
+    const passModal = document.getElementById('gmPassModal');
+    const lbl = document.getElementById('gmPassActionLabel');
+    const inp = document.getElementById('gmPassInput');
+    const err = document.getElementById('gmPassErr');
+    const btnOk = document.getElementById('btnGmPassConfirm');
+    const btnCancel = document.getElementById('btnGmPassCancel');
+
+    lbl.textContent = actionLabel ? `Xác nhận: ${actionLabel}` : 'Nhập mật khẩu để xác nhận thay đổi.';
+    inp.value = '';
+    err.textContent = '';
+    passModal.classList.add('show');
+    setTimeout(() => inp.focus(), 60);
+
+    const cleanup = (ok) => {
+      passModal.classList.remove('show');
+      btnOk.onclick = null;
+      btnCancel.onclick = null;
+      inp.onkeydown = null;
+      resolve(ok);
+    };
+
+    const trySubmit = () => {
+      if(inp.value === GM_PASSWORD){
+        cleanup(true);
+      } else {
+        err.textContent = '❌ Mật khẩu Game Master không đúng!';
+        inp.focus();
+        inp.select();
+      }
+    };
+
+    btnOk.onclick = trySubmit;
+    btnCancel.onclick = () => cleanup(false);
+    inp.onkeydown = (e) => {
+      if(e.key === 'Enter'){ e.preventDefault(); trySubmit(); }
+      else if(e.key === 'Escape'){ e.preventDefault(); cleanup(false); }
+    };
+  });
+}
+
+function openGameMasterModal(setIdx = currentSetIndex){
+  document.getElementById('setSelect').value = currentSetIndex;
+  document.getElementById('modalSetSelect').value = setIdx;
   buildEditor(allSets[setIdx].questions);
   document.getElementById('setNameInput').value = allSets[setIdx].title;
   document.getElementById('ghToken').value = localStorage.getItem(GH_TOKEN_KEY) || '';
+  document.getElementById('gmResetStatus').textContent = '';
   document.getElementById('modal').classList.add('show');
 }
 
-btnEdit.onclick = () => openEditorModal(currentSetIndex);
-btnEditHeader.onclick = () => openEditorModal(currentSetIndex);
+document.getElementById('btnGameMaster').onclick = () => openGameMasterModal(currentSetIndex);
 eClose.onclick = () => document.getElementById('modal').classList.remove('show');
+
+document.getElementById('btnApplySet').onclick = async () => {
+  const idx = +document.getElementById('setSelect').value;
+  if(!(await requireGmPassword(`Áp dụng bộ câu hỏi "${allSets[idx].title}" cho trò chơi`))) return;
+  selectSet(idx);
+  document.getElementById('modal').classList.remove('show');
+  toast(`✅ Đã áp dụng bộ câu hỏi: ${allSets[idx].title}`);
+};
+
+document.getElementById('btnOpenSheetsSetup').onclick = async () => {
+  if(!(await requireGmPassword('Mở cài đặt kết nối Google Sheets'))) return;
+  SheetsOnline.openSetup();
+};
+
+async function handleResetLeaderboard(onlyCurrentSet){
+  const targetTitle = onlyCurrentSet ? allSets[currentSetIndex].title : '';
+  const desc = onlyCurrentSet
+    ? `Reset BXH của bộ "${targetTitle}"`
+    : 'Reset toàn bộ BXH (Tất cả bộ câu hỏi)';
+  if(!(await requireGmPassword(desc))) return;
+
+  const statusEl = document.getElementById('gmResetStatus');
+  statusEl.textContent = '⏳ Đang xóa dữ liệu Bảng xếp hạng trên Google Sheets...';
+  statusEl.style.color = '#2563eb';
+
+  if(!window.SheetsOnline || !SheetsOnline.resetLeaderboard){
+    statusEl.textContent = '❌ Không tìm thấy module SheetsOnline.';
+    statusEl.style.color = '#dc2626';
+    return;
+  }
+
+  const res = await SheetsOnline.resetLeaderboard('ToHinhDoanChu', targetTitle);
+  if(res.ok){
+    statusEl.textContent = `✅ Đã reset BXH thành công (đã xóa ${res.deleted} lượt chơi)!`;
+    statusEl.style.color = '#15803d';
+    toast('✅ Đã reset Bảng xếp hạng thành công!');
+  } else if(res.reason === 'needs_script_update'){
+    statusEl.innerHTML = `⚠️ Mã Google Apps Script hiện tại chưa có chức năng tự xóa BXH từ web. Hãy bấm <b>Cài đặt Google Sheets</b> ở trên để cập nhật mã Apps Script mới (và Deploy lại), hoặc <a href="${SheetsOnline.SPREADSHEET_URL}" target="_blank" style="color:#2563eb">mở Google Sheet gốc</a> để xóa thủ công.`;
+    statusEl.style.color = '#b45309';
+  } else if(res.reason === 'not_configured'){
+    statusEl.textContent = '⚠️ Chưa cấu hình URL Google Apps Script.';
+    statusEl.style.color = '#b45309';
+  } else {
+    statusEl.textContent = '❌ Reset BXH thất bại: ' + (res.reason || 'Lỗi kết nối');
+    statusEl.style.color = '#dc2626';
+  }
+}
+
+document.getElementById('btnResetLbSet').onclick = () => handleResetLeaderboard(true);
+document.getElementById('btnResetLbAll').onclick = () => handleResetLeaderboard(false);
 
 document.getElementById('modalSetSelect').onchange = (e) => {
   const idx = +e.target.value;
-  openEditorModal(idx);
+  openGameMasterModal(idx);
 };
 
-document.getElementById('btnNewSet').onclick = () => {
+document.getElementById('btnNewSet').onclick = async () => {
+  if(!(await requireGmPassword('Tạo bộ câu hỏi mới'))) return;
   const newId = 'set_' + Date.now();
   const newSet = {
     id: newId,
@@ -1064,24 +1247,23 @@ document.getElementById('btnNewSet').onclick = () => {
   };
   allSets.push(newSet);
   updateSetSelectUI();
-  selectSet(allSets.length - 1);
-  openEditorModal(allSets.length - 1);
-  toast('Đã tạo thêm bộ câu hỏi mới!');
+  openGameMasterModal(allSets.length - 1);
+  toast('Đã tạo thêm bộ câu hỏi mới! Hãy bấm Lưu hoặc Xuất bản khi soạn xong.');
 };
 
-document.getElementById('btnDeleteSet').onclick = () => {
+document.getElementById('btnDeleteSet').onclick = async () => {
   if(allSets.length <= 1){
     alert('Không thể xóa bộ câu hỏi cuối cùng!');
     return;
   }
-  if(confirm(`Bạn có chắc muốn xóa "${allSets[currentSetIndex].title}" không?`)){
-    allSets.splice(currentSetIndex, 1);
-    currentSetIndex = 0;
-    updateSetSelectUI();
-    selectSet(0);
-    openEditorModal(0);
-    toast('Đã xóa bộ câu hỏi!');
-  }
+  const delIdx = +document.getElementById('modalSetSelect').value;
+  if(!(await requireGmPassword(`Xóa bộ câu hỏi "${allSets[delIdx].title}"`))) return;
+  allSets.splice(delIdx, 1);
+  if(currentSetIndex >= allSets.length) currentSetIndex = 0;
+  updateSetSelectUI();
+  selectSet(0);
+  openGameMasterModal(0);
+  toast('Đã xóa bộ câu hỏi!');
 };
 
 function buildEditor(list){
@@ -1111,27 +1293,28 @@ function readEditor(){
   }));
 }
 
-eSaveLocal.onclick = () => {
+eSaveLocal.onclick = async () => {
+  const editIdx = +document.getElementById('modalSetSelect').value;
+  if(!(await requireGmPassword('Lưu thay đổi bộ câu hỏi vào máy này'))) return;
   const updatedQuestions = readEditor();
-  const updatedTitle = document.getElementById('setNameInput').value.trim() || allSets[currentSetIndex].title;
-  allSets[currentSetIndex].title = updatedTitle;
-  allSets[currentSetIndex].questions = updatedQuestions;
-  
+  const updatedTitle = document.getElementById('setNameInput').value.trim() || allSets[editIdx].title;
+  allSets[editIdx].title = updatedTitle;
+  allSets[editIdx].questions = updatedQuestions;
+
   localStorage.setItem(LOCAL_KEY, JSON.stringify(allSets));
   updateSetSelectUI();
-  selectSet(currentSetIndex);
+  selectSet(editIdx);
   document.getElementById('modal').classList.remove('show');
   toast('Đã lưu thành công vào trình duyệt máy này!');
 };
 
-eDefault.onclick = () => {
-  if(confirm('Khôi phục lại 4 bộ đề mẫu Hóa 10?')){
-    allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
-    updateSetSelectUI();
-    selectSet(0);
-    openEditorModal(0);
-    toast('Đã khôi phục 4 bộ câu hỏi mẫu!');
-  }
+eDefault.onclick = async () => {
+  if(!(await requireGmPassword('Khôi phục lại 4 bộ đề mẫu Hóa 10'))) return;
+  allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
+  updateSetSelectUI();
+  selectSet(0);
+  openGameMasterModal(0);
+  toast('Đã khôi phục 4 bộ câu hỏi mẫu!');
 };
 
 eExport.onclick = () => {
@@ -1147,19 +1330,23 @@ file.onchange = () => {
   const f = file.files[0];
   if(!f) return;
   const r = new FileReader();
-  r.onload = () => {
+  r.onload = async () => {
     try {
       const s = JSON.parse(r.result);
+      let importedSets = null, singleSet = null;
       if(s.sets && Array.isArray(s.sets)){
-        allSets = s.sets;
+        importedSets = s.sets;
       } else if(Array.isArray(s) && s.length === N){
-        allSets[currentSetIndex].questions = s;
+        singleSet = s;
       } else {
         throw new Error();
       }
+      if(!(await requireGmPassword('Nhập dữ liệu câu hỏi từ file JSON'))) return;
+      if(importedSets) allSets = importedSets;
+      else allSets[+document.getElementById('modalSetSelect').value].questions = singleSet;
       updateSetSelectUI();
       selectSet(0);
-      openEditorModal(0);
+      openGameMasterModal(0);
       toast('Đã nhập file JSON thành công!');
     } catch(err){
       alert('File JSON không hợp lệ! Vui lòng chọn file chứa đúng cấu trúc 12 câu hỏi.');
@@ -1176,17 +1363,18 @@ btnSyncGH.onclick = async () => {
     alert('Vui lòng dán GitHub Personal Access Token để có quyền cập nhật file lên repository!');
     return;
   }
+  if(!(await requireGmPassword('Xuất bản toàn bộ bộ đề lên GitHub'))) return;
   localStorage.setItem(GH_TOKEN_KEY, token);
 
-  // Cập nhật bộ đề đang sửa trước khi đẩy
+  const editIdx = +document.getElementById('modalSetSelect').value;
   const updatedQuestions = readEditor();
-  const updatedTitle = document.getElementById('setNameInput').value.trim() || allSets[currentSetIndex].title;
-  allSets[currentSetIndex].title = updatedTitle;
-  allSets[currentSetIndex].questions = updatedQuestions;
+  const updatedTitle = document.getElementById('setNameInput').value.trim() || allSets[editIdx].title;
+  allSets[editIdx].title = updatedTitle;
+  allSets[editIdx].questions = updatedQuestions;
 
   btnSyncGH.disabled = true;
   btnSyncGH.textContent = '⏳ Đang lưu lên GitHub...';
-  
+
   try {
     let sha = null;
     const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
@@ -1199,14 +1387,14 @@ btnSyncGH.onclick = async () => {
       const fileData = await getRes.json();
       sha = fileData.sha;
     }
-    
+
     const payloadData = { sets: allSets };
     const jsonStr = JSON.stringify(payloadData, null, 2);
     const utf8Bytes = new TextEncoder().encode(jsonStr);
     let binary = '';
     utf8Bytes.forEach(b => binary += String.fromCharCode(b));
     const contentBase64 = btoa(binary);
-    
+
     const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
       method: 'PUT',
       headers: {
@@ -1220,15 +1408,15 @@ btnSyncGH.onclick = async () => {
         sha: sha || undefined
       })
     });
-    
+
     if(!putRes.ok){
       const errData = await putRes.json();
       throw new Error(errData.message || 'Lỗi lưu lên GitHub');
     }
-    
+
     localStorage.setItem(LOCAL_KEY, JSON.stringify(allSets));
     updateSetSelectUI();
-    selectSet(currentSetIndex);
+    selectSet(editIdx);
     document.getElementById('modal').classList.remove('show');
     toast('🎉 Đã xuất bản lên GitHub thành công! Web sẽ tự cập nhật cho học sinh sau 1 phút.');
   } catch(err){
