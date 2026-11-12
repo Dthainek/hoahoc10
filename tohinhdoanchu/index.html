@@ -96,8 +96,20 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .finish-title.win{color:#dc2626}
 .finish-sub{margin:0 0 16px;font-size:18px;font-weight:700;color:#b45309}
 .finish-sub.lose{color:#475569;font-weight:600;font-size:15px}
-.finish-score{display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;padding:6px 16px;border-radius:999px;font-size:14px;font-weight:700;color:#334155;margin-bottom:22px}
+.finish-score{display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:700;color:#334155;margin-bottom:10px;line-height:1.6}
+.finish-sync{font-size:13px;font-weight:700;margin-bottom:18px;padding:6px 12px;border-radius:8px;background:#f8fafc;color:#475569}
 .finish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* Popup nhập tên trước khi chơi Online */
+#playerModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:160}
+#playerModal.show{display:flex}
+.player-box{background:#ffffff;border-radius:18px;width:min(440px,92vw);padding:26px 24px;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .25s ease}
+.player-box h3{margin:0 0 6px;font-size:21px;font-weight:800;color:#0f172a}
+.player-box p{margin:0 0 16px;font-size:13.5px;color:#475569}
+.player-box label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:4px}
+.player-box input{width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;margin-bottom:12px;outline:none}
+.player-box input:focus{border-color:#2563eb}
+.score-pill{background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800;white-space:nowrap}
 
 /* Modal soạn và quản lý bộ câu hỏi */
 #modal{position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
@@ -127,9 +139,12 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   </div>
   
   <div class="set-selector-wrap">
-    <label for="setSelect">📚 Bộ câu hỏi:</label>
+    <span class="score-pill" id="scorePill">🏆 0đ</span>
+    <label for="setSelect">📚 Bộ:</label>
     <select id="setSelect"></select>
-    <button class="btn-ui" id="btnEditHeader" title="Chỉnh sửa hoặc thêm bộ câu hỏi mới">✏️ Quản lý bộ đề</button>
+    <button class="btn-ui" id="btnLeaderboard" title="Xem bảng xếp hạng Online">🏆 BXH</button>
+    <button class="btn-ui" id="btnSheets" title="Cấu hình lưu điểm Google Sheets">📊 Sheets</button>
+    <button class="btn-ui" id="btnEditHeader" title="Chỉnh sửa hoặc thêm bộ câu hỏi mới">✏️ Bộ đề</button>
   </div>
 </div>
 
@@ -231,15 +246,34 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <h2 class="finish-title" id="finishTitle">Chúc mừng bạn đã hoàn thành!</h2>
     <p class="finish-sub" id="finishSub">Chào mừng ngày Nhà giáo Việt Nam</p>
     <div class="finish-score" id="finishScore">Kết quả: 12/12 câu đúng</div>
+    <div class="finish-sync" id="finishSyncStatus"></div>
     <div class="finish-actions">
       <button class="btn-ui" id="btnFinishView">👀 Xem lại bức tranh</button>
+      <button class="btn-ui btn-accent" id="btnFinishLb">🏆 Bảng xếp hạng</button>
       <button class="btn-ui btn-primary" id="btnFinishReplay">🔄 Chơi lại</button>
+    </div>
+  </div>
+</div>
+
+<!-- Popup nhập tên người chơi Online -->
+<div id="playerModal">
+  <div class="player-box">
+    <h3>🎮 Tham gia chơi Online</h3>
+    <p>Nhập tên để lưu thành tích, thời gian và xếp hạng (trả lời càng nhanh điểm thưởng càng cao!).</p>
+    <label for="pName">Họ và tên học sinh *</label>
+    <input type="text" id="pName" placeholder="Ví dụ: Nguyễn Văn A">
+    <label for="pClass">Lớp (không bắt buộc)</label>
+    <input type="text" id="pClass" placeholder="Ví dụ: 10A1">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+      <button class="btn-ui btn-primary" id="btnStartPlay" style="flex:1;padding:10px 16px;font-size:15px">🚀 Bắt đầu chơi</button>
+      <button class="btn-ui" id="btnPlayDemo" style="padding:10px 14px">Chơi thử</button>
     </div>
   </div>
 </div>
 
 <div class="toast" id="toast"></div>
 
+<script src="../sheets_online.js"></script>
 <script>
 const L=['A','B','C','D'], N=12, LOCAL_KEY='hoahoc10_sets_v2', GH_TOKEN_KEY='hoahoc10_gh_token';
 const REPO_OWNER = 'Dthainek';
@@ -326,9 +360,11 @@ let allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
 let currentSetIndex = 0;
 let questions = allSets[0].questions;
 let state;
+let playerInfo = { name: '', className: '', isDemo: false, startTime: '', started: false };
 
 /* Nạp dữ liệu */
 async function initData(){
+  if(window.SheetsOnline) await SheetsOnline.initConfig();
   try {
     const res = await fetch('./questions.json?t=' + Date.now());
     if(res.ok){
@@ -552,18 +588,22 @@ function setTimerDoneUI(){
 function handleTimeout(qIndex){
   if(!state || state.ans[qIndex] !== null) return;
   stopTimer();
+  state.elapsedMs[qIndex] = 30000;
+  state.qScores[qIndex] = 0;
+  state.curStartAt = null;
   state.ans[qIndex] = -1;
   show();
   toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}!`, '#dc2626');
   checkGameFinished();
 }
 
-function showFinishPopup(ok){
+async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
   const modal = document.getElementById('finishModal');
   const icon = document.getElementById('finishIcon');
   const title = document.getElementById('finishTitle');
   const sub = document.getElementById('finishSub');
   const score = document.getElementById('finishScore');
+  const syncEl = document.getElementById('finishSyncStatus');
   
   if(ok === N){
     icon.textContent = '🎉💐';
@@ -571,35 +611,84 @@ function showFinishPopup(ok){
     title.className = 'finish-title win';
     sub.textContent = 'Chào mừng ngày Nhà giáo Việt Nam';
     sub.className = 'finish-sub';
-    score.textContent = `Kết quả xuất sắc: ${ok}/${N} câu đúng`;
   } else {
     icon.textContent = '💪📚';
     title.textContent = 'Bạn cần cố gắng hơn';
     title.className = 'finish-title';
     sub.textContent = 'Hãy ôn tập thêm và thử chinh phục lại bức tranh 20-11 nhé!';
     sub.className = 'finish-sub lose';
-    score.textContent = `Kết quả: ${ok}/${N} câu đúng`;
   }
+  const pLabel = playerInfo.isDemo ? 'Chế độ chơi thử' : `${playerInfo.name}${playerInfo.className ? ' - ' + playerInfo.className : ''}`;
+  score.innerHTML = `👤 <b>${esc(pLabel)}</b><br>✅ Đúng: <b>${ok}/${N}</b> câu &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b> &nbsp;|&nbsp; 🏆 Điểm: <b style="color:#dc2626">${totalScore}</b>`;
   modal.classList.add('show');
+
+  if(playerInfo.isDemo){
+    syncEl.textContent = 'ℹ️ Chế độ chơi thử: không lưu kết quả lên Google Sheets.';
+    syncEl.style.color = '#64748b';
+  } else if(!window.SheetsOnline || !SheetsOnline.isConfigured()){
+    syncEl.innerHTML = '⚠️ Chưa kết nối URL Apps Script Google Sheets (<a href="#" onclick="document.getElementById(\'finishModal\').classList.remove(\'show\');SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt ngay</a>)';
+    syncEl.style.color = '#b45309';
+  } else {
+    syncEl.textContent = '⏳ Đang lưu điểm lên Google Sheets...';
+    syncEl.style.color = '#2563eb';
+    const res = await SheetsOnline.submitScore({
+      game: 'ToHinhDoanChu',
+      name: playerInfo.name,
+      className: playerInfo.className,
+      setTitle: allSets[currentSetIndex].title,
+      startTime: playerInfo.startTime,
+      endTime,
+      totalTime: totalTimeSec,
+      correctCount: `${ok}/${N}`,
+      score: totalScore
+    });
+    if(res.ok){
+      syncEl.textContent = '✅ Đã lưu thành công tên, thời gian và điểm lên Google Sheets!';
+      syncEl.style.color = '#15803d';
+    } else {
+      syncEl.textContent = '❌ Lưu lên Google Sheets thất bại: ' + (res.reason || 'Lỗi mạng');
+      syncEl.style.color = '#dc2626';
+    }
+  }
 }
 
 document.getElementById('btnFinishView').onclick = () => {
   document.getElementById('finishModal').classList.remove('show');
 };
+document.getElementById('btnFinishLb').onclick = () => {
+  document.getElementById('finishModal').classList.remove('show');
+  SheetsOnline.openLeaderboard('ToHinhDoanChu', allSets[currentSetIndex].title);
+};
 document.getElementById('btnFinishReplay').onclick = () => {
   document.getElementById('finishModal').classList.remove('show');
-  newGame();
+  newGame(true);
 };
 
 function checkGameFinished(){
   if(state.ans.every(x => x !== null)){
     stopTimer();
     const ok = state.ans.filter((x, i) => x === questions[i].a).length;
-    setTimeout(() => showFinishPopup(ok), 350);
+    const totalScore = state.qScores.reduce((a, b) => a + b, 0);
+    const totalTimeSec = Math.round(state.elapsedMs.reduce((a, b) => a + b, 0) / 100) / 10;
+    const endTime = window.SheetsOnline ? SheetsOnline.formatVNTime(new Date()) : '';
+    setTimeout(() => showFinishPopup(ok, totalScore, totalTimeSec, endTime), 350);
   }
 }
 
-function newGame(){
+function recordElapsed(){
+  if(state && state.curStartAt !== null && state.ans[state.cur] === null){
+    state.elapsedMs[state.cur] = Math.min(30000, state.elapsedMs[state.cur] + (Date.now() - state.curStartAt));
+    state.curStartAt = null;
+  }
+}
+
+function updateScoreUI(){
+  const total = state ? state.qScores.reduce((a, b) => a + b, 0) : 0;
+  const el = document.getElementById('scorePill');
+  if(el) el.textContent = `🏆 ${total}đ`;
+}
+
+function newGame(askPlayer = true){
   stopTimer();
   document.getElementById('finishModal').classList.remove('show');
   const {stroke, bg} = layout();
@@ -618,8 +707,51 @@ function newGame(){
     cells.push({...r, q: wrong[i][0], l: wrong[i][1]});
   });
 
-  state = { cells, ans: Array(N).fill(null), timesLeft: Array(N).fill(30), cur: 0 };
+  state = { cells, ans: Array(N).fill(null), timesLeft: Array(N).fill(30), elapsedMs: Array(N).fill(0), qScores: Array(N).fill(0), cur: 0, curStartAt: null };
+  updateScoreUI();
   renderMosaic();
+  if(askPlayer){
+    playerInfo.started = false;
+    show(false);
+    openPlayerModal();
+  } else {
+    playerInfo.started = true;
+    show(true);
+  }
+}
+
+function openPlayerModal(){
+  try {
+    const last = JSON.parse(localStorage.getItem('hoahoc10_last_player') || '{}');
+    if(last.name) document.getElementById('pName').value = last.name;
+    if(last.className) document.getElementById('pClass').value = last.className;
+  } catch(e){}
+  document.getElementById('playerModal').classList.add('show');
+  setTimeout(() => document.getElementById('pName').focus(), 100);
+}
+
+document.getElementById('btnStartPlay').onclick = () => {
+  const n = document.getElementById('pName').value.trim();
+  const c = document.getElementById('pClass').value.trim();
+  if(!n){ alert('Vui lòng nhập họ và tên để lưu điểm!'); document.getElementById('pName').focus(); return; }
+  localStorage.setItem('hoahoc10_last_player', JSON.stringify({name: n, className: c}));
+  playerInfo = { name: n, className: c, isDemo: false, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
+  document.getElementById('playerModal').classList.remove('show');
+  show(true);
+};
+
+document.getElementById('btnPlayDemo').onclick = () => {
+  playerInfo = { name: 'Chơi thử', className: '', isDemo: true, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
+  document.getElementById('playerModal').classList.remove('show');
+  show(true);
+};
+
+document.getElementById('btnLeaderboard').onclick = () => SheetsOnline.openLeaderboard('ToHinhDoanChu', allSets[currentSetIndex].title);
+document.getElementById('btnSheets').onclick = () => SheetsOnline.openSetup();
+
+function switchQuestion(nextIdx){
+  recordElapsed();
+  state.cur = nextIdx;
   show();
 }
 
@@ -631,7 +763,7 @@ function renderMosaic(){
     d.className = 'cell';
     d.style.cssText = `left:${c.x/GW*100}%;top:${c.y/GH*100}%;width:${c.w/GW*100}%;height:${c.h/GH*100}%`;
     d.innerHTML = `<span>${c.q + 1}${L[c.l]}</span>`;
-    d.onclick = () => { state.cur = c.q; show(); };
+    d.onclick = () => { switchQuestion(c.q); };
     c.el = d;
     m.appendChild(d);
   });
@@ -648,7 +780,7 @@ function paint(){
   });
 }
 
-function show(){
+function show(runTimer = true){
   stopTimer();
   const i = state.cur, q = questions[i], a = state.ans[i];
   document.getElementById('qno').textContent = `Câu ${String(i+1).padStart(2,'0')}:`;
@@ -673,7 +805,10 @@ function show(){
     r.className = '';
     r.textContent = 'Hãy chọn một đáp án';
     updateTimerUI(state.timesLeft[i]);
-    startTimer();
+    if(runTimer && playerInfo.started){
+      state.curStartAt = Date.now();
+      startTimer();
+    }
   } else if(a === -1){
     r.className = 'no';
     r.textContent = '⏰ Hết giờ!';
@@ -702,7 +837,7 @@ function show(){
     const x = state.ans[k];
     if(x !== null) d.classList.add(x === questions[k].a ? 'ok' : 'no');
     if(k === i) d.classList.add('cur');
-    d.onclick = () => { state.cur = k; show(); };
+    d.onclick = () => { switchQuestion(k); };
     dots.appendChild(d);
   }
   paint();
@@ -713,7 +848,13 @@ function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;
 function answer(k){
   if(state.ans[state.cur] !== null) return;
   stopTimer();
-  state.ans[state.cur] = k;
+  recordElapsed();
+  const i = state.cur;
+  const secLeft = Math.max(0, 30 - state.elapsedMs[i] / 1000);
+  const isRight = (k === questions[i].a);
+  state.qScores[i] = window.SheetsOnline ? SheetsOnline.calcQuestionScore(isRight, secLeft) : (isRight ? 100 : 0);
+  state.ans[i] = k;
+  updateScoreUI();
   show();
   checkGameFinished();
 }
@@ -726,9 +867,9 @@ function toast(msg, bg='#15803d'){
   setTimeout(() => t.style.display = 'none', 5000);
 }
 
-prev.onclick = () => { if(state.cur > 0){ state.cur--; show(); } };
-next.onclick = () => { if(state.cur < N-1){ state.cur++; show(); } };
-btnReset.onclick = newGame;
+prev.onclick = () => { if(state.cur > 0){ switchQuestion(state.cur - 1); } };
+next.onclick = () => { if(state.cur < N-1){ switchQuestion(state.cur + 1); } };
+btnReset.onclick = () => newGame(true);
 
 /* ---------- Quản lý bộ đề & Soạn câu hỏi ---------- */
 function openEditorModal(setIdx){

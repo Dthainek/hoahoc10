@@ -117,6 +117,15 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .qe label{font-size:13px;font-weight:700;color:#475569}
 
 .toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#15803d;color:#ffffff;padding:12px 24px;border-radius:10px;display:none;z-index:200;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.25)}
+.score-pill{background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800;white-space:nowrap}
+#playerModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:160}
+#playerModal.show{display:flex}
+.player-box{background:#ffffff;border-radius:18px;width:min(440px,92vw);padding:26px 24px;box-shadow:0 24px 48px rgba(0,0,0,0.28)}
+.player-box h3{margin:0 0 6px;font-size:21px;font-weight:800;color:#0f172a}
+.player-box p{margin:0 0 16px;font-size:13.5px;color:#475569}
+.player-box label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:4px}
+.player-box input{width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;margin-bottom:12px;outline:none}
+.player-box input:focus{border-color:#2563eb}
 @media(max-width:760px){.opts-grid{grid-template-columns:1fr}.slide-card{padding:16px}}
 </style>
 </head>
@@ -128,8 +137,11 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <h1 class="app-title">Lật Mảnh Ghép Bí Mật (4 Mảnh)</h1>
   </div>
   <div class="set-selector-wrap">
-    <label for="setSelect">📚 Bộ câu hỏi:</label>
+    <span class="score-pill" id="scorePill">🏆 0đ</span>
+    <label for="setSelect">📚 Bộ:</label>
     <select id="setSelect"></select>
+    <button class="btn-ui" id="btnLeaderboard" style="padding:5px 10px;font-size:13px">🏆 BXH</button>
+    <button class="btn-ui" id="btnSheets" style="padding:5px 10px;font-size:13px">📊 Sheets</button>
     <button class="btn-ui" id="btnEditHeader" style="padding:5px 10px;font-size:13px">✏️ Quản lý</button>
   </div>
 </div>
@@ -249,8 +261,25 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   </div>
 </div>
 
+<!-- Popup nhập tên người chơi Online -->
+<div id="playerModal">
+  <div class="player-box">
+    <h3>🎮 Tham gia chơi Online</h3>
+    <p>Nhập tên để lưu thành tích, thời gian và xếp hạng (trả lời càng nhanh điểm thưởng càng cao!).</p>
+    <label for="pName">Họ và tên học sinh *</label>
+    <input type="text" id="pName" placeholder="Ví dụ: Nguyễn Văn A">
+    <label for="pClass">Lớp (không bắt buộc)</label>
+    <input type="text" id="pClass" placeholder="Ví dụ: 10A1">
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+      <button class="btn-ui btn-primary" id="btnStartPlay" style="flex:1;padding:10px 16px;font-size:15px">🚀 Bắt đầu chơi</button>
+      <button class="btn-ui" id="btnPlayDemo" style="padding:10px 14px">Chơi thử</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast"></div>
 
+<script src="../sheets_online.js"></script>
 <script>
 const L = ['A','B','C','D'], N = 4, MAX_TIME = 30;
 const LOCAL_KEY = 'hoahoc10_latmanhghep_v2';
@@ -293,13 +322,19 @@ let currentSetIndex = 0;
 let questions = allSets[0].questions;
 // Trạng thái của 4 mảnh ghép: null (chưa mở), 'right' (đã lật), 'wrong' (bôi đen do sai), 'timeout' (bôi đen do quá giờ)
 let tileStatus = Array(N).fill(null);
+let elapsedMs = Array(N).fill(0);
+let qScores = Array(N).fill(0);
 let activeTile = 0;
+let questionStartedAt = null;
 let timerInterval = null;
 let autoReturnTimer = null;
 let timeLeft = MAX_TIME;
 let isRevealedAll = false;
+let scoreSubmitted = false;
+let playerInfo = { name: '', className: '', isDemo: false, startTime: '', started: false };
 
 async function initData(){
+  if(window.SheetsOnline) await SheetsOnline.initConfig();
   try {
     const res = await fetch('./questions.json?t=' + Date.now());
     if(res.ok){
@@ -343,15 +378,56 @@ function selectSet(idx){
 
 document.getElementById('setSelect').onchange = e => selectSet(+e.target.value);
 
+function updateScoreUI(){
+  const total = qScores.reduce((a, b) => a + b, 0);
+  const el = document.getElementById('scorePill');
+  if(el) el.textContent = `🏆 ${total}đ`;
+}
+
+function openPlayerModal(){
+  try {
+    const last = JSON.parse(localStorage.getItem('hoahoc10_last_player') || '{}');
+    if(last.name) document.getElementById('pName').value = last.name;
+    if(last.className) document.getElementById('pClass').value = last.className;
+  } catch(e){}
+  document.getElementById('playerModal').classList.add('show');
+  setTimeout(() => document.getElementById('pName').focus(), 100);
+}
+
+document.getElementById('btnStartPlay').onclick = () => {
+  const n = document.getElementById('pName').value.trim();
+  const c = document.getElementById('pClass').value.trim();
+  if(!n){ alert('Vui lòng nhập họ và tên để lưu điểm!'); document.getElementById('pName').focus(); return; }
+  localStorage.setItem('hoahoc10_last_player', JSON.stringify({name: n, className: c}));
+  playerInfo = { name: n, className: c, isDemo: false, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
+  document.getElementById('playerModal').classList.remove('show');
+};
+
+document.getElementById('btnPlayDemo').onclick = () => {
+  playerInfo = { name: 'Chơi thử', className: '', isDemo: true, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
+  document.getElementById('playerModal').classList.remove('show');
+};
+
+document.getElementById('btnLeaderboard').onclick = () => SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
+document.getElementById('btnSheets').onclick = () => SheetsOnline.openSetup();
+
 /* ---------- Chuyển đổi Slide & Logic trò chơi ---------- */
-function resetGame(){
+function resetGame(askPlayer = true){
   stopTimers();
   tileStatus = Array(N).fill(null);
+  elapsedMs = Array(N).fill(0);
+  qScores = Array(N).fill(0);
+  scoreSubmitted = false;
   isRevealedAll = false;
+  updateScoreUI();
   document.getElementById('boardWrap').classList.remove('reveal-all');
   document.getElementById('revealCaption').classList.remove('show');
   showSlide('board');
   renderBoard();
+  if(askPlayer){
+    playerInfo.started = false;
+    openPlayerModal();
+  }
 }
 
 function showSlide(which){
@@ -401,21 +477,58 @@ function renderBoard(){
   const cap = document.getElementById('revealCaption');
   if(doneCount === N){
     cap.classList.add('show');
+    const totalScore = qScores.reduce((a, b) => a + b, 0);
+    const totalTimeSec = Math.round(elapsedMs.reduce((a, b) => a + b, 0) / 100) / 10;
     if(openedCount === N){
       document.getElementById('boardWrap').classList.add('reveal-all');
-      cap.textContent = '🎉 Xuất sắc! Cả 4 mảnh ghép đã mở — Bức ảnh bí mật: Nông dân thu hoạch muối (NaCl) ở ruộng muối!';
+      cap.innerHTML = `🎉 Xuất sắc! Cả 4 mảnh ghép đã mở — Bức ảnh bí mật: Nông dân thu hoạch muối trên ruộng muối!<br><span style="font-size:14px">🏆 Điểm: <b>${totalScore}</b> &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b></span> <span id="lmSyncMsg"></span>`;
     } else {
-      cap.textContent = `Hoàn thành trò chơi: Đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa do trả lời sai hoặc quá giờ).`;
+      cap.innerHTML = `Hoàn thành trò chơi: Đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa).<br><span style="font-size:14px">🏆 Điểm: <b>${totalScore}</b> &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b></span> <span id="lmSyncMsg"></span>`;
+    }
+    if(!scoreSubmitted){
+      scoreSubmitted = true;
+      submitLatManhGhepScore(openedCount, totalScore, totalTimeSec);
     }
   } else if(!isRevealedAll){
     cap.classList.remove('show');
   }
 }
 
+async function submitLatManhGhepScore(openedCount, totalScore, totalTimeSec){
+  const el = document.getElementById('lmSyncMsg');
+  if(!el) return;
+  if(playerInfo.isDemo || !playerInfo.name){
+    el.innerHTML = '— <i>(Chơi thử: không lưu điểm)</i>';
+    return;
+  }
+  if(!window.SheetsOnline || !SheetsOnline.isConfigured()){
+    el.innerHTML = '— <a href="#" onclick="SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt Google Sheets để lưu điểm</a>';
+    return;
+  }
+  el.textContent = '— ⏳ Đang lưu lên Google Sheets...';
+  const res = await SheetsOnline.submitScore({
+    game: 'LatManhGhep',
+    name: playerInfo.name,
+    className: playerInfo.className,
+    setTitle: allSets[currentSetIndex].title,
+    startTime: playerInfo.startTime,
+    endTime: SheetsOnline.formatVNTime(new Date()),
+    totalTime: totalTimeSec,
+    correctCount: `${openedCount}/${N}`,
+    score: totalScore
+  });
+  el.innerHTML = res.ok
+    ? '— ✅ <b>Đã lưu vào Google Sheets!</b> (<a href="#" onclick="SheetsOnline.openLeaderboard(\'LatManhGhep\', allSets[currentSetIndex].title);return false;" style="color:#15803d">Xem BXH</a>)'
+    : '— ❌ Lưu thất bại';
+}
+
 document.querySelectorAll('.tile').forEach(tile => {
   tile.onclick = () => {
     const idx = +tile.dataset.idx;
     if(tileStatus[idx] !== null) return; // Đã trả lời hoặc bị khóa
+    if(!playerInfo.started){
+      playerInfo = { name: 'Chơi thử', className: '', isDemo: true, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
+    }
     openQuestionSlide(idx);
   };
 });
@@ -424,6 +537,7 @@ function openQuestionSlide(idx){
   stopTimers();
   activeTile = idx;
   timeLeft = MAX_TIME;
+  questionStartedAt = Date.now();
   const q = questions[idx];
 
   document.getElementById('qBadge').textContent = `🧩 MẢNH GHÉP ${idx + 1} — CÂU HỎI ${idx + 1}`;
@@ -489,6 +603,10 @@ function handleAnswer(chosenIdx){
   stopTimers();
   lockOptions();
 
+  const elapsed = questionStartedAt ? Math.min(30000, Date.now() - questionStartedAt) : 0;
+  elapsedMs[activeTile] = elapsed;
+  const secLeft = Math.max(0, 30 - elapsed / 1000);
+
   const q = questions[activeTile];
   const btns = document.querySelectorAll('#optsGrid .opt');
   const fb = document.getElementById('qFeedback');
@@ -497,14 +615,17 @@ function handleAnswer(chosenIdx){
   if(chosenIdx === q.a){
     btns[chosenIdx].classList.add('right');
     tileStatus[activeTile] = 'right';
+    qScores[activeTile] = window.SheetsOnline ? SheetsOnline.calcQuestionScore(true, secLeft) : 100;
     fb.className = 'q-feedback ok';
-    fbText.textContent = `✅ Chính xác! Đang quay lại lật mở mảnh ghép ${activeTile + 1}...`;
+    fbText.textContent = `✅ Chính xác! (+${qScores[activeTile]}đ) Đang quay lại lật mảnh ghép ${activeTile + 1}...`;
   } else {
     btns[chosenIdx].classList.add('wrong');
     tileStatus[activeTile] = 'wrong';
+    qScores[activeTile] = 0;
     fb.className = 'q-feedback no';
     fbText.textContent = `❌ Sai rồi! Mảnh ghép ${activeTile + 1} bị bôi đen (không lật thẻ)...`;
   }
+  updateScoreUI();
 
   autoReturnTimer = setTimeout(() => returnToBoard(), 1350);
 }
@@ -514,6 +635,8 @@ function handleTimeout(){
   stopTimers();
   lockOptions();
 
+  elapsedMs[activeTile] = 30000;
+  qScores[activeTile] = 0;
   tileStatus[activeTile] = 'timeout';
   const fb = document.getElementById('qFeedback');
   fb.className = 'q-feedback no';
