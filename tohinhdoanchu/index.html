@@ -774,14 +774,14 @@ async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
     icon.textContent = '🎉💐';
     title.textContent = 'Chúc mừng bạn đã hoàn thành!';
     title.className = 'finish-title win';
-    sub.textContent = 'Chào mừng ngày Nhà giáo Việt Nam';
+    sub.textContent = '💐 Chúc mừng ngày Nhà giáo Việt Nam 20-11!';
     sub.className = 'finish-sub';
   } else {
-    icon.textContent = '💪📚';
+    icon.textContent = '💪💐';
     title.textContent = 'Bạn cần cố gắng hơn';
     title.className = 'finish-title';
-    sub.textContent = 'Hãy ôn tập thêm và thử chinh phục lại bức tranh bí mật nhé!';
-    sub.className = 'finish-sub lose';
+    sub.textContent = '💐 Chúc mừng ngày Nhà giáo Việt Nam 20-11!';
+    sub.className = 'finish-sub';
   }
   const pLabel = playerInfo.isDemo ? 'Chế độ chơi thử' : `${playerInfo.name}${playerInfo.className ? ' - ' + playerInfo.className : ''}`;
   score.innerHTML = `👤 <b>${esc(pLabel)}</b><br>✅ Đúng: <b>${ok}/${N}</b> câu &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b> &nbsp;|&nbsp; 🏆 Điểm: <b style="color:#dc2626">${totalScore}</b>`;
@@ -873,31 +873,105 @@ function updateScoreUI(){
   if(el) el.textContent = `🏆 ${total}đ`;
 }
 
+function sharesEdge(a, b){
+  const touchX = (a.x + a.w === b.x || b.x + b.w === a.x) && Math.min(a.y + a.h, b.y + b.h) > Math.max(a.y, b.y);
+  const touchY = (a.y + a.h === b.y || b.y + b.h === a.y) && Math.min(a.x + a.w, b.x + b.w) > Math.max(a.x, b.x);
+  return touchX || touchY;
+}
+
+function buildAdj(rects){
+  const adj = Array.from({length: rects.length}, () => []);
+  for(let i=0; i<rects.length; i++){
+    for(let j=i+1; j<rects.length; j++){
+      if(sharesEdge(rects[i], rects[j])){ adj[i].push(j); adj[j].push(i); }
+    }
+  }
+  return adj;
+}
+
+function assignCellsNoAdjacent(stroke, bg){
+  const all = [...stroke, ...bg];
+  const adj = buildAdj(all);
+  const S = stroke.length;
+
+  const baseOrder = shuffle([...Array(N).keys()]);
+  const strokeQs = [];
+  while(strokeQs.length < S){
+    const chunk = shuffle([...baseOrder]);
+    for(const q of chunk){ if(strokeQs.length < S) strokeQs.push(q); }
+  }
+  shuffle(strokeQs);
+
+  for(let step=0; step<500; step++){
+    const bad = [];
+    for(let i=0; i<S; i++){
+      if(adj[i].some(nb => nb < S && strokeQs[nb] === strokeQs[i])) bad.push(i);
+    }
+    if(bad.length === 0) break;
+    const i = bad[Math.floor(Math.random() * bad.length)];
+    for(let t=0; t<30; t++){
+      const j = Math.floor(Math.random() * S);
+      if(j === i || strokeQs[i] === strokeQs[j]) continue;
+      const before = adj[i].filter(nb => nb < S && strokeQs[nb] === strokeQs[i]).length
+                   + adj[j].filter(nb => nb < S && strokeQs[nb] === strokeQs[j]).length;
+      const after = adj[i].filter(nb => nb < S && nb !== j && strokeQs[nb] === strokeQs[j]).length
+                  + adj[j].filter(nb => nb < S && nb !== i && strokeQs[nb] === strokeQs[i]).length;
+      if(after < before){ [strokeQs[i], strokeQs[j]] = [strokeQs[j], strokeQs[i]]; break; }
+    }
+  }
+
+  const wrong = [];
+  for(let rep=0; rep<3; rep++){
+    for(let q=0; q<N; q++) for(let l=0; l<4; l++) if(l !== questions[q].a) wrong.push([q, l]);
+  }
+  shuffle(wrong);
+
+  const qAt = (idx) => idx < S ? strokeQs[idx] : wrong[idx - S][0];
+  const confAt = (idx) => {
+    const q = qAt(idx);
+    return adj[idx].filter(nb => qAt(nb) === q).length;
+  };
+
+  for(let step=0; step<1000; step++){
+    const bad = [];
+    for(let idx=S; idx<all.length; idx++){
+      if(confAt(idx) > 0) bad.push(idx);
+    }
+    if(bad.length === 0) break;
+    const u = bad[Math.floor(Math.random() * bad.length)];
+    let bestJ = -1, bestGain = 0;
+    for(let t=0; t<25; t++){
+      const v = S + Math.floor(Math.random() * bg.length);
+      if(u === v || wrong[u-S][0] === wrong[v-S][0]) continue;
+      const before = confAt(u) + confAt(v);
+      [wrong[u-S], wrong[v-S]] = [wrong[v-S], wrong[u-S]];
+      const after = confAt(u) + confAt(v);
+      const gain = before - after;
+      [wrong[u-S], wrong[v-S]] = [wrong[v-S], wrong[u-S]];
+      if(gain > bestGain){ bestGain = gain; bestJ = v; }
+    }
+    if(bestJ !== -1){
+      [wrong[u-S], wrong[bestJ-S]] = [wrong[bestJ-S], wrong[u-S]];
+    }
+  }
+
+  const cells = [];
+  stroke.forEach((r, i) => {
+    const q = strokeQs[i];
+    cells.push({...r, q, l: questions[q].a});
+  });
+  bg.forEach((r, i) => {
+    cells.push({...r, q: wrong[i][0], l: wrong[i][1]});
+  });
+  return cells;
+}
+
 function newGame(askPlayer = true){
   stopTimer();
   clearAutoNext();
   document.getElementById('finishModal').classList.remove('show');
   const {stroke, bg} = layout();
-  const order = shuffle([...Array(N).keys()]);
-  const cells = [];
-
-  stroke.forEach((r) => {
-    const q = order[r.qSlot];
-    cells.push({...r, q, l: questions[q].a});
-  });
-
-  const wrong = [];
-  for(let rep=0; rep<3; rep++){
-    for(let q=0; q<N; q++){
-      for(let l=0; l<4; l++){
-        if(l !== questions[q].a) wrong.push([q, l]);
-      }
-    }
-  }
-  shuffle(wrong);
-  bg.forEach((r, i) => {
-    cells.push({...r, q: wrong[i][0], l: wrong[i][1]});
-  });
+  const cells = assignCellsNoAdjacent(stroke, bg);
 
   state = { cells, ans: Array(N).fill(null), timesLeft: Array(N).fill(30), elapsedMs: Array(N).fill(0), qScores: Array(N).fill(0), cur: 0, curStartAt: null };
   updateScoreUI();
