@@ -292,31 +292,31 @@ function jsonOut(obj) {
   let currentLbGame = 'ToHinhDoanChu';
   let currentLbSet = '';
 
-  async function loadLeaderboardUI(){
-    const el = document.getElementById('shLbContent');
+  async function renderLeaderboardInto(el, gameName, setTitle, highlightName){
+    ensureModals();
     el.innerHTML = '<p style="text-align:center;color:#64748b">⏳ Đang tải bảng xếp hạng từ Google Sheets...</p>';
-    const mode = document.getElementById('shLbFilter').value;
-    const res = await fetchLeaderboard(currentLbGame, mode === 'current' ? currentLbSet : '');
+    const res = await fetchLeaderboard(gameName, setTitle || '');
     if(!res.ok){
       if(res.reason === 'not_configured'){
-        el.innerHTML = `<div style="text-align:center;padding:20px;color:#b45309;background:#fffbeb;border-radius:10px">
+        el.innerHTML = `<div style="text-align:center;padding:16px;color:#b45309;background:#fffbeb;border-radius:10px;font-size:13px">
           ⚠️ Chưa cấu hình link Google Apps Script.<br><br>
-          <button class="sh-btn pri" onclick="document.getElementById('shLeaderboardModal').classList.remove('show');SheetsOnline.openSetup();">⚙️ Bấm vào đây để kết nối Google Sheets</button>
+          <button class="sh-btn pri" onclick="SheetsOnline.openSetup();">⚙️ Kết nối Google Sheets</button>
         </div>`;
       } else {
-        el.innerHTML = `<p style="color:#dc2626;text-align:center">Không tải được bảng xếp hạng: ${res.reason}</p>`;
+        el.innerHTML = `<p style="color:#dc2626;text-align:center;font-size:13px">Không tải được bảng xếp hạng: ${res.reason}</p>`;
       }
       return;
     }
     if(!res.rows || res.rows.length === 0){
-      el.innerHTML = '<p style="text-align:center;color:#64748b;padding:20px">Chưa có lượt chơi nào được lưu trên Google Sheets.</p>';
+      el.innerHTML = '<p style="text-align:center;color:#64748b;padding:16px;font-size:13px">Chưa có lượt chơi nào được lưu trên Google Sheets.</p>';
       return;
     }
     const esc = s => String(s||'').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-    let html = `<table class="sh-table"><thead><tr><th>Hạng</th><th>Họ và tên</th><th>Lớp</th><th>Bộ đề</th><th>Bắt đầu</th><th>Tổng thời gian</th><th>Đúng</th><th>Điểm</th></tr></thead><tbody>`;
+    let html = `<table class="sh-table"><thead><tr><th>Hạng</th><th>Họ và tên</th><th>Lớp</th><th>Bộ đề</th><th>Bắt đầu</th><th>Thời gian</th><th>Đúng</th><th>Điểm</th></tr></thead><tbody>`;
     res.rows.forEach((r, idx) => {
       const medal = idx === 0 ? '🥇' : idx === 1 ? '🥈' : idx === 2 ? '🥉' : (idx + 1);
-      html += `<tr>
+      const isMe = highlightName && String(r.name).trim() === String(highlightName).trim();
+      html += `<tr style="${isMe ? 'background:#fef3c7;font-weight:700' : ''}">
         <td style="font-weight:800;text-align:center">${medal}</td>
         <td style="font-weight:700">${esc(r.name)}</td>
         <td>${esc(r.className)}</td>
@@ -329,6 +329,12 @@ function jsonOut(obj) {
     });
     html += '</tbody></table>';
     el.innerHTML = html;
+  }
+
+  async function loadLeaderboardUI(){
+    const el = document.getElementById('shLbContent');
+    const mode = document.getElementById('shLbFilter').value;
+    await renderLeaderboardInto(el, currentLbGame, mode === 'current' ? currentLbSet : '', '');
   }
 
   function openLeaderboard(gameName, setTitle){
@@ -354,6 +360,7 @@ function jsonOut(obj) {
     formatVNTime,
     calcQuestionScore,
     submitScore,
+    renderLeaderboardInto,
     openLeaderboard,
     openSetup,
     isConfigured: () => !!(appsScriptUrl || localStorage.getItem(LOCAL_API_KEY))

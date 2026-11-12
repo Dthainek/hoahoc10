@@ -8,7 +8,7 @@
 *{box-sizing:border-box}
 html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#eef2f6;color:#1e293b}
 /* Header */
-.header-bar{background:#ffffff;border-bottom:1px solid #cbd5e1;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.header-bar{position:relative;z-index:165;background:#ffffff;border-bottom:1px solid #cbd5e1;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
 .header-left{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 .back-link{color:#2563eb;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#eff6ff;border-radius:8px;transition:background .2s}
 .back-link:hover{background:#dbeafe}
@@ -87,29 +87,41 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .dot.no{background:#0f172a;color:#ffffff;border-color:#0f172a}
 
 /* Popup kết thúc */
-#finishModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:150}
+#finishModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:175}
 #finishModal.show{display:flex}
-.finish-box{background:#ffffff;border-radius:20px;width:min(460px,92vw);padding:30px 24px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .3s cubic-bezier(.16,1,.3,1)}
+.finish-box{background:#ffffff;border-radius:20px;width:min(780px,95vw);max-height:92vh;overflow:auto;padding:24px 22px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .3s cubic-bezier(.16,1,.3,1)}
 @keyframes popIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
-.finish-icon{font-size:56px;margin-bottom:10px}
-.finish-title{margin:0 0 8px;font-size:23px;font-weight:800;color:#0f172a}
+.finish-icon{font-size:46px;margin-bottom:6px}
+.finish-title{margin:0 0 6px;font-size:22px;font-weight:800;color:#0f172a}
 .finish-title.win{color:#dc2626}
-.finish-sub{margin:0 0 16px;font-size:18px;font-weight:700;color:#b45309}
-.finish-sub.lose{color:#475569;font-weight:600;font-size:15px}
-.finish-score{display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:700;color:#334155;margin-bottom:10px;line-height:1.6}
-.finish-sync{font-size:13px;font-weight:700;margin-bottom:18px;padding:6px 12px;border-radius:8px;background:#f8fafc;color:#475569}
+.finish-sub{margin:0 0 12px;font-size:16px;font-weight:700;color:#b45309}
+.finish-sub.lose{color:#475569;font-weight:600;font-size:14px}
+.finish-score{display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:700;color:#334155;margin-bottom:8px;line-height:1.6}
+.finish-sync{font-size:13px;font-weight:700;margin-bottom:10px;padding:6px 12px;border-radius:8px;background:#f8fafc;color:#475569}
+.finish-lb-title{font-size:15px;font-weight:800;color:#0f172a;margin:10px 0 6px;text-align:left;display:flex;justify-content:space-between;align-items:center}
+#finishLeaderboardWrap{max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:16px;text-align:left}
 .finish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
 
-/* Popup nhập tên trước khi chơi Online */
-#playerModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:160}
+/* Màn hình đăng nhập Tên và Lớp trước khi chơi */
+#playerModal{position:fixed;inset:0;background:#eef2f6;display:none;align-items:center;justify-content:center;z-index:160;padding:70px 16px 20px}
 #playerModal.show{display:flex}
-.player-box{background:#ffffff;border-radius:18px;width:min(440px,92vw);padding:26px 24px;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .25s ease}
-.player-box h3{margin:0 0 6px;font-size:21px;font-weight:800;color:#0f172a}
-.player-box p{margin:0 0 16px;font-size:13.5px;color:#475569}
+.player-box{background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;width:min(460px,95vw);padding:28px 26px;box-shadow:0 20px 45px rgba(15,23,42,0.12);animation:popIn .25s ease}
+.player-box h3{margin:0 0 6px;font-size:22px;font-weight:800;color:#0f172a}
+.player-box p{margin:0 0 14px;font-size:14px;color:#475569}
+.login-set-pill{display:inline-block;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:14px}
 .player-box label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:4px}
-.player-box input{width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;margin-bottom:12px;outline:none}
+.player-box input{width:100%;padding:11px 13px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;margin-bottom:12px;outline:none}
 .player-box input:focus{border-color:#2563eb}
 .score-pill{background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800;white-space:nowrap}
+
+/* Modal Mời tham gia QR */
+#inviteModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:180}
+#inviteModal.show{display:flex}
+.invite-box{background:#ffffff;border-radius:20px;width:min(480px,94vw);padding:24px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .25s ease}
+.qr-frame{display:inline-flex;padding:12px;background:#ffffff;border:2px solid #cbd5e1;border-radius:16px;margin:12px 0;box-shadow:0 4px 14px rgba(0,0,0,0.06)}
+.qr-frame img{width:240px;height:240px;display:block;border-radius:6px}
+.invite-link-row{display:flex;gap:8px;margin-top:8px}
+.invite-link-row input{flex:1;padding:9px 10px;border:1.5px solid #cbd5e1;border-radius:8px;font-family:monospace;font-size:13px;background:#f8fafc;color:#0f172a}
 
 /* Modal soạn và quản lý bộ câu hỏi */
 #modal{position:fixed;inset:0;background:rgba(15,23,42,0.65);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
@@ -142,6 +154,7 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <span class="score-pill" id="scorePill">🏆 0đ</span>
     <label for="setSelect">📚 Bộ:</label>
     <select id="setSelect"></select>
+    <button class="btn-ui btn-accent" id="btnInvite" title="Hiện mã QR mời học sinh tham gia">📲 Mời tham gia</button>
     <button class="btn-ui" id="btnLeaderboard" title="Xem bảng xếp hạng Online">🏆 BXH</button>
     <button class="btn-ui" id="btnSheets" title="Cấu hình lưu điểm Google Sheets">📊 Sheets</button>
     <button class="btn-ui" id="btnEditHeader" title="Chỉnh sửa hoặc thêm bộ câu hỏi mới">✏️ Bộ đề</button>
@@ -239,7 +252,7 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   </div>
 </div>
 
-<!-- Popup kết thúc trò chơi -->
+<!-- Popup kết thúc trò chơi + Bảng xếp hạng điểm -->
 <div id="finishModal">
   <div class="finish-box">
     <div class="finish-icon" id="finishIcon">🎉</div>
@@ -247,26 +260,58 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <p class="finish-sub" id="finishSub">Chào mừng ngày Nhà giáo Việt Nam</p>
     <div class="finish-score" id="finishScore">Kết quả: 12/12 câu đúng</div>
     <div class="finish-sync" id="finishSyncStatus"></div>
+    <div class="finish-lb-title">
+      <span>🏆 Bảng xếp hạng điểm</span>
+      <button class="btn-ui" id="btnRefreshFinishLb" style="padding:3px 10px;font-size:12px">🔄 Làm mới</button>
+    </div>
+    <div id="finishLeaderboardWrap"></div>
     <div class="finish-actions">
       <button class="btn-ui" id="btnFinishView">👀 Xem lại bức tranh</button>
-      <button class="btn-ui btn-accent" id="btnFinishLb">🏆 Bảng xếp hạng</button>
+      <button class="btn-ui btn-accent" id="btnFinishLb">📊 Mở toàn màn hình BXH</button>
       <button class="btn-ui btn-primary" id="btnFinishReplay">🔄 Chơi lại</button>
     </div>
   </div>
 </div>
 
-<!-- Popup nhập tên người chơi Online -->
+<!-- Màn hình đăng nhập Tên và Lớp trước khi chơi -->
 <div id="playerModal">
   <div class="player-box">
-    <h3>🎮 Tham gia chơi Online</h3>
-    <p>Nhập tên để lưu thành tích, thời gian và xếp hạng (trả lời càng nhanh điểm thưởng càng cao!).</p>
+    <h3>🎮 Đăng nhập tham gia trò chơi</h3>
+    <div class="login-set-pill" id="loginSetName">📚 Bộ câu hỏi</div>
+    <p>Nhập <b>Họ và tên</b> và <b>Lớp</b> rồi ấn <b>Bắt đầu</b> để vào màn hình chơi và tính thời gian.</p>
     <label for="pName">Họ và tên học sinh *</label>
     <input type="text" id="pName" placeholder="Ví dụ: Nguyễn Văn A">
-    <label for="pClass">Lớp (không bắt buộc)</label>
+    <label for="pClass">Lớp *</label>
     <input type="text" id="pClass" placeholder="Ví dụ: 10A1">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-      <button class="btn-ui btn-primary" id="btnStartPlay" style="flex:1;padding:10px 16px;font-size:15px">🚀 Bắt đầu chơi</button>
-      <button class="btn-ui" id="btnPlayDemo" style="padding:10px 14px">Chơi thử</button>
+      <button class="btn-ui btn-primary" id="btnStartPlay" style="flex:1;padding:11px 16px;font-size:15px">🚀 Bắt đầu</button>
+      <button class="btn-ui" id="btnPlayDemo" style="padding:11px 14px">Chơi thử</button>
+    </div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #cbd5e1;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <button class="btn-ui btn-accent" id="btnLoginInvite" style="padding:6px 12px;font-size:12.5px">📲 Mời tham gia (Mã QR)</button>
+      <button class="btn-ui" id="btnLoginLb" style="padding:6px 12px;font-size:12.5px">🏆 Xem BXH</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Mời tham gia QR -->
+<div id="inviteModal">
+  <div class="invite-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <h3 style="margin:0;font-size:19px;color:#0f172a">📲 Mời tham gia trò chơi</h3>
+      <button class="btn-ui" id="btnCloseInvite" style="padding:5px 10px">✖ Đóng</button>
+    </div>
+    <div class="login-set-pill" id="inviteSetTitle" style="margin-bottom:4px">📚 Bộ câu hỏi</div>
+    <p style="margin:4px 0 6px;font-size:13.5px;color:#475569">Học sinh quét mã QR hoặc mở đường dẫn dưới đây để vào trực tiếp trò chơi:</p>
+    <div class="qr-frame">
+      <img id="qrImg" alt="Mã QR vào trò chơi Tô hình đoán chữ">
+    </div>
+    <div class="invite-link-row">
+      <input type="text" id="inviteLinkInput" readonly>
+      <button class="btn-ui btn-primary" id="btnCopyInvite">📋 Sao chép</button>
+    </div>
+    <div style="margin-top:14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
+      <button class="btn-ui btn-accent" id="btnInviteLb">🏆 Theo dõi Bảng xếp hạng</button>
     </div>
   </div>
 </div>
@@ -585,6 +630,43 @@ function setTimerDoneUI(){
   text.textContent = 'Đã xong';
 }
 
+let autoNextTimer = null;
+
+function clearAutoNext(){
+  if(autoNextTimer){
+    clearTimeout(autoNextTimer);
+    autoNextTimer = null;
+  }
+}
+
+function findNextUnanswered(fromIdx){
+  if(!state || !state.ans) return -1;
+  for(let offset = 1; offset < N; offset++){
+    const idx = (fromIdx + offset) % N;
+    if(state.ans[idx] === null) return idx;
+  }
+  return state.ans[fromIdx] === null ? fromIdx : -1;
+}
+
+function scheduleAutoNext(fromIdx){
+  clearAutoNext();
+  const nextIdx = findNextUnanswered(fromIdx);
+  if(nextIdx === -1){
+    checkGameFinished();
+    return;
+  }
+  autoNextTimer = setTimeout(() => {
+    autoNextTimer = null;
+    if(state && state.ans[nextIdx] === null){
+      switchQuestion(nextIdx);
+    } else {
+      const fallbackIdx = findNextUnanswered(fromIdx);
+      if(fallbackIdx !== -1) switchQuestion(fallbackIdx);
+      else checkGameFinished();
+    }
+  }, 900);
+}
+
 function handleTimeout(qIndex){
   if(!state || state.ans[qIndex] !== null) return;
   stopTimer();
@@ -594,7 +676,7 @@ function handleTimeout(qIndex){
   state.ans[qIndex] = -1;
   show();
   toast(`⏰ Hết 30 giây cho câu ${qIndex + 1}!`, '#dc2626');
-  checkGameFinished();
+  scheduleAutoNext(qIndex);
 }
 
 async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
@@ -604,6 +686,7 @@ async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
   const sub = document.getElementById('finishSub');
   const score = document.getElementById('finishScore');
   const syncEl = document.getElementById('finishSyncStatus');
+  const lbWrap = document.getElementById('finishLeaderboardWrap');
   
   if(ok === N){
     icon.textContent = '🎉💐';
@@ -620,7 +703,13 @@ async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
   }
   const pLabel = playerInfo.isDemo ? 'Chế độ chơi thử' : `${playerInfo.name}${playerInfo.className ? ' - ' + playerInfo.className : ''}`;
   score.innerHTML = `👤 <b>${esc(pLabel)}</b><br>✅ Đúng: <b>${ok}/${N}</b> câu &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b> &nbsp;|&nbsp; 🏆 Điểm: <b style="color:#dc2626">${totalScore}</b>`;
+  if(lbWrap){
+    lbWrap.innerHTML = '<div style="padding:18px;text-align:center;color:#64748b;font-size:13px">⏳ Đang tải bảng xếp hạng...</div>';
+  }
   modal.classList.add('show');
+
+  const setTitle = allSets[currentSetIndex].title;
+  const highlightName = playerInfo.isDemo ? '' : playerInfo.name;
 
   if(playerInfo.isDemo){
     syncEl.textContent = 'ℹ️ Chế độ chơi thử: không lưu kết quả lên Google Sheets.';
@@ -635,7 +724,7 @@ async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
       game: 'ToHinhDoanChu',
       name: playerInfo.name,
       className: playerInfo.className,
-      setTitle: allSets[currentSetIndex].title,
+      setTitle,
       startTime: playerInfo.startTime,
       endTime,
       totalTime: totalTimeSec,
@@ -650,6 +739,10 @@ async function showFinishPopup(ok, totalScore, totalTimeSec, endTime){
       syncEl.style.color = '#dc2626';
     }
   }
+
+  if(lbWrap && window.SheetsOnline && SheetsOnline.renderLeaderboardInto){
+    await SheetsOnline.renderLeaderboardInto(lbWrap, 'ToHinhDoanChu', setTitle, highlightName);
+  }
 }
 
 document.getElementById('btnFinishView').onclick = () => {
@@ -663,10 +756,20 @@ document.getElementById('btnFinishReplay').onclick = () => {
   document.getElementById('finishModal').classList.remove('show');
   newGame(true);
 };
+const btnRefreshFinishLb = document.getElementById('btnRefreshFinishLb');
+if(btnRefreshFinishLb){
+  btnRefreshFinishLb.onclick = () => {
+    const lbWrap = document.getElementById('finishLeaderboardWrap');
+    if(lbWrap && window.SheetsOnline && SheetsOnline.renderLeaderboardInto){
+      SheetsOnline.renderLeaderboardInto(lbWrap, 'ToHinhDoanChu', allSets[currentSetIndex].title, playerInfo.isDemo ? '' : playerInfo.name);
+    }
+  };
+}
 
 function checkGameFinished(){
   if(state.ans.every(x => x !== null)){
     stopTimer();
+    clearAutoNext();
     const ok = state.ans.filter((x, i) => x === questions[i].a).length;
     const totalScore = state.qScores.reduce((a, b) => a + b, 0);
     const totalTimeSec = Math.round(state.elapsedMs.reduce((a, b) => a + b, 0) / 100) / 10;
@@ -690,6 +793,7 @@ function updateScoreUI(){
 
 function newGame(askPlayer = true){
   stopTimer();
+  clearAutoNext();
   document.getElementById('finishModal').classList.remove('show');
   const {stroke, bg} = layout();
   const order = shuffle([...Array(N).keys()]);
@@ -721,6 +825,10 @@ function newGame(askPlayer = true){
 }
 
 function openPlayerModal(){
+  const loginSetEl = document.getElementById('loginSetName');
+  if(loginSetEl && allSets[currentSetIndex]){
+    loginSetEl.textContent = '📚 ' + allSets[currentSetIndex].title;
+  }
   try {
     const last = JSON.parse(localStorage.getItem('hoahoc10_last_player') || '{}');
     if(last.name) document.getElementById('pName').value = last.name;
@@ -730,15 +838,28 @@ function openPlayerModal(){
   setTimeout(() => document.getElementById('pName').focus(), 100);
 }
 
-document.getElementById('btnStartPlay').onclick = () => {
+function startPlayFromLogin(){
   const n = document.getElementById('pName').value.trim();
   const c = document.getElementById('pClass').value.trim();
   if(!n){ alert('Vui lòng nhập họ và tên để lưu điểm!'); document.getElementById('pName').focus(); return; }
+  if(!c){ alert('Vui lòng nhập lớp của bạn!'); document.getElementById('pClass').focus(); return; }
   localStorage.setItem('hoahoc10_last_player', JSON.stringify({name: n, className: c}));
   playerInfo = { name: n, className: c, isDemo: false, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
   document.getElementById('playerModal').classList.remove('show');
   show(true);
-};
+}
+
+document.getElementById('btnStartPlay').onclick = startPlayFromLogin;
+document.getElementById('pName').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    if(!document.getElementById('pClass').value.trim()) document.getElementById('pClass').focus();
+    else startPlayFromLogin();
+  }
+});
+document.getElementById('pClass').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); startPlayFromLogin(); }
+});
 
 document.getElementById('btnPlayDemo').onclick = () => {
   playerInfo = { name: 'Chơi thử', className: '', isDemo: true, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
@@ -746,10 +867,55 @@ document.getElementById('btnPlayDemo').onclick = () => {
   show(true);
 };
 
+function getInviteUrl(){
+  if(window.location.protocol === 'file:'){
+    return 'https://dthainek.github.io/hoahoc10/tohinhdoanchu/';
+  }
+  return window.location.href.split('#')[0];
+}
+
+function openInviteModal(){
+  const url = getInviteUrl();
+  const setTitle = (allSets[currentSetIndex] && allSets[currentSetIndex].title) || 'Tô hình đoán chữ';
+  const setTitleEl = document.getElementById('inviteSetTitle');
+  const linkInput = document.getElementById('inviteLinkInput');
+  const qrImg = document.getElementById('qrImg');
+  if(setTitleEl) setTitleEl.textContent = '📚 Bộ câu hỏi: ' + setTitle;
+  if(linkInput) linkInput.value = url;
+  if(qrImg){
+    qrImg.onerror = () => {
+      qrImg.onerror = null;
+      qrImg.src = `https://quickchart.io/qr?size=260&text=${encodeURIComponent(url)}`;
+    };
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(url)}`;
+  }
+  document.getElementById('inviteModal').classList.add('show');
+}
+
+document.getElementById('btnInvite').onclick = openInviteModal;
+document.getElementById('btnLoginInvite').onclick = openInviteModal;
+document.getElementById('btnCloseInvite').onclick = () => document.getElementById('inviteModal').classList.remove('show');
+document.getElementById('btnCopyInvite').onclick = async () => {
+  const linkInput = document.getElementById('inviteLinkInput');
+  const url = linkInput ? linkInput.value : getInviteUrl();
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('📋 Đã sao chép link trò chơi!', '#16a34a');
+  } catch(e) {
+    if(linkInput){ linkInput.select(); document.execCommand('copy'); }
+    toast('📋 Đã sao chép link trò chơi!', '#16a34a');
+  }
+};
+document.getElementById('btnInviteLb').onclick = () => {
+  document.getElementById('inviteModal').classList.remove('show');
+  SheetsOnline.openLeaderboard('ToHinhDoanChu', allSets[currentSetIndex].title);
+};
+document.getElementById('btnLoginLb').onclick = () => SheetsOnline.openLeaderboard('ToHinhDoanChu', allSets[currentSetIndex].title);
 document.getElementById('btnLeaderboard').onclick = () => SheetsOnline.openLeaderboard('ToHinhDoanChu', allSets[currentSetIndex].title);
 document.getElementById('btnSheets').onclick = () => SheetsOnline.openSetup();
 
 function switchQuestion(nextIdx){
+  clearAutoNext();
   recordElapsed();
   state.cur = nextIdx;
   show();
@@ -856,7 +1022,7 @@ function answer(k){
   state.ans[i] = k;
   updateScoreUI();
   show();
-  checkGameFinished();
+  scheduleAutoNext(i);
 }
 
 function toast(msg, bg='#15803d'){
