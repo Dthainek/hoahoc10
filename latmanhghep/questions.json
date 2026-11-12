@@ -1,0 +1,30 @@
+{
+  "sets": [
+    {
+      "id": "muoi_an_nacl",
+      "title": "Bài 11: Khám phá Muối ăn (NaCl) - Liên kết ion",
+      "questions": [
+        {
+          "q": "Ion dương (+1) trong phân tử muối ăn (NaCl) được tạo thành khi nguyên tử kim loại kiềm mềm nào nhường đi 1 electron lớp ngoài cùng?",
+          "o": ["Na", "K", "Ca", "Mg"],
+          "a": 0
+        },
+        {
+          "q": "Để tạo nên hợp chất muối ăn (NaCl), kim loại Natri phản ứng trực tiếp với đơn chất phi kim nào có màu vàng lục ở điều kiện thường?",
+          "o": ["Khí O₂", "Khí Cl₂", "Khí H₂", "Khí N₂"],
+          "a": 1
+        },
+        {
+          "q": "Trong thực tế, người diêm dân tận dụng ánh nắng mặt trời làm bay hơi nước từ nguồn nguyên liệu tự nhiên nào để thu hoạch muối ăn?",
+          "o": ["Nước mưa", "Nước cất", "Nước biển", "Nước sông"],
+          "a": 2
+        },
+        {
+          "q": "Ở điều kiện thường, muối ăn (NaCl) là chất rắn có các ion Na⁺ và Cl⁻ sắp xếp đều đặn theo trật tự không gian tạo thành dạng cấu trúc gì?",
+          "o": ["Chất lỏng", "Chất khí", "Dung dịch", "Tinh thể"],
+          "a": 3
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Lật Mảnh Ghép Bí Mật (4 Mảnh) - Hóa Học 10</title>
+<style>
+*{box-sizing:border-box}
+html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#eef2f6;color:#1e293b}
+
+/* Header */
+.header-bar{background:#ffffff;border-bottom:1px solid #cbd5e1;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.header-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.back-link{color:#2563eb;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#eff6ff;border-radius:8px;transition:background .2s}
+.back-link:hover{background:#dbeafe}
+.app-title{font-size:17px;font-weight:800;color:#0f172a;margin:0}
+.set-selector-wrap{display:flex;align-items:center;gap:8px;background:#f8fafc;border:1px solid #cbd5e1;padding:4px 10px;border-radius:10px}
+.set-selector-wrap label{font-size:13px;font-weight:700;color:#475569;white-space:nowrap}
+#setSelect{font:inherit;font-size:14px;font-weight:600;padding:5px 8px;border-radius:6px;border:1px solid #94a3b8;background:#fff;color:#0f172a;cursor:pointer;outline:none}
+
+/* Sân khấu Slide chính */
+.stage{min-height:calc(100vh - 61px);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px}
+.slide-card{width:100%;max-width:1080px;background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;box-shadow:0 10px 30px rgba(15,23,42,0.08);padding:24px 28px;display:none;flex-direction:column}
+.slide-card.active{display:flex;animation:slideFadeIn .3s ease}
+@keyframes slideFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* SLIDE 1: Bảng 4 mảnh ghép */
+.s1-top{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px;gap:12px;flex-wrap:wrap}
+.s1-top h2{margin:0;font-size:22px;font-weight:800;color:#0f172a;display:flex;align-items:center;gap:8px}
+.s1-sub{margin:4px 0 0;font-size:14px;color:#475569}
+.stats-pill{background:#eff6ff;border:1.5px solid #bfdbfe;color:#1d4ed8;padding:6px 14px;border-radius:999px;font-size:14px;font-weight:800}
+
+/* Khung bức ảnh & lưới 2x2 */
+.board-wrap{position:relative;width:100%;max-width:860px;margin:0 auto;aspect-ratio:16/9;border-radius:14px;overflow:hidden;border:3px solid #0f172a;box-shadow:0 6px 20px rgba(0,0,0,0.12);background:#cbd5e1}
+.secret-img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+.puzzle-grid{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr}
+
+/* Mảnh ghép */
+.tile{position:relative;border:2px solid rgba(255,255,255,0.85);display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;user-select:none;transition:transform .55s cubic-bezier(.4,0,.2,1), opacity .55s ease, background .25s;transform-origin:center}
+.tile-1{background:linear-gradient(135deg,#2563eb,#1d4ed8);color:#fff}
+.tile-2{background:linear-gradient(135deg,#0284c7,#0369a1);color:#fff}
+.tile-3{background:linear-gradient(135deg,#0d9488,#0f766e);color:#fff}
+.tile-4{background:linear-gradient(135deg,#d97706,#b45309);color:#fff}
+.tile:not(.locked):not(.opened):hover{filter:brightness(1.08);transform:scale(0.985)}
+.tile-num{font-size:clamp(34px,5.5vw,58px);font-weight:900;line-height:1;text-shadow:0 3px 8px rgba(0,0,0,0.25)}
+.tile-label{margin-top:8px;font-size:clamp(14px,1.8vw,18px);font-weight:700;background:rgba(255,255,255,0.2);padding:4px 14px;border-radius:999px;backdrop-filter:blur(2px)}
+
+/* Trạng thái ĐÃ LẬT ĐÚNG: Mở lộ ảnh phía dưới */
+.tile.opened{opacity:0;transform:rotateY(90deg) scale(0.92);pointer-events:none}
+
+/* Trạng thái SAI / QUÁ GIỜ: Bôi đen & khóa, không lật lên */
+.tile.locked{background:#090d16!important;color:#94a3b8!important;border-color:#1e293b!important;cursor:not-allowed}
+.tile.locked .tile-num{font-size:clamp(26px,3.5vw,40px);color:#ef4444;text-shadow:none}
+.tile.locked .tile-label{background:rgba(239,68,68,0.16);color:#fca5a5;border:1px solid rgba(239,68,68,0.35)}
+
+/* Khi bấm Xem toàn bức tranh */
+.board-wrap.reveal-all .tile{opacity:0;pointer-events:none}
+
+/* Chú thích ảnh khi mở hết */
+.reveal-caption{display:none;margin-top:14px;background:#f0fdf4;border:1.5px solid #86efac;color:#166534;padding:12px 18px;border-radius:12px;font-size:15px;font-weight:700;text-align:center}
+.reveal-caption.show{display:block;animation:slideFadeIn .3s ease}
+
+/* Thanh nút dưới Slide 1 */
+.controls{display:flex;justify-content:space-between;align-items:center;margin-top:18px;gap:10px;flex-wrap:wrap}
+.btns{display:flex;gap:8px;flex-wrap:wrap}
+button{font:inherit;cursor:pointer;transition:all .15s}
+.btn-ui{border:1px solid #cbd5e1;background:#f8fafc;color:#334155;border-radius:10px;padding:9px 16px;font-size:14px;font-weight:700}
+.btn-ui:hover{background:#e2e8f0;color:#0f172a}
+.btn-primary{background:#2563eb;color:#ffffff;border:1px solid #1d4ed8}
+.btn-primary:hover{background:#1d4ed8}
+.btn-accent{background:#16a34a;color:#ffffff;border:1px solid #15803d}
+.btn-accent:hover{background:#15803d}
+.btn-amber{background:#f59e0b;color:#ffffff;border:1px solid #d97706}
+.btn-amber:hover{background:#d97706}
+
+/* SLIDE 2: Câu hỏi trắc nghiệm + Đếm ngược 30s */
+.q-top{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px;flex-wrap:wrap}
+.q-badge{background:#eff6ff;border:1.5px solid #bfdbfe;color:#1d4ed8;padding:6px 16px;border-radius:999px;font-size:16px;font-weight:800}
+.timer-badge{display:inline-flex;align-items:center;gap:8px;background:#eff6ff;border:2px solid #93c5fd;color:#1d4ed8;padding:6px 18px;border-radius:999px;font-size:18px;font-weight:900;min-width:110px;justify-content:center}
+.timer-badge.warning{background:#fffbeb;border-color:#fcd34d;color:#b45309}
+.timer-badge.danger{background:#fef2f2;border-color:#fca5a5;color:#dc2626;animation:pulseTimer .7s infinite alternate}
+.timer-badge.done{background:#f1f5f9;border-color:#cbd5e1;color:#64748b}
+@keyframes pulseTimer{from{transform:scale(1)}to{transform:scale(1.06)}}
+.timer-bar-wrap{height:7px;width:100%;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:22px}
+.timer-bar{height:100%;width:100%;background:#2563eb;transition:width .25s linear,background-color .3s;border-radius:999px}
+.timer-bar.warning{background:#f59e0b}
+.timer-bar.danger{background:#dc2626}
+
+#qText{font-size:clamp(20px,2.5vw,26px);font-weight:700;line-height:1.45;color:#0f172a;margin:0 0 24px;padding:18px 22px;background:#f8fafc;border-left:5px solid #2563eb;border-radius:10px}
+.opts-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:20px}
+.opt{display:flex;align-items:center;gap:14px;width:100%;text-align:left;border:2px solid #cbd5e1;background:#ffffff;color:#1e293b;border-radius:14px;padding:16px 18px;font-size:18px;font-weight:600;transition:all .15s}
+.opt b{flex:0 0 40px;height:40px;border-radius:50%;background:#f1f5f9;color:#0f172a;display:flex;align-items:center;justify-content:center;font-size:16px;font-weight:800;border:1.5px solid #cbd5e1}
+.opt:hover:not(:disabled){border-color:#2563eb;background:#eff6ff;transform:translateY(-2px)}
+.opt:disabled{cursor:default}
+.opt.right{border-color:#16a34a!important;background:#dcfce7!important;color:#166534!important}
+.opt.right b{background:#16a34a;color:#ffffff;border-color:#15803d}
+.opt.wrong{border-color:#dc2626!important;background:#fee2e2!important;color:#991b1b!important}
+.opt.wrong b{background:#dc2626;color:#ffffff;border-color:#b91c1c}
+
+.q-feedback{min-height:54px;border-radius:12px;padding:12px 18px;font-size:16px;font-weight:700;display:flex;align-items:center;justify-content:space-between;gap:12px;background:#f8fafc;border:2px dashed #cbd5e1;color:#64748b}
+.q-feedback.ok{background:#f0fdf4;border-color:#16a34a;color:#15803d}
+.q-feedback.no{background:#fef2f2;border-color:#dc2626;color:#b91c1c}
+
+/* Modal soạn bộ câu hỏi */
+#modal{position:fixed;inset:0;background:rgba(15,23,42,0.68);backdrop-filter:blur(3px);display:none;align-items:center;justify-content:center;z-index:100}
+#modal.show{display:flex}
+.box{background:#ffffff;border-radius:16px;width:min(880px,96vw);max-height:92vh;overflow:auto;padding:22px;color:#1e293b;box-shadow:0 20px 40px rgba(0,0,0,0.22)}
+.box-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;border-bottom:1px solid #e2e8f0;padding-bottom:10px}
+.box-header h3{margin:0;font-size:18px;color:#0f172a}
+.set-edit-bar{display:flex;gap:10px;align-items:center;background:#f1f5f9;padding:10px 14px;border-radius:10px;margin-bottom:14px;flex-wrap:wrap}
+.set-edit-bar input{flex:1;font:inherit;padding:8px 12px;border:1.5px solid #cbd5e1;border-radius:8px}
+.gh-card{background:#f0fdf4;border:1.5px solid #86efac;border-radius:10px;padding:14px;margin-bottom:16px}
+.gh-card input{background:#ffffff;border:1.5px solid #86efac;color:#0f172a;padding:8px 12px;border-radius:8px;width:100%;font-family:monospace;font-size:13px}
+.qe{border:1px solid #e2e8f0;background:#f8fafc;border-radius:10px;padding:12px;margin-bottom:12px}
+.qe textarea,.qe input,.qe select{width:100%;font:inherit;padding:7px 10px;border:1px solid #cbd5e1;border-radius:6px;background:#ffffff;color:#0f172a;margin-top:4px}
+.qe .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.qe label{font-size:13px;font-weight:700;color:#475569}
+
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#15803d;color:#ffffff;padding:12px 24px;border-radius:10px;display:none;z-index:200;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.25)}
+@media(max-width:760px){.opts-grid{grid-template-columns:1fr}.slide-card{padding:16px}}
+</style>
+</head>
+<body>
+
+<div class="header-bar">
+  <div class="header-left">
+    <a href="../index.html" class="back-link">⬅ Về kho Minigame Hóa học 10</a>
+    <h1 class="app-title">Lật Mảnh Ghép Bí Mật (4 Mảnh)</h1>
+  </div>
+  <div class="set-selector-wrap">
+    <label for="setSelect">📚 Bộ câu hỏi:</label>
+    <select id="setSelect"></select>
+    <button class="btn-ui" id="btnEditHeader" style="padding:5px 10px;font-size:13px">✏️ Quản lý</button>
+  </div>
+</div>
+
+<main class="stage">
+  <!-- SLIDE 1: Chứa 4 mảnh ghép che bức ảnh nông dân thu hoạch muối -->
+  <section class="slide-card active" id="slideBoard">
+    <div class="s1-top">
+      <div>
+        <h2>🧩 Bấm chọn một mảnh ghép để mở câu hỏi</h2>
+        <p class="s1-sub">Trả lời đúng trong 30 giây để lật mở mảnh ghép. Nếu sai hoặc quá giờ, mảnh ghép sẽ bị bôi đen!</p>
+      </div>
+      <span class="stats-pill" id="statsPill">Đã lật: 0/4 mảnh</span>
+    </div>
+
+    <div class="board-wrap" id="boardWrap">
+      <img src="./salt_harvest.jpg" alt="Nông dân thu hoạch muối ở ruộng muối" class="secret-img" id="secretImg">
+      <div class="puzzle-grid" id="puzzleGrid">
+        <div class="tile tile-1" data-idx="0">
+          <div class="tile-num">1</div>
+          <div class="tile-label">Câu hỏi 1</div>
+        </div>
+        <div class="tile tile-2" data-idx="1">
+          <div class="tile-num">2</div>
+          <div class="tile-label">Câu hỏi 2</div>
+        </div>
+        <div class="tile tile-3" data-idx="2">
+          <div class="tile-num">3</div>
+          <div class="tile-label">Câu hỏi 3</div>
+        </div>
+        <div class="tile tile-4" data-idx="3">
+          <div class="tile-num">4</div>
+          <div class="tile-label">Câu hỏi 4</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="reveal-caption" id="revealCaption"></div>
+
+    <div class="controls">
+      <div class="btns">
+        <button class="btn-ui" id="btnReset">🔄 Chơi lại</button>
+        <button class="btn-ui btn-amber" id="btnRevealAll">👁️ Mở toàn bức tranh</button>
+      </div>
+      <div class="btns">
+        <button class="btn-ui btn-primary" id="btnEdit">✏️ Soạn & Lưu câu hỏi</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SLIDE 2: Slide câu hỏi trắc nghiệm (đếm ngược 30s) -->
+  <section class="slide-card" id="slideQuiz">
+    <div class="q-top">
+      <div class="q-badge" id="qBadge">🧩 MẢNH GHÉP 1 — CÂU HỎI 1</div>
+      <div style="display:flex;align-items:center;gap:10px">
+        <div class="timer-badge" id="timerBadge">⏱️ <span id="timerText">30s</span></div>
+        <button class="btn-ui" id="btnBackToBoard">⬅ Về bảng mảnh ghép</button>
+      </div>
+    </div>
+
+    <div class="timer-bar-wrap">
+      <div class="timer-bar" id="timerBar"></div>
+    </div>
+
+    <h3 id="qText">Nội dung câu hỏi...</h3>
+
+    <div class="opts-grid" id="optsGrid"></div>
+
+    <div class="q-feedback" id="qFeedback">
+      <span id="qFeedbackText">Hãy chọn đáp án đúng trước khi hết 30 giây!</span>
+    </div>
+  </section>
+</main>
+
+<!-- Modal quản lý & đồng bộ bộ câu hỏi -->
+<div id="modal">
+  <div class="box">
+    <div class="box-header">
+      <h3>✏️ Quản lý & Soạn bộ 4 câu hỏi</h3>
+      <button class="btn-ui" id="eClose">✖ Đóng</button>
+    </div>
+
+    <div class="set-edit-bar">
+      <label style="font-weight:700;font-size:13px">Bộ đề:</label>
+      <select id="modalSetSelect" style="padding:6px;border-radius:6px;font:inherit;font-weight:600"></select>
+      <input type="text" id="setNameInput" placeholder="Tên bộ câu hỏi...">
+      <button class="btn-ui btn-primary" id="btnNewSet">➕ Tạo bộ mới</button>
+      <button class="btn-ui" id="btnDeleteSet" style="color:#b91c1c;border-color:#fca5a5">🗑 Xóa</button>
+    </div>
+
+    <div class="gh-card">
+      <div style="font-weight:800;color:#15803d;margin-bottom:6px">🌐 Lưu & Xuất bản vĩnh viễn lên GitHub (dthainek.github.io/hoahoc10)</div>
+      <p style="font-size:13px;color:#334155;margin:0 0 8px 0">
+        Nhập <b>GitHub Token</b> (được lưu chung nếu bạn đã nhập ở trò chơi trước) để cập nhật bộ câu hỏi vĩnh viễn lên web:
+      </p>
+      <input type="password" id="ghToken" placeholder="Dán token ghp_xxxx hoặc github_pat_xxxx...">
+      <div style="display:flex;gap:10px;margin-top:8px;align-items:center;flex-wrap:wrap">
+        <button class="btn-ui btn-accent" id="btnSyncGH">🚀 Xuất bản lên GitHub ngay</button>
+      </div>
+    </div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin:12px 0 8px;flex-wrap:wrap;gap:8px">
+      <span style="font-weight:800">4 câu hỏi trắc nghiệm:</span>
+      <div class="btns">
+        <button class="btn-ui" id="eExport">⬇ Xuất JSON</button>
+        <button class="btn-ui" id="eImport">⬆ Nhập JSON</button>
+        <button class="btn-ui" id="eDefault">🔄 Khôi phục mẫu</button>
+      </div>
+    </div>
+
+    <div id="editor"></div>
+
+    <div class="btns" style="margin-top:16px">
+      <button class="btn-ui btn-primary" id="eSaveLocal" style="padding:10px 20px">💾 Lưu vào trình duyệt máy này</button>
+      <input type="file" id="file" accept=".json" hidden>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const L = ['A','B','C','D'], N = 4, MAX_TIME = 30;
+const LOCAL_KEY = 'hoahoc10_latmanhghep_v1';
+const GH_TOKEN_KEY = 'hoahoc10_gh_token';
+const REPO_OWNER = 'Dthainek';
+const REPO_NAME = 'hoahoc10';
+const FILE_PATH = 'latmanhghep/questions.json';
+
+const DEFAULT_SETS = [
+  {
+    id: "muoi_an_nacl",
+    title: "Bài 11: Khám phá Muối ăn (NaCl) - Liên kết ion",
+    questions: [
+      {
+        q: "Ion dương (+1) trong phân tử muối ăn (NaCl) được tạo thành khi nguyên tử kim loại kiềm mềm nào nhường đi 1 electron lớp ngoài cùng?",
+        o: ["Na", "K", "Ca", "Mg"],
+        a: 0
+      },
+      {
+        q: "Để tạo nên hợp chất muối ăn (NaCl), kim loại Natri phản ứng trực tiếp với đơn chất phi kim nào có màu vàng lục ở điều kiện thường?",
+        o: ["Khí O₂", "Khí Cl₂", "Khí H₂", "Khí N₂"],
+        a: 1
+      },
+      {
+        q: "Trong thực tế, người diêm dân tận dụng ánh nắng mặt trời làm bay hơi nước từ nguồn nguyên liệu tự nhiên nào để thu hoạch muối ăn?",
+        o: ["Nước mưa", "Nước cất", "Nước biển", "Nước sông"],
+        a: 2
+      },
+      {
+        q: "Ở điều kiện thường, muối ăn (NaCl) là chất rắn có các ion Na⁺ và Cl⁻ sắp xếp đều đặn theo trật tự không gian tạo thành dạng cấu trúc gì?",
+        o: ["Chất lỏng", "Chất khí", "Dung dịch", "Tinh thể"],
+        a: 3
+      }
+    ]
+  }
+];
+
+let allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
+let currentSetIndex = 0;
+let questions = allSets[0].questions;
+// Trạng thái của 4 mảnh ghép: null (chưa mở), 'right' (đã lật), 'wrong' (bôi đen do sai), 'timeout' (bôi đen do quá giờ)
+let tileStatus = Array(N).fill(null);
+let activeTile = 0;
+let timerInterval = null;
+let autoReturnTimer = null;
+let timeLeft = MAX_TIME;
+let isRevealedAll = false;
+
+async function initData(){
+  try {
+    const res = await fetch('./questions.json?t=' + Date.now());
+    if(res.ok){
+      const data = await res.json();
+      if(data.sets && Array.isArray(data.sets) && data.sets.length > 0){
+        allSets = data.sets;
+      }
+    }
+  } catch(e){}
+
+  try {
+    const local = JSON.parse(localStorage.getItem(LOCAL_KEY));
+    if(local && Array.isArray(local) && local.length > 0){
+      allSets = local;
+    }
+  } catch(e){}
+
+  updateSetSelectUI();
+  selectSet(0);
+}
+
+function updateSetSelectUI(){
+  const s = document.getElementById('setSelect');
+  const ms = document.getElementById('modalSetSelect');
+  s.innerHTML = ''; ms.innerHTML = '';
+  allSets.forEach((set, i) => {
+    const o1 = document.createElement('option'); o1.value = i; o1.textContent = set.title; s.appendChild(o1);
+    const o2 = document.createElement('option'); o2.value = i; o2.textContent = set.title; ms.appendChild(o2);
+  });
+  s.value = currentSetIndex;
+  ms.value = currentSetIndex;
+}
+
+function selectSet(idx){
+  currentSetIndex = idx;
+  questions = allSets[currentSetIndex].questions;
+  document.getElementById('setSelect').value = idx;
+  document.getElementById('modalSetSelect').value = idx;
+  resetGame();
+}
+
+document.getElementById('setSelect').onchange = e => selectSet(+e.target.value);
+
+/* ---------- Chuyển đổi Slide & Logic trò chơi ---------- */
+function resetGame(){
+  stopTimers();
+  tileStatus = Array(N).fill(null);
+  isRevealedAll = false;
+  document.getElementById('boardWrap').classList.remove('reveal-all');
+  document.getElementById('revealCaption').classList.remove('show');
+  showSlide('board');
+  renderBoard();
+}
+
+function showSlide(which){
+  document.getElementById('slideBoard').classList.toggle('active', which === 'board');
+  document.getElementById('slideQuiz').classList.toggle('active', which === 'quiz');
+}
+
+function stopTimers(){
+  if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
+  if(autoReturnTimer){ clearTimeout(autoReturnTimer); autoReturnTimer = null; }
+}
+
+function renderBoard(){
+  const tiles = document.querySelectorAll('.tile');
+  let openedCount = 0;
+  let doneCount = 0;
+
+  tiles.forEach(t => {
+    const idx = +t.dataset.idx;
+    const st = tileStatus[idx];
+    t.classList.remove('opened', 'locked');
+    const numEl = t.querySelector('.tile-num');
+    const lblEl = t.querySelector('.tile-label');
+
+    if(st === 'right'){
+      t.classList.add('opened');
+      openedCount++;
+      doneCount++;
+    } else if(st === 'wrong'){
+      t.classList.add('locked');
+      numEl.textContent = '🔒';
+      lblEl.textContent = `Mảnh ${idx + 1}: Sai (Không lật)`;
+      doneCount++;
+    } else if(st === 'timeout'){
+      t.classList.add('locked');
+      numEl.textContent = '⏰';
+      lblEl.textContent = `Mảnh ${idx + 1}: Quá giờ`;
+      doneCount++;
+    } else {
+      numEl.textContent = idx + 1;
+      lblEl.textContent = `Câu hỏi ${idx + 1}`;
+    }
+  });
+
+  document.getElementById('statsPill').textContent = `Đã lật: ${openedCount}/${N} mảnh`;
+
+  const cap = document.getElementById('revealCaption');
+  if(doneCount === N){
+    cap.classList.add('show');
+    if(openedCount === N){
+      document.getElementById('boardWrap').classList.add('reveal-all');
+      cap.textContent = '🎉 Xuất sắc! Cả 4 mảnh ghép đã mở — Bức ảnh bí mật: Nông dân thu hoạch muối (NaCl) ở ruộng muối!';
+    } else {
+      cap.textContent = `Hoàn thành trò chơi: Đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa do trả lời sai hoặc quá giờ).`;
+    }
+  } else if(!isRevealedAll){
+    cap.classList.remove('show');
+  }
+}
+
+document.querySelectorAll('.tile').forEach(tile => {
+  tile.onclick = () => {
+    const idx = +tile.dataset.idx;
+    if(tileStatus[idx] !== null) return; // Đã trả lời hoặc bị khóa
+    openQuestionSlide(idx);
+  };
+});
+
+function openQuestionSlide(idx){
+  stopTimers();
+  activeTile = idx;
+  timeLeft = MAX_TIME;
+  const q = questions[idx];
+
+  document.getElementById('qBadge').textContent = `🧩 MẢNH GHÉP ${idx + 1} — CÂU HỎI ${idx + 1}`;
+  document.getElementById('qText').textContent = q.q;
+
+  const grid = document.getElementById('optsGrid');
+  grid.innerHTML = '';
+  q.o.forEach((optText, k) => {
+    const b = document.createElement('button');
+    b.className = 'opt';
+    b.innerHTML = `<b>${L[k]}</b><span>${esc(optText)}</span>`;
+    b.onclick = () => handleAnswer(k);
+    grid.appendChild(b);
+  });
+
+  const fb = document.getElementById('qFeedback');
+  fb.className = 'q-feedback';
+  document.getElementById('qFeedbackText').textContent = 'Hãy chọn đáp án đúng trong vòng 30 giây!';
+
+  updateTimerUI(timeLeft);
+  showSlide('quiz');
+  startCountdown();
+}
+
+function startCountdown(){
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    updateTimerUI(timeLeft);
+    if(timeLeft <= 0){
+      handleTimeout();
+    }
+  }, 1000);
+}
+
+function updateTimerUI(sec){
+  const s = Math.max(0, sec);
+  const badge = document.getElementById('timerBadge');
+  const text = document.getElementById('timerText');
+  const bar = document.getElementById('timerBar');
+
+  text.textContent = s + 's';
+  bar.style.width = ((s / MAX_TIME) * 100) + '%';
+
+  badge.className = 'timer-badge';
+  bar.className = 'timer-bar';
+  if(s <= 5){
+    badge.classList.add('danger');
+    bar.classList.add('danger');
+  } else if(s <= 10){
+    badge.classList.add('warning');
+    bar.classList.add('warning');
+  }
+}
+
+function lockOptions(){
+  document.querySelectorAll('#optsGrid .opt').forEach(b => b.disabled = true);
+  document.getElementById('timerBadge').className = 'timer-badge done';
+  document.getElementById('timerBar').style.width = '0%';
+}
+
+function handleAnswer(chosenIdx){
+  if(tileStatus[activeTile] !== null) return;
+  stopTimers();
+  lockOptions();
+
+  const q = questions[activeTile];
+  const btns = document.querySelectorAll('#optsGrid .opt');
+  const fb = document.getElementById('qFeedback');
+  const fbText = document.getElementById('qFeedbackText');
+
+  if(chosenIdx === q.a){
+    btns[chosenIdx].classList.add('right');
+    tileStatus[activeTile] = 'right';
+    fb.className = 'q-feedback ok';
+    fbText.textContent = `✅ Chính xác! Đang quay lại lật mở mảnh ghép ${activeTile + 1}...`;
+  } else {
+    btns[chosenIdx].classList.add('wrong');
+    tileStatus[activeTile] = 'wrong';
+    fb.className = 'q-feedback no';
+    fbText.textContent = `❌ Sai rồi! Mảnh ghép ${activeTile + 1} bị bôi đen (không lật thẻ)...`;
+  }
+
+  autoReturnTimer = setTimeout(() => returnToBoard(), 1350);
+}
+
+function handleTimeout(){
+  if(tileStatus[activeTile] !== null) return;
+  stopTimers();
+  lockOptions();
+
+  tileStatus[activeTile] = 'timeout';
+  const fb = document.getElementById('qFeedback');
+  fb.className = 'q-feedback no';
+  document.getElementById('qFeedbackText').textContent = `⏰ Quá 30 giây! Mảnh ghép ${activeTile + 1} bị bôi đen (không lật thẻ)...`;
+
+  autoReturnTimer = setTimeout(() => returnToBoard(), 1500);
+}
+
+function returnToBoard(){
+  stopTimers();
+  showSlide('board');
+  renderBoard();
+}
+
+document.getElementById('btnBackToBoard').onclick = returnToBoard;
+document.getElementById('btnReset').onclick = resetGame;
+document.getElementById('btnRevealAll').onclick = () => {
+  isRevealedAll = !isRevealedAll;
+  document.getElementById('boardWrap').classList.toggle('reveal-all', isRevealedAll);
+  const cap = document.getElementById('revealCaption');
+  if(isRevealedAll){
+    cap.classList.add('show');
+    cap.textContent = '🖼️ Bức ảnh bí mật: Nông dân thu hoạch muối trên ruộng muối!';
+  } else {
+    renderBoard();
+  }
+};
+
+function esc(s){ return String(s).replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c])); }
+function toast(msg, bg='#15803d'){
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.style.background = bg; t.style.display = 'block';
+  setTimeout(() => t.style.display = 'none', 4500);
+}
+
+/* ---------- Quản lý & Soạn bộ 4 câu hỏi ---------- */
+function openEditorModal(setIdx){
+  buildEditor(allSets[setIdx].questions);
+  document.getElementById('setNameInput').value = allSets[setIdx].title;
+  document.getElementById('ghToken').value = localStorage.getItem(GH_TOKEN_KEY) || '';
+  document.getElementById('modal').classList.add('show');
+}
+
+document.getElementById('btnEdit').onclick = () => openEditorModal(currentSetIndex);
+document.getElementById('btnEditHeader').onclick = () => openEditorModal(currentSetIndex);
+document.getElementById('eClose').onclick = () => document.getElementById('modal').classList.remove('show');
+document.getElementById('modalSetSelect').onchange = e => openEditorModal(+e.target.value);
+
+document.getElementById('btnNewSet').onclick = () => {
+  allSets.push({
+    id: 'set_' + Date.now(),
+    title: 'Bộ câu hỏi mới ' + (allSets.length + 1),
+    questions: JSON.parse(JSON.stringify(DEFAULT_SETS[0].questions))
+  });
+  updateSetSelectUI();
+  selectSet(allSets.length - 1);
+  openEditorModal(allSets.length - 1);
+  toast('Đã tạo bộ 4 câu hỏi mới!');
+};
+
+document.getElementById('btnDeleteSet').onclick = () => {
+  if(allSets.length <= 1) return alert('Không thể xóa bộ câu hỏi cuối cùng!');
+  if(confirm(`Xóa "${allSets[currentSetIndex].title}"?`)){
+    allSets.splice(currentSetIndex, 1);
+    currentSetIndex = 0;
+    updateSetSelectUI(); selectSet(0); openEditorModal(0);
+  }
+};
+
+function buildEditor(list){
+  const e = document.getElementById('editor');
+  e.innerHTML = '';
+  list.forEach((q, i) => {
+    const d = document.createElement('div');
+    d.className = 'qe';
+    d.innerHTML = `<b>Mảnh ghép ${i+1} (Câu ${i+1}):</b><textarea rows="2" class="qq"></textarea>` +
+      `<div class="g">` + L.map((l, k) => `<label>${l}: <input class="oo" data-k="${k}"></label>`).join('') + `</div>` +
+      `<label style="display:block;margin-top:6px">Đáp án đúng: <select class="aa">${L.map((l, k) => `<option value="${k}">${l}</option>`).join('')}</select></label>`;
+    d.querySelector('.qq').value = q.q;
+    d.querySelectorAll('.oo').forEach(inp => inp.value = q.o[inp.dataset.k]);
+    d.querySelector('.aa').value = q.a;
+    e.appendChild(d);
+  });
+}
+
+function readEditor(){
+  return [...document.querySelectorAll('.qe')].map(d => ({
+    q: d.querySelector('.qq').value.trim() || '(Chưa có nội dung)',
+    o: [...d.querySelectorAll('.oo')].map(i => i.value.trim() || '—'),
+    a: +d.querySelector('.aa').value
+  }));
+}
+
+document.getElementById('eSaveLocal').onclick = () => {
+  const idx = +document.getElementById('modalSetSelect').value;
+  allSets[idx].title = document.getElementById('setNameInput').value.trim() || allSets[idx].title;
+  allSets[idx].questions = readEditor();
+  localStorage.setItem(LOCAL_KEY, JSON.stringify(allSets));
+  updateSetSelectUI(); selectSet(idx);
+  document.getElementById('modal').classList.remove('show');
+  toast('Đã lưu bộ câu hỏi vào trình duyệt!');
+};
+
+document.getElementById('eDefault').onclick = () => {
+  if(confirm('Khôi phục bộ câu hỏi mẫu?')){
+    allSets = JSON.parse(JSON.stringify(DEFAULT_SETS));
+    updateSetSelectUI(); selectSet(0); openEditorModal(0);
+  }
+};
+
+document.getElementById('eExport').onclick = () => {
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(new Blob([JSON.stringify({sets: allSets}, null, 2)], {type: 'application/json'}));
+  a.download = 'lat-manh-ghep-4-cau.json';
+  a.click();
+};
+
+document.getElementById('eImport').onclick = () => document.getElementById('file').click();
+document.getElementById('file').onchange = () => {
+  const f = document.getElementById('file').files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try {
+      const s = JSON.parse(r.result);
+      if(s.sets && Array.isArray(s.sets)) allSets = s.sets;
+      else if(Array.isArray(s) && s.length === N) allSets[currentSetIndex].questions = s;
+      else throw new Error();
+      updateSetSelectUI(); selectSet(0); openEditorModal(0);
+      toast('Đã nhập file JSON thành công!');
+    } catch(e){ alert('File JSON không hợp lệ (cần đúng 4 câu hỏi).'); }
+  };
+  r.readAsText(f);
+  document.getElementById('file').value = '';
+};
+
+document.getElementById('btnSyncGH').onclick = async () => {
+  const token = document.getElementById('ghToken').value.trim();
+  if(!token) return alert('Vui lòng nhập GitHub Token!');
+  localStorage.setItem(GH_TOKEN_KEY, token);
+
+  const idx = +document.getElementById('modalSetSelect').value;
+  allSets[idx].title = document.getElementById('setNameInput').value.trim() || allSets[idx].title;
+  allSets[idx].questions = readEditor();
+
+  const btn = document.getElementById('btnSyncGH');
+  btn.disabled = true; btn.textContent = '⏳ Đang xuất bản...';
+  try {
+    let sha = null;
+    const getRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+      headers: {'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github.v3+json'}
+    });
+    if(getRes.ok) sha = (await getRes.json()).sha;
+
+    const jsonStr = JSON.stringify({sets: allSets}, null, 2);
+    const bytes = new TextEncoder().encode(jsonStr);
+    let bin = ''; bytes.forEach(b => bin += String.fromCharCode(b));
+
+    const putRes = await fetch(`https://api.github.com/repos/${REPO_OWNER}/${REPO_NAME}/contents/${FILE_PATH}`, {
+      method: 'PUT',
+      headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json', 'Accept': 'application/vnd.github.v3+json'},
+      body: JSON.stringify({message: 'Cập nhật câu hỏi Lật mảnh ghép 4 mảnh', content: btoa(bin), sha: sha || undefined})
+    });
+    if(!putRes.ok) throw new Error((await putRes.json()).message || 'Lỗi GitHub');
+
+    localStorage.setItem(LOCAL_KEY, JSON.stringify(allSets));
+    updateSetSelectUI(); selectSet(idx);
+    document.getElementById('modal').classList.remove('show');
+    toast('🎉 Đã xuất bản lên GitHub thành công!');
+  } catch(err){
+    alert('Lỗi lưu GitHub: ' + err.message);
+  } finally {
+    btn.disabled = false; btn.textContent = '🚀 Xuất bản lên GitHub ngay';
+  }
+};
+
+initData();
+</script>
+</body>
+</html>
