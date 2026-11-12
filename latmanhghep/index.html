@@ -9,7 +9,7 @@
 html,body{height:100%;margin:0;font-family:"Segoe UI",system-ui,-apple-system,sans-serif;background:#eef2f6;color:#1e293b}
 
 /* Header */
-.header-bar{background:#ffffff;border-bottom:1px solid #cbd5e1;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
+.header-bar{position:relative;z-index:165;background:#ffffff;border-bottom:1px solid #cbd5e1;padding:10px 20px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;box-shadow:0 1px 4px rgba(0,0,0,0.04)}
 .header-left{display:flex;align-items:center;gap:14px;flex-wrap:wrap}
 .back-link{color:#2563eb;text-decoration:none;font-weight:700;font-size:14px;display:inline-flex;align-items:center;gap:6px;padding:6px 12px;background:#eff6ff;border-radius:8px;transition:background .2s}
 .back-link:hover{background:#dbeafe}
@@ -116,16 +116,44 @@ button{font:inherit;cursor:pointer;transition:all .15s}
 .qe .g{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
 .qe label{font-size:13px;font-weight:700;color:#475569}
 
-.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#15803d;color:#ffffff;padding:12px 24px;border-radius:10px;display:none;z-index:200;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.25)}
+.toast{position:fixed;left:50%;bottom:28px;transform:translateX(-50%);background:#15803d;color:#ffffff;padding:12px 24px;border-radius:10px;display:none;z-index:240;font-weight:700;box-shadow:0 10px 25px rgba(0,0,0,0.25)}
 .score-pill{background:#fef3c7;border:1.5px solid #fcd34d;color:#92400e;border-radius:999px;padding:5px 12px;font-size:13px;font-weight:800;white-space:nowrap}
-#playerModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:160}
+
+/* Popup kết thúc + Bảng xếp hạng điểm */
+#finishModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:175}
+#finishModal.show{display:flex}
+.finish-box{background:#ffffff;border-radius:20px;width:min(780px,95vw);max-height:92vh;overflow:auto;padding:24px 22px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .3s cubic-bezier(.16,1,.3,1)}
+@keyframes popIn{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
+.finish-icon{font-size:46px;margin-bottom:6px}
+.finish-title{margin:0 0 6px;font-size:22px;font-weight:800;color:#0f172a}
+.finish-title.win{color:#15803d}
+.finish-sub{margin:0 0 12px;font-size:15px;font-weight:700;color:#b45309}
+.finish-sub.lose{color:#475569;font-weight:600;font-size:14px}
+.finish-score{display:inline-block;background:#f8fafc;border:1.5px solid #e2e8f0;padding:8px 16px;border-radius:12px;font-size:14px;font-weight:700;color:#334155;margin-bottom:8px;line-height:1.6}
+.finish-sync{font-size:13px;font-weight:700;margin-bottom:10px;padding:6px 12px;border-radius:8px;background:#f8fafc;color:#475569}
+.finish-lb-title{font-size:15px;font-weight:800;color:#0f172a;margin:10px 0 6px;text-align:left;display:flex;justify-content:space-between;align-items:center}
+#finishLeaderboardWrap{max-height:260px;overflow:auto;border:1px solid #e2e8f0;border-radius:10px;margin-bottom:16px;text-align:left}
+.finish-actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+
+/* Màn hình đăng nhập Tên và Lớp trước khi chơi */
+#playerModal{position:fixed;inset:0;background:#eef2f6;display:none;align-items:center;justify-content:center;z-index:160;padding:70px 16px 20px}
 #playerModal.show{display:flex}
-.player-box{background:#ffffff;border-radius:18px;width:min(440px,92vw);padding:26px 24px;box-shadow:0 24px 48px rgba(0,0,0,0.28)}
-.player-box h3{margin:0 0 6px;font-size:21px;font-weight:800;color:#0f172a}
-.player-box p{margin:0 0 16px;font-size:13.5px;color:#475569}
+.player-box{background:#ffffff;border:1px solid #e2e8f0;border-radius:20px;width:min(460px,95vw);padding:28px 26px;box-shadow:0 20px 45px rgba(15,23,42,0.12);animation:popIn .25s ease}
+.player-box h3{margin:0 0 6px;font-size:22px;font-weight:800;color:#0f172a}
+.player-box p{margin:0 0 14px;font-size:14px;color:#475569}
+.login-set-pill{display:inline-block;background:#eff6ff;border:1px solid #bfdbfe;color:#1d4ed8;font-size:13px;font-weight:700;padding:4px 12px;border-radius:999px;margin-bottom:14px}
 .player-box label{display:block;font-size:13px;font-weight:700;color:#334155;margin-bottom:4px}
-.player-box input{width:100%;padding:10px 12px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;margin-bottom:12px;outline:none}
+.player-box input{width:100%;padding:11px 13px;border:1.5px solid #cbd5e1;border-radius:10px;font:inherit;font-size:15px;margin-bottom:12px;outline:none}
 .player-box input:focus{border-color:#2563eb}
+
+/* Modal Mời tham gia QR */
+#inviteModal{position:fixed;inset:0;background:rgba(15,23,42,0.72);backdrop-filter:blur(4px);display:none;align-items:center;justify-content:center;z-index:180}
+#inviteModal.show{display:flex}
+.invite-box{background:#ffffff;border-radius:20px;width:min(480px,94vw);padding:24px;text-align:center;box-shadow:0 24px 48px rgba(0,0,0,0.28);animation:popIn .25s ease}
+.qr-frame{display:inline-flex;padding:12px;background:#ffffff;border:2px solid #cbd5e1;border-radius:16px;margin:12px 0;box-shadow:0 4px 14px rgba(0,0,0,0.06)}
+.qr-frame img{width:240px;height:240px;display:block;border-radius:6px}
+.invite-link-row{display:flex;gap:8px;margin-top:8px}
+.invite-link-row input{flex:1;padding:9px 10px;border:1.5px solid #cbd5e1;border-radius:8px;font-family:monospace;font-size:13px;background:#f8fafc;color:#0f172a}
 @media(max-width:760px){.opts-grid{grid-template-columns:1fr}.slide-card{padding:16px}}
 </style>
 </head>
@@ -140,6 +168,7 @@ button{font:inherit;cursor:pointer;transition:all .15s}
     <span class="score-pill" id="scorePill">🏆 0đ</span>
     <label for="setSelect">📚 Bộ:</label>
     <select id="setSelect"></select>
+    <button class="btn-ui btn-accent" id="btnInvite" style="padding:5px 10px;font-size:13px" title="Hiện mã QR mời học sinh tham gia">📲 Mời tham gia</button>
     <button class="btn-ui" id="btnLeaderboard" style="padding:5px 10px;font-size:13px">🏆 BXH</button>
     <button class="btn-ui" id="btnSheets" style="padding:5px 10px;font-size:13px">📊 Sheets</button>
     <button class="btn-ui" id="btnEditHeader" style="padding:5px 10px;font-size:13px">✏️ Quản lý</button>
@@ -261,18 +290,66 @@ button{font:inherit;cursor:pointer;transition:all .15s}
   </div>
 </div>
 
-<!-- Popup nhập tên người chơi Online -->
+<!-- Popup kết thúc trò chơi + Bảng xếp hạng điểm -->
+<div id="finishModal">
+  <div class="finish-box">
+    <div class="finish-icon" id="finishIcon">🎉</div>
+    <h2 class="finish-title" id="finishTitle">Chúc mừng bạn đã hoàn thành!</h2>
+    <p class="finish-sub" id="finishSub">Bạn đã mở khóa toàn bộ bức ảnh bí mật!</p>
+    <div class="finish-score" id="finishScore">Kết quả: 4/4 mảnh</div>
+    <div class="finish-sync" id="finishSyncStatus"></div>
+    <div class="finish-lb-title">
+      <span>🏆 Bảng xếp hạng điểm</span>
+      <button class="btn-ui" id="btnRefreshFinishLb" style="padding:3px 10px;font-size:12px">🔄 Làm mới</button>
+    </div>
+    <div id="finishLeaderboardWrap"></div>
+    <div class="finish-actions">
+      <button class="btn-ui" id="btnFinishView">👀 Xem lại bức tranh</button>
+      <button class="btn-ui btn-accent" id="btnFinishLb">📊 Mở toàn màn hình BXH</button>
+      <button class="btn-ui btn-primary" id="btnFinishReplay">🔄 Chơi lại</button>
+    </div>
+  </div>
+</div>
+
+<!-- Màn hình đăng nhập Tên và Lớp trước khi chơi -->
 <div id="playerModal">
   <div class="player-box">
-    <h3>🎮 Tham gia chơi Online</h3>
-    <p>Nhập tên để lưu thành tích, thời gian và xếp hạng (trả lời càng nhanh điểm thưởng càng cao!).</p>
+    <h3>🎮 Đăng nhập tham gia trò chơi</h3>
+    <div class="login-set-pill" id="loginSetName">📚 Bộ câu hỏi</div>
+    <p>Nhập <b>Họ và tên</b> và <b>Lớp</b> rồi ấn <b>Bắt đầu</b> để vào màn hình chơi và tính thời gian.</p>
     <label for="pName">Họ và tên học sinh *</label>
     <input type="text" id="pName" placeholder="Ví dụ: Nguyễn Văn A">
-    <label for="pClass">Lớp (không bắt buộc)</label>
+    <label for="pClass">Lớp *</label>
     <input type="text" id="pClass" placeholder="Ví dụ: 10A1">
     <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-      <button class="btn-ui btn-primary" id="btnStartPlay" style="flex:1;padding:10px 16px;font-size:15px">🚀 Bắt đầu chơi</button>
-      <button class="btn-ui" id="btnPlayDemo" style="padding:10px 14px">Chơi thử</button>
+      <button class="btn-ui btn-primary" id="btnStartPlay" style="flex:1;padding:11px 16px;font-size:15px">🚀 Bắt đầu</button>
+      <button class="btn-ui" id="btnPlayDemo" style="padding:11px 14px">Chơi thử</button>
+    </div>
+    <div style="margin-top:14px;padding-top:12px;border-top:1px dashed #cbd5e1;display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap">
+      <button class="btn-ui btn-accent" id="btnLoginInvite" style="padding:6px 12px;font-size:12.5px">📲 Mời tham gia (Mã QR)</button>
+      <button class="btn-ui" id="btnLoginLb" style="padding:6px 12px;font-size:12.5px">🏆 Xem BXH</button>
+    </div>
+  </div>
+</div>
+
+<!-- Modal Mời tham gia QR -->
+<div id="inviteModal">
+  <div class="invite-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px">
+      <h3 style="margin:0;font-size:19px;color:#0f172a">📲 Mời tham gia trò chơi</h3>
+      <button class="btn-ui" id="btnCloseInvite" style="padding:5px 10px">✖ Đóng</button>
+    </div>
+    <div class="login-set-pill" id="inviteSetTitle" style="margin-bottom:4px">📚 Bộ câu hỏi</div>
+    <p style="margin:4px 0 6px;font-size:13.5px;color:#475569">Học sinh quét mã QR hoặc mở đường dẫn dưới đây để vào trực tiếp trò chơi:</p>
+    <div class="qr-frame">
+      <img id="qrImg" alt="Mã QR vào trò chơi Lật mảnh ghép bí mật">
+    </div>
+    <div class="invite-link-row">
+      <input type="text" id="inviteLinkInput" readonly>
+      <button class="btn-ui btn-primary" id="btnCopyInvite">📋 Sao chép</button>
+    </div>
+    <div style="margin-top:14px;display:flex;justify-content:center;gap:10px;flex-wrap:wrap">
+      <button class="btn-ui btn-accent" id="btnInviteLb">🏆 Theo dõi Bảng xếp hạng</button>
     </div>
   </div>
 </div>
@@ -328,9 +405,11 @@ let activeTile = 0;
 let questionStartedAt = null;
 let timerInterval = null;
 let autoReturnTimer = null;
+let autoNextTimer = null;
 let timeLeft = MAX_TIME;
 let isRevealedAll = false;
 let scoreSubmitted = false;
+let finishShown = false;
 let playerInfo = { name: '', className: '', isDemo: false, startTime: '', started: false };
 
 async function initData(){
@@ -385,6 +464,10 @@ function updateScoreUI(){
 }
 
 function openPlayerModal(){
+  const loginSetEl = document.getElementById('loginSetName');
+  if(loginSetEl && allSets[currentSetIndex]){
+    loginSetEl.textContent = '📚 ' + allSets[currentSetIndex].title;
+  }
   try {
     const last = JSON.parse(localStorage.getItem('hoahoc10_last_player') || '{}');
     if(last.name) document.getElementById('pName').value = last.name;
@@ -394,30 +477,91 @@ function openPlayerModal(){
   setTimeout(() => document.getElementById('pName').focus(), 100);
 }
 
-document.getElementById('btnStartPlay').onclick = () => {
+function startPlayFromLogin(){
   const n = document.getElementById('pName').value.trim();
   const c = document.getElementById('pClass').value.trim();
   if(!n){ alert('Vui lòng nhập họ và tên để lưu điểm!'); document.getElementById('pName').focus(); return; }
+  if(!c){ alert('Vui lòng nhập lớp của bạn!'); document.getElementById('pClass').focus(); return; }
   localStorage.setItem('hoahoc10_last_player', JSON.stringify({name: n, className: c}));
   playerInfo = { name: n, className: c, isDemo: false, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
   document.getElementById('playerModal').classList.remove('show');
-};
+  showSlide('board');
+}
+
+document.getElementById('btnStartPlay').onclick = startPlayFromLogin;
+document.getElementById('pName').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){
+    e.preventDefault();
+    if(!document.getElementById('pClass').value.trim()) document.getElementById('pClass').focus();
+    else startPlayFromLogin();
+  }
+});
+document.getElementById('pClass').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); startPlayFromLogin(); }
+});
 
 document.getElementById('btnPlayDemo').onclick = () => {
   playerInfo = { name: 'Chơi thử', className: '', isDemo: true, startTime: SheetsOnline.formatVNTime(new Date()), started: true };
   document.getElementById('playerModal').classList.remove('show');
+  showSlide('board');
 };
 
+function getInviteUrl(){
+  if(window.location.protocol === 'file:'){
+    return 'https://dthainek.github.io/hoahoc10/latmanhghep/';
+  }
+  return window.location.href.split('#')[0];
+}
+
+function openInviteModal(){
+  const url = getInviteUrl();
+  const setTitle = (allSets[currentSetIndex] && allSets[currentSetIndex].title) || 'Lật mảnh ghép bí mật';
+  const setTitleEl = document.getElementById('inviteSetTitle');
+  const linkInput = document.getElementById('inviteLinkInput');
+  const qrImg = document.getElementById('qrImg');
+  if(setTitleEl) setTitleEl.textContent = '📚 Bộ câu hỏi: ' + setTitle;
+  if(linkInput) linkInput.value = url;
+  if(qrImg){
+    qrImg.onerror = () => {
+      qrImg.onerror = null;
+      qrImg.src = `https://quickchart.io/qr?size=260&text=${encodeURIComponent(url)}`;
+    };
+    qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&margin=8&data=${encodeURIComponent(url)}`;
+  }
+  document.getElementById('inviteModal').classList.add('show');
+}
+
+document.getElementById('btnInvite').onclick = openInviteModal;
+document.getElementById('btnLoginInvite').onclick = openInviteModal;
+document.getElementById('btnCloseInvite').onclick = () => document.getElementById('inviteModal').classList.remove('show');
+document.getElementById('btnCopyInvite').onclick = async () => {
+  const linkInput = document.getElementById('inviteLinkInput');
+  const url = linkInput ? linkInput.value : getInviteUrl();
+  try {
+    await navigator.clipboard.writeText(url);
+    toast('📋 Đã sao chép link trò chơi!', '#16a34a');
+  } catch(e) {
+    if(linkInput){ linkInput.select(); document.execCommand('copy'); }
+    toast('📋 Đã sao chép link trò chơi!', '#16a34a');
+  }
+};
+document.getElementById('btnInviteLb').onclick = () => {
+  document.getElementById('inviteModal').classList.remove('show');
+  SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
+};
+document.getElementById('btnLoginLb').onclick = () => SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
 document.getElementById('btnLeaderboard').onclick = () => SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
 document.getElementById('btnSheets').onclick = () => SheetsOnline.openSetup();
 
 /* ---------- Chuyển đổi Slide & Logic trò chơi ---------- */
 function resetGame(askPlayer = true){
   stopTimers();
+  document.getElementById('finishModal').classList.remove('show');
   tileStatus = Array(N).fill(null);
   elapsedMs = Array(N).fill(0);
   qScores = Array(N).fill(0);
   scoreSubmitted = false;
+  finishShown = false;
   isRevealedAll = false;
   updateScoreUI();
   document.getElementById('boardWrap').classList.remove('reveal-all');
@@ -438,6 +582,15 @@ function showSlide(which){
 function stopTimers(){
   if(timerInterval){ clearInterval(timerInterval); timerInterval = null; }
   if(autoReturnTimer){ clearTimeout(autoReturnTimer); autoReturnTimer = null; }
+  if(autoNextTimer){ clearTimeout(autoNextTimer); autoNextTimer = null; }
+}
+
+function findNextUnanswered(fromIdx){
+  for(let offset = 1; offset < N; offset++){
+    const idx = (fromIdx + offset) % N;
+    if(tileStatus[idx] === null) return idx;
+  }
+  return tileStatus[fromIdx] === null ? fromIdx : -1;
 }
 
 function renderBoard(){
@@ -485,41 +638,115 @@ function renderBoard(){
     } else {
       cap.innerHTML = `Hoàn thành trò chơi: Đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa).<br><span style="font-size:14px">🏆 Điểm: <b>${totalScore}</b> &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b></span> <span id="lmSyncMsg"></span>`;
     }
-    if(!scoreSubmitted){
-      scoreSubmitted = true;
-      submitLatManhGhepScore(openedCount, totalScore, totalTimeSec);
+    if(!finishShown){
+      finishShown = true;
+      const endTime = window.SheetsOnline ? SheetsOnline.formatVNTime(new Date()) : '';
+      setTimeout(() => showFinishPopup(openedCount, totalScore, totalTimeSec, endTime), 750);
     }
   } else if(!isRevealedAll){
     cap.classList.remove('show');
   }
 }
 
-async function submitLatManhGhepScore(openedCount, totalScore, totalTimeSec){
+async function showFinishPopup(openedCount, totalScore, totalTimeSec, endTime){
+  const modal = document.getElementById('finishModal');
+  const icon = document.getElementById('finishIcon');
+  const title = document.getElementById('finishTitle');
+  const sub = document.getElementById('finishSub');
+  const scoreEl = document.getElementById('finishScore');
+  const syncEl = document.getElementById('finishSyncStatus');
+  const lbWrap = document.getElementById('finishLeaderboardWrap');
+
+  if(openedCount === N){
+    icon.textContent = '🎉💐';
+    title.textContent = 'Chúc mừng bạn đã hoàn thành!';
+    title.className = 'finish-title win';
+    sub.textContent = 'Bạn đã mở khóa toàn bộ bức ảnh bí mật: Nông dân thu hoạch muối!';
+    sub.className = 'finish-sub';
+  } else {
+    icon.textContent = '💪📚';
+    title.textContent = 'Bạn cần cố gắng hơn';
+    title.className = 'finish-title';
+    sub.textContent = `Bạn đã mở ${openedCount}/${N} mảnh ghép (${N - openedCount} mảnh bị khóa). Hãy thử lại nhé!`;
+    sub.className = 'finish-sub lose';
+  }
+
+  const pLabel = playerInfo.isDemo ? 'Chế độ chơi thử' : `${playerInfo.name}${playerInfo.className ? ' - ' + playerInfo.className : ''}`;
+  scoreEl.innerHTML = `👤 <b>${esc(pLabel)}</b><br>🧩 Đã mở: <b>${openedCount}/${N}</b> mảnh &nbsp;|&nbsp; ⏱️ Thời gian: <b>${totalTimeSec}s</b> &nbsp;|&nbsp; 🏆 Điểm: <b style="color:#dc2626">${totalScore}</b>`;
+  if(lbWrap){
+    lbWrap.innerHTML = '<div style="padding:18px;text-align:center;color:#64748b;font-size:13px">⏳ Đang tải bảng xếp hạng...</div>';
+  }
+  modal.classList.add('show');
+
+  const setTitle = allSets[currentSetIndex].title;
+  const highlightName = playerInfo.isDemo ? '' : playerInfo.name;
+
+  if(!scoreSubmitted){
+    scoreSubmitted = true;
+    await submitLatManhGhepScore(openedCount, totalScore, totalTimeSec, endTime, syncEl);
+  }
+
+  if(lbWrap && window.SheetsOnline && SheetsOnline.renderLeaderboardInto){
+    await SheetsOnline.renderLeaderboardInto(lbWrap, 'LatManhGhep', setTitle, highlightName);
+  }
+}
+
+document.getElementById('btnFinishView').onclick = () => {
+  document.getElementById('finishModal').classList.remove('show');
+};
+document.getElementById('btnFinishLb').onclick = () => {
+  document.getElementById('finishModal').classList.remove('show');
+  SheetsOnline.openLeaderboard('LatManhGhep', allSets[currentSetIndex].title);
+};
+document.getElementById('btnFinishReplay').onclick = () => {
+  document.getElementById('finishModal').classList.remove('show');
+  resetGame(true);
+};
+const btnRefreshFinishLb = document.getElementById('btnRefreshFinishLb');
+if(btnRefreshFinishLb){
+  btnRefreshFinishLb.onclick = () => {
+    const lbWrap = document.getElementById('finishLeaderboardWrap');
+    if(lbWrap && window.SheetsOnline && SheetsOnline.renderLeaderboardInto){
+      SheetsOnline.renderLeaderboardInto(lbWrap, 'LatManhGhep', allSets[currentSetIndex].title, playerInfo.isDemo ? '' : playerInfo.name);
+    }
+  };
+}
+
+async function submitLatManhGhepScore(openedCount, totalScore, totalTimeSec, endTime, syncEl){
   const el = document.getElementById('lmSyncMsg');
-  if(!el) return;
   if(playerInfo.isDemo || !playerInfo.name){
-    el.innerHTML = '— <i>(Chơi thử: không lưu điểm)</i>';
+    if(syncEl){ syncEl.textContent = 'ℹ️ Chế độ chơi thử: không lưu kết quả lên Google Sheets.'; syncEl.style.color = '#64748b'; }
+    if(el) el.innerHTML = '— <i>(Chơi thử: không lưu điểm)</i>';
     return;
   }
   if(!window.SheetsOnline || !SheetsOnline.isConfigured()){
-    el.innerHTML = '— <a href="#" onclick="SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt Google Sheets để lưu điểm</a>';
+    if(syncEl){
+      syncEl.innerHTML = '⚠️ Chưa kết nối URL Apps Script Google Sheets (<a href="#" onclick="document.getElementById(\'finishModal\').classList.remove(\'show\');SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt ngay</a>)';
+      syncEl.style.color = '#b45309';
+    }
+    if(el) el.innerHTML = '— <a href="#" onclick="SheetsOnline.openSetup();return false;" style="color:#2563eb">Cài đặt Google Sheets để lưu điểm</a>';
     return;
   }
-  el.textContent = '— ⏳ Đang lưu lên Google Sheets...';
+  if(syncEl){ syncEl.textContent = '⏳ Đang lưu điểm lên Google Sheets...'; syncEl.style.color = '#2563eb'; }
+  if(el) el.textContent = '— ⏳ Đang lưu lên Google Sheets...';
   const res = await SheetsOnline.submitScore({
     game: 'LatManhGhep',
     name: playerInfo.name,
     className: playerInfo.className,
     setTitle: allSets[currentSetIndex].title,
     startTime: playerInfo.startTime,
-    endTime: SheetsOnline.formatVNTime(new Date()),
+    endTime: endTime || SheetsOnline.formatVNTime(new Date()),
     totalTime: totalTimeSec,
     correctCount: `${openedCount}/${N}`,
     score: totalScore
   });
-  el.innerHTML = res.ok
-    ? '— ✅ <b>Đã lưu vào Google Sheets!</b> (<a href="#" onclick="SheetsOnline.openLeaderboard(\'LatManhGhep\', allSets[currentSetIndex].title);return false;" style="color:#15803d">Xem BXH</a>)'
-    : '— ❌ Lưu thất bại';
+  if(res.ok){
+    if(syncEl){ syncEl.textContent = '✅ Đã lưu thành công tên, thời gian và điểm lên Google Sheets!'; syncEl.style.color = '#15803d'; }
+    if(el) el.innerHTML = '— ✅ <b>Đã lưu vào Google Sheets!</b> (<a href="#" onclick="SheetsOnline.openLeaderboard(\'LatManhGhep\', allSets[currentSetIndex].title);return false;" style="color:#15803d">Xem BXH</a>)';
+  } else {
+    if(syncEl){ syncEl.textContent = '❌ Lưu lên Google Sheets thất bại: ' + (res.reason || 'Lỗi mạng'); syncEl.style.color = '#dc2626'; }
+    if(el) el.textContent = '— ❌ Lưu thất bại';
+  }
 }
 
 document.querySelectorAll('.tile').forEach(tile => {
@@ -627,7 +854,7 @@ function handleAnswer(chosenIdx){
   }
   updateScoreUI();
 
-  autoReturnTimer = setTimeout(() => returnToBoard(), 1350);
+  autoReturnTimer = setTimeout(() => returnToBoard(true), 1000);
 }
 
 function handleTimeout(){
@@ -642,17 +869,31 @@ function handleTimeout(){
   fb.className = 'q-feedback no';
   document.getElementById('qFeedbackText').textContent = `⏰ Quá 30 giây! Mảnh ghép ${activeTile + 1} bị bôi đen (không lật thẻ)...`;
 
-  autoReturnTimer = setTimeout(() => returnToBoard(), 1500);
+  autoReturnTimer = setTimeout(() => returnToBoard(true), 1150);
 }
 
-function returnToBoard(){
+function returnToBoard(autoAdvance = false){
   stopTimers();
   showSlide('board');
   renderBoard();
+  if(autoAdvance){
+    const nextIdx = findNextUnanswered(activeTile);
+    if(nextIdx !== -1){
+      autoNextTimer = setTimeout(() => {
+        autoNextTimer = null;
+        if(tileStatus[nextIdx] === null){
+          openQuestionSlide(nextIdx);
+        } else {
+          const fallback = findNextUnanswered(activeTile);
+          if(fallback !== -1) openQuestionSlide(fallback);
+        }
+      }, 1050);
+    }
+  }
 }
 
-document.getElementById('btnBackToBoard').onclick = returnToBoard;
-document.getElementById('btnReset').onclick = resetGame;
+document.getElementById('btnBackToBoard').onclick = () => returnToBoard(false);
+document.getElementById('btnReset').onclick = () => resetGame(true);
 document.getElementById('btnRevealAll').onclick = () => {
   isRevealedAll = !isRevealedAll;
   document.getElementById('boardWrap').classList.toggle('reveal-all', isRevealedAll);
