@@ -5,23 +5,43 @@
       "title": "Bài 11: Lật mảnh ghép bí mật - Liên kết ion",
       "questions": [
         {
-          "q": "Kim loại kiềm nào có số hiệu nguyên tử Z = 11, ở trạng thái rắn mềm màu trắng bạc và dễ dàng nhường đi 1 electron lớp ngoài cùng để tạo thành ion dương (+1)?",
-          "o": ["Na", "K", "Ca", "Mg"],
+          "q": "Tôi là một kim loại được tìm thấy ở nhóm IA, cơ thể tôi rất mềm có thể dùng dao để cắt. Tôi rất sợ nước, tôi sẽ tan nhanh và phát nổ khi gặp nước. Tôi tạo ra được dung dịch xút ăn da. Tôi là ai?",
+          "o": [
+            "Na",
+            "K",
+            "Ca",
+            "Mg"
+          ],
           "a": 0
         },
         {
-          "q": "Nguyên tố phi kim thuộc nhóm VIIA (Z = 17) tồn tại ở điều kiện thường dưới dạng đơn chất nào có màu vàng lục, mùi hắc và dễ nhận 1 electron tạo ion âm (-1)?",
-          "o": ["Khí O₂", "Khí Cl₂", "Khí H₂", "Khí N₂"],
+          "q": "Tôi là một loại khí rất độc, màu vàng được sử dụng làm vũ khí hóa học trong thế chiến thứ 1. Tôi là ai?",
+          "o": [
+            "Khí O₂",
+            "Khí Cl₂",
+            "Khí H₂",
+            "Khí N₂"
+          ],
           "a": 1
         },
         {
           "q": "Nguồn tài nguyên nước tự nhiên nào bao phủ khoảng 71% bề mặt Trái Đất, chứa lượng lớn khoáng chất hòa tan và là môi trường sống của hệ sinh thái đại dương?",
-          "o": ["Nước mưa", "Nước cất", "Nước biển", "Nước sông"],
+          "o": [
+            "Nước mưa",
+            "Nước cất",
+            "Nước biển",
+            "Nước sông"
+          ],
           "a": 2
         },
         {
           "q": "Ở trạng thái rắn, khi các nguyên tử, phân tử hoặc ion sắp xếp đều đặn theo một trật tự hình học xác định trong không gian, chúng tạo thành cấu trúc gọi là gì?",
-          "o": ["Chất lỏng", "Chất khí", "Dung dịch", "Tinh thể"],
+          "o": [
+            "Chất lỏng",
+            "Chất khí",
+            "Dung dịch",
+            "Tinh thể"
+          ],
           "a": 3
         }
       ]
